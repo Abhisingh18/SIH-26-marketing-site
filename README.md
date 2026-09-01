@@ -1,25 +1,25 @@
 # Sovereign AI — Marketing Site
 
-Public marketing / landing website for **Sovereign AI**, an on-premise agentic AI
-workbench for confidential industrial workflows.
+Public marketing website for **Sovereign AI**, an on-premise agentic AI workbench
+for confidential industrial workflows.
 
 > This repo is the **website only**. It explains the product, builds trust and
 > collects demo requests. The actual product is a **desktop application** that runs
 > inside the customer's own infrastructure — no confidential document is ever
-> uploaded to this site.
+> uploaded to this site, including through the demo form.
 
 ## Stack
 
-| Layer      | Choice                                 |
-| ---------- | -------------------------------------- |
-| Framework  | Next.js 16 (App Router, Turbopack)     |
-| UI         | React 19 + TypeScript                  |
-| Styling    | Tailwind CSS v4 (`@theme` tokens)      |
-| Motion     | `motion` (Framer Motion 13)            |
-| Scrolling  | Lenis smooth scroll                    |
-| Icons      | lucide-react                           |
+| Layer      | Choice                             |
+| ---------- | ---------------------------------- |
+| Framework  | Next.js 16 (App Router, Turbopack) |
+| UI         | React 19 + TypeScript              |
+| Styling    | Tailwind CSS v4 (`@theme` tokens)  |
+| Motion     | `motion` (Framer Motion 13)        |
+| Scrolling  | Lenis smooth scroll                |
+| Icons      | lucide-react                       |
 
-Everything is statically prerendered — the whole page is one static route.
+Every route is statically prerendered.
 
 ## Getting started
 
@@ -30,70 +30,99 @@ npm run build   # production build
 npm run lint    # eslint
 ```
 
+## Routes
+
+The site is deliberately **multi-page** — the home page sells the idea and sends
+people onward; each subject gets its own page rather than one endless scroll.
+
+| Route           | Purpose                                                                  |
+| --------------- | ------------------------------------------------------------------------ |
+| `/`             | Hero, statement, three pillars, product moment, teasers, CTA             |
+| `/platform`     | Agentic execution, model routing, multimodal, private knowledge, outputs |
+| `/solutions`    | The problem, six industrial use cases, target sectors                    |
+| `/security`     | The boundary, sovereignty monitor, security controls                     |
+| `/architecture` | Layered system diagram, design principles, tech stack, deployment modes  |
+| `/demo`         | Demo request form and what happens next                                  |
+
 ## Design system
 
-Design tokens live in [`app/globals.css`](app/globals.css) under `@theme`.
-The look is deliberately light, minimal and typography-led (Sarvam-style),
-*not* dark cyberpunk — the audience is refineries, PSUs and regulated industry.
+Tokens live in [`app/globals.css`](app/globals.css) under `@theme`. The look is
+light, quiet and typography-led — *not* dark cyberpunk, because the audience is
+refineries, PSUs and regulated industry.
 
-| Token                 | Value     | Use                          |
-| --------------------- | --------- | ---------------------------- |
-| `--color-paper`       | `#fbfaf7` | page background              |
-| `--color-surface`     | `#ffffff` | cards, panels                |
-| `--color-sand`        | `#f4f2ec` | window chrome, subtle fills  |
-| `--color-ink`         | `#0c0c0d` | primary text, inverted slabs |
-| `--color-muted`       | `#76767d` | secondary text               |
-| `--color-line`        | `#e7e4dc` | hairline borders             |
-| `--color-accent`      | `#2340e0` | single accent                |
-| `--color-signal`      | `#11a05a` | live / online status         |
+| Token             | Value     | Use                          |
+| ----------------- | --------- | ---------------------------- |
+| `--color-paper`   | `#fcfbf9` | page background              |
+| `--color-surface` | `#ffffff` | elevated panels              |
+| `--color-veil`    | `#f5f3ef` | recessed bands, diagram beds |
+| `--color-ink`     | `#111113` | headings, inverted slabs     |
+| `--color-body`    | `#56565c` | body copy                    |
+| `--color-muted`   | `#8a8a92` | meta text                    |
+| `--color-line`    | `#eae7e1` | hairlines                    |
+| `--color-accent`  | `#2338cc` | one accent, used sparingly   |
+| `--color-signal`  | `#15a05c` | live / verified states       |
 
-Type: **Inter** for prose, **JetBrains Mono** for technical labels, diagram nodes
-and status readouts.
+Three rules the whole design leans on:
 
-Utility classes: `.display` (tight headline tracking), `.eyebrow` (mono section
-label), `.grid-paper` (blueprint grid), `.lift` (card hover).
+1. **Elevation over borders.** Panels use `--shadow-e1/e2/e3` with a faint ring,
+   not 1px outlines everywhere.
+2. **Light weight at large sizes.** `.display` is weight 400 with `-0.038em`
+   tracking; heavy headlines read cheap at this scale.
+3. **Three text steps only** — `ink` / `body` / `muted`. No fourth grey.
+
+Utilities: `.display`, `.display-sm`, `.label`, `.measure`, `.grid-paper`,
+`.card-hover`, `.link-underline`.
+
+Type: **Inter** for everything, **JetBrains Mono** only for labels, counters and
+file names.
 
 ## Structure
 
 ```
 app/
-  layout.tsx            fonts, metadata, nav + footer shell
-  page.tsx              section order for the whole landing page
-  globals.css           design tokens + utilities
+  layout.tsx              fonts, metadata, nav + footer shell
+  globals.css             design tokens + utilities
+  page.tsx                home
+  platform/page.tsx
+  solutions/page.tsx
+  security/page.tsx
+  architecture/page.tsx
+  demo/page.tsx
 components/
-  site/                 nav, footer
-  mock/workbench.tsx    the desktop-app mockup (compact + full variants)
+  site/                   nav (active route state), footer
+  mock/
+    workbench.tsx         desktop-app mockup — compact + full variants
+    monitor.tsx           sovereignty monitor panel
   ui/
-    primitives.tsx      Button, Badge, Card, Node, LiveDot
-    diagram.tsx         Down, Split, Layer, Step, DiagramFrame
-    section.tsx         Section shell + SectionHead
-    reveal.tsx          scroll-in animation wrappers
+    primitives.tsx        Button, TextLink, Label, Pill, LiveDot, Panel
+    diagram.tsx           Node, Down, Split, Layer, DiagramFrame
+    section.tsx           Section, SectionHead, PageHero
+    reveal.tsx            scroll-in animation wrappers
   sections/
-    hero.tsx            hero + trust chips + app mockup
-    narrative.tsx       trust bar, big statement, problem
-    solution.tsx        perimeter diagram, platform features
-    agentic.tsx         agent execution, deliverables
-    intelligence.tsx    model routing, multimodal, private knowledge
-    security.tsx        sovereignty monitor, desktop app showcase
-    enterprise.tsx      use cases, architecture, deployment, final CTA
+    hero.tsx              home hero
+    home.tsx              trust strip, statement, pillars, teasers
+    platform.tsx          agentic, model routing, multimodal, knowledge, outputs
+    solutions.tsx         problem, use cases, sectors
+    security.tsx          boundary, monitor, controls
+    architecture.tsx      layers, principles, stack, deployment
+    demo-form.tsx         demo request form (client)
+    cta.tsx               shared dark CTA band
 ```
-
-## Page flow
-
-Hero → Trust bar → Statement → Problem → Solution → Platform → Agentic →
-Multi-model → Multimodal → Knowledge → Sovereignty → Product showcase →
-Use cases → Deliverables → Architecture → Deployment → CTA → Footer
 
 ## Editing copy
 
-All copy lives in plain arrays at the top of each section file
-(`PROBLEMS`, `FEATURES`, `USE_CASES`, `COUNTERS`, `STACK`, …) — change the data,
-not the JSX.
+All copy lives in plain arrays at the top of each section file (`PILLARS`,
+`USE_CASES`, `CONTROLS`, `STACK`, `PRINCIPLES`, …) — change the data, not the JSX.
 
-## Notes
+## Before going live
 
-- The **Sovereignty Monitor** numbers are illustrative marketing figures. If the
-  desktop app exposes real telemetry, wire it in rather than hardcoding zeros.
+- **Wire the demo form.** [`components/sections/demo-form.tsx`](components/sections/demo-form.tsx)
+  currently fakes the submit; point it at a form service, CRM or `/api` route.
+  Keep the no-attachments rule — confidential files belong in the desktop app.
+- **Sovereignty Monitor numbers are illustrative.** If the desktop app exposes
+  real telemetry, feed it in rather than hardcoding zeros.
+- **Set a real `metadataBase`** in [`app/layout.tsx`](app/layout.tsx) and add an
+  OG image.
 - Third-party components (llama-swap, vLLM, Docling, Qdrant, Mem0) are credited
   under "Powered by open-source infrastructure" — never presented as in-house.
-- Brand is kept generic on purpose; no customer name appears as the product brand.
+- Branding stays generic on purpose; no customer name appears as the product brand.

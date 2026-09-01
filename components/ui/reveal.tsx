@@ -55,10 +55,19 @@ export function RevealGroup({
   );
 }
 
-export function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
+export function RevealItem({
+  children,
+  className,
+  id,
+}: {
+  children: ReactNode;
+  className?: string;
+  id?: string;
+}) {
   const reduce = useReducedMotion();
   return (
     <motion.div
+      id={id}
       className={className}
       variants={{
         hidden: reduce ? {} : { opacity: 0, y: 16 },

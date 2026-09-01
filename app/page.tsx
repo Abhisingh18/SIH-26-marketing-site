@@ -1,35 +1,24 @@
 import { Hero } from "@/components/sections/hero";
-import { BigStatement, Problem, TrustBar } from "@/components/sections/narrative";
-import { Platform, Solution } from "@/components/sections/solution";
-import { Agentic, Deliverables } from "@/components/sections/agentic";
-import { Knowledge, MultiModel, Multimodal } from "@/components/sections/intelligence";
-import { Security, Showcase } from "@/components/sections/security";
 import {
-  Architecture,
-  CTA,
-  Deployment,
-  UseCases,
-} from "@/components/sections/enterprise";
+  Pillars,
+  ProductMoment,
+  SolutionsTeaser,
+  SovereigntyTeaser,
+  Statement,
+  TrustStrip,
+} from "@/components/sections/home";
+import { CTA } from "@/components/sections/cta";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <TrustBar />
-      <BigStatement />
-      <Problem />
-      <Solution />
-      <Platform />
-      <Agentic />
-      <MultiModel />
-      <Multimodal />
-      <Knowledge />
-      <Security />
-      <Showcase />
-      <UseCases />
-      <Deliverables />
-      <Architecture />
-      <Deployment />
+      <TrustStrip />
+      <Statement />
+      <Pillars />
+      <ProductMoment />
+      <SovereigntyTeaser />
+      <SolutionsTeaser />
       <CTA />
     </>
   );

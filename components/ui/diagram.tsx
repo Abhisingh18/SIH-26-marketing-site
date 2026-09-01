@@ -1,13 +1,65 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Vertical connector with an arrowhead. */
-export function Down({ className, height = 28 }: { className?: string; height?: number }) {
+/* ------------------------------------------------------------------ */
+/* Nodes                                                               */
+/* ------------------------------------------------------------------ */
+
+export function Node({
+  children,
+  meta,
+  tone = "default",
+  className,
+}: {
+  children: ReactNode;
+  meta?: string;
+  tone?: "default" | "quiet" | "accent" | "ink";
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center rounded-[12px] px-4 py-3 text-center",
+        tone === "default" && "bg-surface shadow-e1 ring-1 ring-line",
+        tone === "quiet" && "bg-veil ring-1 ring-line/60",
+        tone === "accent" && "bg-accent-tint ring-1 ring-accent/15",
+        tone === "ink" && "bg-ink shadow-e2",
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          "text-[13.5px] leading-tight",
+          tone === "ink" ? "text-paper" : "text-ink",
+          tone === "accent" && "text-accent",
+        )}
+      >
+        {children}
+      </span>
+      {meta ? (
+        <span
+          className={cn(
+            "mt-1 font-mono text-[10px] tracking-[0.08em]",
+            tone === "ink" ? "text-paper/45" : "text-muted",
+          )}
+        >
+          {meta}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Connectors                                                          */
+/* ------------------------------------------------------------------ */
+
+export function Down({ className, height = 26 }: { className?: string; height?: number }) {
   return (
     <div className={cn("flex flex-col items-center", className)} aria-hidden>
-      <span className="w-px bg-line-strong" style={{ height }} />
-      <svg width="9" height="6" viewBox="0 0 9 6" className="-mt-px fill-line-strong">
-        <path d="M4.5 6 0 0h9L4.5 6Z" />
+      <span className="w-px bg-line-2" style={{ height }} />
+      <svg width="8" height="5" viewBox="0 0 8 5" className="-mt-px fill-line-2">
+        <path d="M4 5 0 0h8L4 5Z" />
       </svg>
     </div>
   );
@@ -16,7 +68,6 @@ export function Down({ className, height = 28 }: { className?: string; height?: 
 /**
  * Bracket that fans one rail out into `count` columns (`direction="out"`)
  * or gathers those columns back into one rail (`direction="in"`).
- * Purely decorative.
  */
 export function Split({
   count = 3,
@@ -28,24 +79,19 @@ export function Split({
   className?: string;
 }) {
   const cols = Array.from({ length: count });
+  const out = direction === "out";
 
-  /** the horizontal bracket spanning the outer column centres */
   const bracket = (
     <div className="flex">
       {cols.map((_, i) => (
         <div key={i} className="flex-1">
           <div
             className={cn(
-              "h-5 border-line-strong",
-              direction === "out" ? "border-t" : "border-b",
-              i === 0 &&
-                (direction === "out"
-                  ? "ml-[50%] rounded-tl-[10px] border-l"
-                  : "ml-[50%] rounded-bl-[10px] border-l"),
+              "h-5 border-line-2",
+              out ? "border-t" : "border-b",
+              i === 0 && (out ? "ml-[50%] rounded-tl-[12px] border-l" : "ml-[50%] rounded-bl-[12px] border-l"),
               i === cols.length - 1 &&
-                (direction === "out"
-                  ? "mr-[50%] rounded-tr-[10px] border-r"
-                  : "mr-[50%] rounded-br-[10px] border-r"),
+                (out ? "mr-[50%] rounded-tr-[12px] border-r" : "mr-[50%] rounded-br-[12px] border-r"),
             )}
           />
         </div>
@@ -53,15 +99,14 @@ export function Split({
     </div>
   );
 
-  /** the short stubs that run from the bracket to each column */
   const stubs = (
     <div className="flex">
       {cols.map((_, i) => (
         <div key={i} className="flex flex-1 flex-col items-center">
-          <span className="h-4 w-px bg-line-strong" />
-          {direction === "out" ? (
-            <svg width="9" height="6" viewBox="0 0 9 6" className="-mt-px fill-line-strong">
-              <path d="M4.5 6 0 0h9L4.5 6Z" />
+          <span className="h-4 w-px bg-line-2" />
+          {out ? (
+            <svg width="8" height="5" viewBox="0 0 8 5" className="-mt-px fill-line-2">
+              <path d="M4 5 0 0h8L4 5Z" />
             </svg>
           ) : null}
         </div>
@@ -69,17 +114,11 @@ export function Split({
     </div>
   );
 
-  /** the single rail on the other side of the bracket */
-  const stem =
-    direction === "out" ? (
-      <div className="mx-auto h-5 w-px bg-line-strong" />
-    ) : (
-      <Down height={20} />
-    );
+  const stem = out ? <div className="mx-auto h-5 w-px bg-line-2" /> : <Down height={20} />;
 
   return (
     <div className={cn("w-full", className)} aria-hidden>
-      {direction === "out" ? (
+      {out ? (
         <>
           {stem}
           {bracket}
@@ -96,7 +135,10 @@ export function Split({
   );
 }
 
-/** A labelled slab in a layered architecture stack. */
+/* ------------------------------------------------------------------ */
+/* Layers & frames                                                     */
+/* ------------------------------------------------------------------ */
+
 export function Layer({
   title,
   detail,
@@ -111,62 +153,25 @@ export function Layer({
   return (
     <div
       className={cn(
-        "w-full rounded-[12px] border px-5 py-4 text-center",
-        tone === "default" && "border-line bg-surface",
-        tone === "accent" && "border-accent/25 bg-accent-soft",
-        tone === "ink" && "border-ink bg-ink",
+        "w-full rounded-[14px] px-6 py-4 text-center",
+        tone === "default" && "bg-surface shadow-e1 ring-1 ring-line",
+        tone === "accent" && "bg-accent-tint ring-1 ring-accent/15",
+        tone === "ink" && "bg-ink shadow-e2",
         className,
       )}
     >
       <p
         className={cn(
-          "font-mono text-[11.5px] uppercase tracking-[0.16em]",
-          tone === "ink" ? "text-paper" : "text-ink",
+          "text-[14.5px] font-medium tracking-[-0.01em]",
+          tone === "ink" ? "text-paper" : tone === "accent" ? "text-accent" : "text-ink",
         )}
       >
         {title}
       </p>
       {detail ? (
-        <p
-          className={cn(
-            "mt-1.5 text-[12.5px]",
-            tone === "ink" ? "text-paper/55" : "text-muted",
-          )}
-        >
+        <p className={cn("mt-1 text-[12.5px]", tone === "ink" ? "text-paper/45" : "text-muted")}>
           {detail}
         </p>
-      ) : null}
-    </div>
-  );
-}
-
-/** Rounded pill used in horizontal step chains. */
-export function Step({
-  index,
-  label,
-  detail,
-  className,
-}: {
-  index: number;
-  label: string;
-  detail?: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex items-center gap-3 rounded-full border border-line bg-surface py-2.5 pl-2.5 pr-5",
-        className,
-      )}
-    >
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink font-mono text-[10px] text-paper">
-        {index}
-      </span>
-      <span className="text-[13.5px] text-ink">{label}</span>
-      {detail ? (
-        <span className="ml-auto hidden font-mono text-[10px] uppercase tracking-[0.12em] text-muted sm:inline">
-          {detail}
-        </span>
       ) : null}
     </div>
   );
@@ -174,27 +179,23 @@ export function Step({
 
 export function DiagramFrame({
   children,
-  className,
   caption,
+  className,
 }: {
   children: ReactNode;
-  className?: string;
   caption?: string;
+  className?: string;
 }) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[18px] border border-line bg-surface px-5 py-10 sm:px-10 sm:py-14",
+        "relative overflow-hidden rounded-[22px] bg-veil px-6 py-12 sm:px-12 sm:py-16",
         className,
       )}
     >
-      <div className="grid-paper pointer-events-none absolute inset-0 opacity-45 [mask-image:radial-gradient(100%_100%_at_50%_50%,#000,transparent_78%)]" />
+      <div className="grid-paper pointer-events-none absolute inset-0 opacity-70 [mask-image:radial-gradient(95%_95%_at_50%_50%,#000,transparent_80%)]" />
       <div className="relative">{children}</div>
-      {caption ? (
-        <p className="relative mt-10 text-center font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">
-          {caption}
-        </p>
-      ) : null}
+      {caption ? <p className="label relative mt-12 text-center">{caption}</p> : null}
     </div>
   );
 }

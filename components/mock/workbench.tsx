@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { icon: Plus, label: "New Task", active: true },
+  { icon: Plus, label: "New task", active: true },
   { icon: Boxes, label: "Projects" },
   { icon: Database, label: "Knowledge" },
   { icon: Sparkles, label: "Models" },
@@ -24,11 +24,11 @@ const NAV = [
 ];
 
 const STEPS = [
-  { label: "Read inspection_report.pdf", meta: "docling · 24 pages" },
-  { label: "Extracted findings and tag numbers", meta: "vision · 7 figures" },
-  { label: "Retrieved SOP-114, SOP-232", meta: "local rag" },
-  { label: "Cross-checked against thickness limits", meta: "reasoning" },
-  { label: "Drafting approval note", meta: "generating", running: true },
+  { label: "Read inspection_report.pdf", meta: "24 pages parsed" },
+  { label: "Extracted findings and tag numbers", meta: "7 figures analysed" },
+  { label: "Retrieved SOP-114, SOP-232", meta: "local knowledge base" },
+  { label: "Cross-checked thickness limits", meta: "reasoning model" },
+  { label: "Drafting approval note", meta: "in progress", running: true },
 ];
 
 export function Workbench({
@@ -39,7 +39,7 @@ export function Workbench({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const inView = useInView(ref, { once: true, margin: "-12% 0px" });
   const reduce = useReducedMotion();
   const compact = variant === "compact";
 
@@ -47,26 +47,24 @@ export function Workbench({
     <div
       ref={ref}
       className={cn(
-        "overflow-hidden rounded-[14px] border border-line-strong bg-surface",
-        "shadow-[0_40px_90px_-50px_rgba(12,12,13,0.45),0_2px_8px_-2px_rgba(12,12,13,0.08)]",
+        "overflow-hidden rounded-[16px] bg-surface shadow-e3 ring-1 ring-line",
         className,
       )}
     >
-      <div className="flex items-center gap-3 border-b border-line bg-sand/70 px-4 py-2.5">
-        <div className="flex gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-          <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
-          <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
+      {/* title bar */}
+      <div className="flex items-center gap-3 border-b border-line bg-veil/60 px-4 py-3">
+        <div className="flex gap-[5px]">
+          <span className="h-[9px] w-[9px] rounded-full bg-line-2" />
+          <span className="h-[9px] w-[9px] rounded-full bg-line-2" />
+          <span className="h-[9px] w-[9px] rounded-full bg-line-2" />
         </div>
-        <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted">
-          Sovereign Workbench
-        </p>
-        <div className="ml-auto flex items-center gap-2 rounded-full border border-line bg-surface px-2.5 py-1">
+        <p className="text-[12px] text-muted">Sovereign Workbench</p>
+        <div className="ml-auto flex items-center gap-2 rounded-full bg-surface px-2.5 py-1 shadow-e1 ring-1 ring-line">
           <span className="relative flex h-1.5 w-1.5">
             <span className="dot-live absolute inline-flex h-full w-full rounded-full bg-signal" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft">
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-body">
             Local
           </span>
         </div>
@@ -75,8 +73,8 @@ export function Workbench({
       <div className="flex">
         <aside
           className={cn(
-            "hidden shrink-0 flex-col justify-between border-r border-line bg-paper/60 p-3 sm:flex",
-            compact ? "w-[148px]" : "w-[186px]",
+            "hidden shrink-0 flex-col justify-between border-r border-line bg-paper/70 p-3 sm:flex",
+            compact ? "w-[152px]" : "w-[192px]",
           )}
         >
           <nav className="flex flex-col gap-0.5">
@@ -84,8 +82,8 @@ export function Workbench({
               <div
                 key={label}
                 className={cn(
-                  "flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[12.5px]",
-                  active ? "bg-ink text-paper" : "text-ink-soft",
+                  "flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-[13px]",
+                  active ? "bg-ink text-paper shadow-e1" : "text-body",
                 )}
               >
                 <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
@@ -93,22 +91,20 @@ export function Workbench({
               </div>
             ))}
           </nav>
-          <div className="mt-6 rounded-[10px] border border-line bg-surface p-2.5">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-muted">
-              Active model
-            </p>
-            <p className="mt-1 truncate text-[12px] text-ink">Reasoning · 30B</p>
+          <div className="mt-8 rounded-[11px] bg-surface p-3 shadow-e1 ring-1 ring-line">
+            <p className="label text-[9.5px]">Active model</p>
+            <p className="mt-1.5 truncate text-[12.5px] text-ink">Reasoning · 30B</p>
             <p className="mt-0.5 font-mono text-[10px] text-muted">gpu-01 · on-prem</p>
           </div>
         </aside>
 
-        <div className={cn("min-w-0 flex-1 p-4 sm:p-5", compact ? "space-y-3.5" : "space-y-4")}>
+        <div className={cn("min-w-0 flex-1 p-5 sm:p-6", compact ? "space-y-4" : "space-y-5")}>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">Task</p>
+            <p className="label">Task</p>
             <p
               className={cn(
-                "mt-1.5 text-ink",
-                compact ? "text-[15px]" : "text-[17px] sm:text-[19px]",
+                "mt-2 tracking-[-0.015em] text-ink",
+                compact ? "text-[16px]" : "text-[18px] sm:text-[20px]",
               )}
             >
               Analyse this inspection report and prepare an approval note.
@@ -120,28 +116,26 @@ export function Workbench({
             <Attachment icon={Table2} name="thickness_log.xlsx" meta="118 KB" />
           </div>
 
-          <div className="rounded-[12px] border border-line bg-paper/70 p-3.5">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
-                Agent activity
-              </p>
+          <div className="rounded-[13px] bg-veil/70 p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="label">Agent activity</p>
               <p className="font-mono text-[10px] text-muted">4 / 5</p>
             </div>
-            <ol className="space-y-2.5">
+            <ol className="space-y-3">
               {STEPS.slice(0, compact ? 4 : 5).map((step, i) => (
                 <motion.li
                   key={step.label}
                   className="flex items-start gap-2.5"
-                  initial={reduce ? false : { opacity: 0, x: -8 }}
+                  initial={reduce ? false : { opacity: 0, x: -6 }}
                   animate={inView ? { opacity: 1, x: 0 } : undefined}
-                  transition={{ delay: 0.35 + i * 0.4, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: 0.4 + i * 0.4, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span
                     className={cn(
-                      "mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full",
+                      "mt-px flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full",
                       step.running
-                        ? "border border-line-strong bg-surface text-muted"
-                        : "bg-signal/15 text-signal",
+                        ? "bg-surface text-muted ring-1 ring-line-2"
+                        : "bg-signal/12 text-signal",
                     )}
                   >
                     {step.running ? (
@@ -153,13 +147,13 @@ export function Workbench({
                   <span className="min-w-0">
                     <span
                       className={cn(
-                        "block text-[12.5px] leading-snug",
+                        "block text-[13px] leading-snug",
                         step.running ? "text-muted" : "text-ink",
                       )}
                     >
                       {step.label}
                     </span>
-                    <span className="font-mono text-[10px] text-muted">{step.meta}</span>
+                    <span className="text-[11px] text-muted">{step.meta}</span>
                   </span>
                 </motion.li>
               ))}
@@ -167,19 +161,17 @@ export function Workbench({
           </div>
 
           <motion.div
-            className="flex items-center gap-3 rounded-[12px] border border-accent/20 bg-accent-soft px-3.5 py-3"
-            initial={reduce ? false : { opacity: 0, y: 10 }}
+            className="flex items-center gap-3 rounded-[13px] bg-accent-tint px-4 py-3.5 ring-1 ring-accent/12"
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={inView ? { opacity: 1, y: 0 } : undefined}
-            transition={{ delay: 2.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: 2.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <FileText className="h-4 w-4 shrink-0 text-accent" strokeWidth={1.75} />
             <div className="min-w-0">
-              <p className="truncate text-[12.5px] text-ink">Approval_Note_TK-402.docx</p>
-              <p className="font-mono text-[10px] text-muted">
-                generated locally · never left this machine
-              </p>
+              <p className="truncate text-[13px] text-ink">Approval_Note_TK-402.docx</p>
+              <p className="text-[11px] text-muted">generated locally · never left this machine</p>
             </div>
-            <span className="ml-auto hidden shrink-0 rounded-full bg-ink px-3 py-1.5 text-[11px] text-paper sm:block">
+            <span className="ml-auto hidden shrink-0 rounded-full bg-ink px-3.5 py-1.5 text-[11.5px] text-paper sm:block">
               Open
             </span>
           </motion.div>
@@ -199,9 +191,9 @@ function Attachment({
   meta: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-[9px] border border-line bg-surface px-2.5 py-1.5">
+    <div className="flex items-center gap-2 rounded-[10px] bg-surface px-2.5 py-1.5 shadow-e1 ring-1 ring-line">
       <Icon className="h-3.5 w-3.5 text-muted" strokeWidth={1.75} />
-      <span className="text-[12px] text-ink">{name}</span>
+      <span className="text-[12.5px] text-ink">{name}</span>
       <span className="font-mono text-[10px] text-muted">{meta}</span>
     </div>
   );

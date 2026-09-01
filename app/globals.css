@@ -1,36 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces */
-  --color-paper: #fbfaf7;
+  /* Surfaces — warm, layered, low-contrast */
+  --color-paper: #fcfbf9;
   --color-surface: #ffffff;
-  --color-sand: #f4f2ec;
-  --color-ink: #0c0c0d;
-  --color-ink-soft: #3a3a3f;
-  --color-muted: #76767d;
-  --color-line: #e7e4dc;
-  --color-line-strong: #d6d2c7;
+  --color-veil: #f5f3ef;
+  --color-shell: #eeebe5;
 
-  /* Accents */
-  --color-accent: #2340e0;
-  --color-accent-soft: #eef1fe;
-  --color-signal: #11a05a;
-  --color-amber: #c47b16;
+  /* Text — three steps only */
+  --color-ink: #111113;
+  --color-body: #56565c;
+  --color-muted: #8a8a92;
+
+  /* Structure */
+  --color-line: #eae7e1;
+  --color-line-2: #dbd7cf;
+
+  /* Accents — used sparingly */
+  --color-accent: #2338cc;
+  --color-accent-tint: #f0f2fe;
+  --color-signal: #15a05c;
+
+  /* Dark inversions */
+  --color-obsidian: #0f0f11;
+  --color-obsidian-2: #17171a;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-jb), ui-monospace, SFMono-Regular, monospace;
 
-  --radius-card: 16px;
+  /* Elevation replaces borders wherever possible */
+  --shadow-e1: 0 1px 2px rgba(17, 17, 19, 0.05);
+  --shadow-e2:
+    0 1px 2px rgba(17, 17, 19, 0.04), 0 10px 26px -16px rgba(17, 17, 19, 0.16);
+  --shadow-e3:
+    0 2px 6px rgba(17, 17, 19, 0.04), 0 34px 64px -34px rgba(17, 17, 19, 0.3);
 }
 
 html {
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--color-paper);
-  color: var(--color-ink);
+  color: var(--color-body);
   font-family: var(--font-sans);
   font-feature-settings: "cv02", "cv03", "cv04", "ss01";
 }
@@ -41,51 +55,87 @@ body {
 }
 
 @layer utilities {
+  /* Large display type: light weight + tight tracking reads premium */
   .display {
-    letter-spacing: -0.035em;
+    color: var(--color-ink);
+    font-weight: 400;
+    letter-spacing: -0.038em;
     line-height: 0.98;
-    font-weight: 500;
   }
-  .eyebrow {
+  .display-sm {
+    color: var(--color-ink);
+    font-weight: 450;
+    letter-spacing: -0.028em;
+    line-height: 1.1;
+  }
+
+  /* Small caps label — quieter than shouty mono */
+  .label {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.18em;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-muted);
   }
+
+  .measure {
+    max-width: 58ch;
+  }
+
+  .rule {
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  /* Blueprint grid, always masked so it never reads as a texture */
   .grid-paper {
     background-image:
-      linear-gradient(to right, rgba(12, 12, 13, 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(12, 12, 13, 0.045) 1px, transparent 1px);
-    background-size: 64px 64px;
+      linear-gradient(to right, rgba(17, 17, 19, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(17, 17, 19, 0.04) 1px, transparent 1px);
+    background-size: 72px 72px;
   }
-  .hairline {
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
-  .lift {
+
+  .card-hover {
     transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.35s ease;
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .lift:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 40px -22px rgba(12, 12, 13, 0.28);
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-e3);
+  }
+
+  /* Nav link underline reveal */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover::after,
+  .link-underline[data-active="true"]::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(0.82); }
+  50% { opacity: 0.3; transform: scale(0.8); }
 }
-.dot-live { animation: pulse-dot 2.2s ease-in-out infinite; }
-
-@keyframes scan {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(400%); }
-}
-.scanline { animation: scan 4.5s linear infinite; }
+.dot-live { animation: pulse-dot 2.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .dot-live, .scanline { animation: none; }
+  .dot-live { animation: none; }
+  .card-hover { transition: none; }
 }
