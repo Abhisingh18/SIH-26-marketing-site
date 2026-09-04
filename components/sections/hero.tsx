@@ -14,7 +14,7 @@ const DOCS = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-[100px] sm:px-8 sm:pt-[112px] md:pb-28">
+    <section className="relative overflow-hidden px-6 pb-20 pt-[84px] sm:px-8 sm:pt-[96px] md:pb-28">
       <Bloom />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
@@ -24,9 +24,9 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="mt-7 flex flex-col items-center">
+            <div className="mt-2 flex flex-col items-center">
               <span className="h-px w-[200px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-              <p className="px-6 py-4 text-[15px] tracking-[-0.005em] text-accent">
+              <p className="px-6 py-3.5 text-[15px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
               <span className="h-px w-[280px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
@@ -107,13 +107,13 @@ function Bloom() {
       aria-hidden
     >
       {/* periwinkle — wide, low, underneath */}
-      <div className="absolute left-1/2 top-[2px] h-[660px] w-[min(1900px,170vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#b3c0f2_0%,#b3c0f2_34%,rgba(179,192,242,0)_100%)] blur-[85px]" />
+      <div className="absolute left-1/2 top-[-14px] h-[660px] w-[min(1900px,170vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#b3c0f2_0%,#b3c0f2_34%,rgba(179,192,242,0)_100%)] blur-[85px]" />
 
       {/* saffron — solid core, soft edge, sitting on top */}
-      <div className="absolute left-1/2 top-[-52px] h-[352px] w-[min(1480px,126vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#f47c14_0%,#f47c14_46%,rgba(244,124,20,0)_100%)] blur-[62px]" />
+      <div className="absolute left-1/2 top-[-68px] h-[352px] w-[min(1480px,126vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#f47c14_0%,#f47c14_46%,rgba(244,124,20,0)_100%)] blur-[62px]" />
 
       {/* paper opens up the centre under the headline, then settles the page */}
-      <div className="absolute inset-x-0 top-[260px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
+      <div className="absolute inset-x-0 top-[244px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
       <div className="absolute inset-x-0 bottom-0 h-[300px] bg-gradient-to-b from-transparent to-paper" />
     </div>
   );
