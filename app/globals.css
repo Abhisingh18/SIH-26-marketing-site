@@ -133,6 +133,26 @@ body {
 }
 
 /*
+ * Seamless marquee. The track holds the list twice and travels exactly -50%,
+ * so the second copy is under the cursor at the moment the first one ends and
+ * the loop has no seam. Hovering pauses it, so nothing scrolls away from a
+ * reader who has stopped to look.
+ */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 46s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/*
  * Headline lines rise in sequence. Kept in CSS rather than the motion wrapper
  * so the hero stays a server component and the first thing on the page is not
  * waiting on hydration to become visible.
@@ -193,5 +213,6 @@ body {
   .dot-live,
   .rule-sweep::after { animation: none; }
   .rise > * { opacity: 1; animation: none; }
+  .marquee-track { animation: none; }
   .card-hover { transition: none; }
 }

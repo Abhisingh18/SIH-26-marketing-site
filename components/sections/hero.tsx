@@ -1,15 +1,30 @@
 import Image from "next/image";
+import {
+  Camera,
+  ClipboardList,
+  FileSearch,
+  FileSpreadsheet,
+  PenLine,
+  Ruler,
+  ScrollText,
+  Table2,
+  Workflow,
+} from "lucide-react";
 import flourish from "@/components/photos/flourish-alpha.png";
 import { Workbench } from "@/components/mock/workbench";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 
 const DOCS = [
-  "P&IDs",
-  "SOPs",
-  "Inspection reports",
-  "Engineering data",
-  "Financial documents",
+  { label: "P&IDs", icon: Workflow },
+  { label: "SOPs", icon: ClipboardList },
+  { label: "Inspection reports", icon: FileSearch },
+  { label: "Engineering drawings", icon: Ruler },
+  { label: "Thickness logs", icon: Table2 },
+  { label: "Handwritten field notes", icon: PenLine },
+  { label: "Equipment photographs", icon: Camera },
+  { label: "Compliance standards", icon: ScrollText },
+  { label: "Financial documents", icon: FileSpreadsheet },
 ];
 
 export function Hero() {
@@ -57,17 +72,9 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.3}>
-            <div className="mt-16 flex flex-col items-center">
-              <p className="label">Built for confidential industrial work</p>
-              <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-9 gap-y-3">
-                {DOCS.map((d) => (
-                  <li key={d} className="text-[15px] text-body">
-                    {d}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <Reveal delay={0.3} className="w-full">
+            <p className="label mt-16">Built for confidential industrial work</p>
+            <DocMarquee />
           </Reveal>
         </div>
 
@@ -134,5 +141,37 @@ function Flourish() {
       aria-hidden
       className="w-[140px] opacity-85 [filter:brightness(0)_invert(1)] sm:w-[154px]"
     />
+  );
+}
+
+/**
+ * The document types the workbench is pointed at, running as a marquee.
+ *
+ * Full-bleed on purpose: a strip that stops at the container edge looks like a
+ * list that ran out, whereas one that runs off both sides reads as a longer set
+ * than the screen can hold — which is the point being made. The section already
+ * clips overflow, so breaking out is safe.
+ */
+function DocMarquee() {
+  const track = [...DOCS, ...DOCS];
+
+  return (
+    <div className="marquee relative left-1/2 mt-7 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+      <ul className="marquee-track gap-2.5 py-1">
+        {track.map((d, i) => (
+          <li
+            key={`${d.label}-${i}`}
+            aria-hidden={i >= DOCS.length}
+            className="group flex shrink-0 items-center gap-2.5 rounded-full bg-surface/70 py-2.5 pl-4 pr-5 shadow-e1 ring-1 ring-line/80 backdrop-blur-sm transition-shadow duration-300 hover:shadow-e2"
+          >
+            <d.icon
+              className="h-3.5 w-3.5 shrink-0 text-muted transition-colors duration-300 group-hover:text-accent"
+              strokeWidth={1.7}
+            />
+            <span className="whitespace-nowrap text-[14px] text-body">{d.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
