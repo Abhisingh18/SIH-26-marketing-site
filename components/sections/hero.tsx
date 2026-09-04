@@ -12,7 +12,7 @@ const DOCS = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-[128px] sm:px-8 sm:pt-[144px] md:pb-28">
+    <section className="relative overflow-hidden px-6 pb-20 pt-[100px] sm:px-8 sm:pt-[112px] md:pb-28">
       <Bloom />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
@@ -105,13 +105,13 @@ function Bloom() {
       aria-hidden
     >
       {/* periwinkle — wide, low, underneath */}
-      <div className="absolute left-1/2 top-[34px] h-[660px] w-[min(1900px,170vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#b3c0f2_0%,#b3c0f2_34%,rgba(179,192,242,0)_100%)] blur-[85px]" />
+      <div className="absolute left-1/2 top-[2px] h-[660px] w-[min(1900px,170vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#b3c0f2_0%,#b3c0f2_34%,rgba(179,192,242,0)_100%)] blur-[85px]" />
 
       {/* saffron — solid core, soft edge, sitting on top */}
-      <div className="absolute left-1/2 top-[-20px] h-[352px] w-[min(1480px,126vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#f47c14_0%,#f47c14_46%,rgba(244,124,20,0)_100%)] blur-[62px]" />
+      <div className="absolute left-1/2 top-[-52px] h-[352px] w-[min(1480px,126vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#f47c14_0%,#f47c14_46%,rgba(244,124,20,0)_100%)] blur-[62px]" />
 
       {/* paper opens up the centre under the headline, then settles the page */}
-      <div className="absolute inset-x-0 top-[292px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
+      <div className="absolute inset-x-0 top-[260px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
       <div className="absolute inset-x-0 bottom-0 h-[300px] bg-gradient-to-b from-transparent to-paper" />
     </div>
   );
