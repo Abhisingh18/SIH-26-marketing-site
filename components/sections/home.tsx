@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowUpRight, Bot, Layers, ShieldCheck } from "lucide-react";
-import { Workbench } from "@/components/mock/workbench";
 import { SovereigntyMonitor } from "@/components/mock/monitor";
 import { Label, Panel, TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
@@ -123,21 +122,49 @@ export function Pillars() {
 /* Product moment                                                      */
 /* ------------------------------------------------------------------ */
 
+const PRODUCT_FACTS = [
+  {
+    n: "01",
+    title: "Installed, not accessed",
+    body: "A desktop client on managed machines — no browser upload, no tenant, no account with anyone else.",
+  },
+  {
+    n: "02",
+    title: "Runs against your GPU",
+    body: "Points at a workstation card or a shared on-premise inference server behind your firewall.",
+  },
+  {
+    n: "03",
+    title: "Works offline",
+    body: "Once models are staged, the application needs no network route to do its job.",
+  },
+];
+
 export function ProductMoment() {
   return (
     <Section tone="veil" size="lg">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-20">
         <SectionHead
           label="The product"
           title="The website explains it. The desktop app is it."
-          body="Confidential work happens inside a desktop application installed on managed machines in your network — not in a browser upload form, and not in a tenant somewhere else."
+          body="Confidential work happens inside a desktop application installed on machines in your network — not in a browser upload form, and not in a tenant somewhere else."
         >
           <TextLink href="/platform">Explore the workbench</TextLink>
         </SectionHead>
 
-        <Reveal delay={0.1} y={26}>
-          <Workbench />
-        </Reveal>
+        <RevealGroup className="border-t border-line">
+          {PRODUCT_FACTS.map((f) => (
+            <RevealItem key={f.n}>
+              <div className="flex gap-6 border-b border-line py-7">
+                <span className="font-mono text-[11px] tracking-[0.14em] text-muted">{f.n}</span>
+                <div>
+                  <p className="text-[16px] font-medium tracking-[-0.01em] text-ink">{f.title}</p>
+                  <p className="mt-2 text-[14px] leading-[1.6] text-body">{f.body}</p>
+                </div>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
       </div>
     </Section>
   );

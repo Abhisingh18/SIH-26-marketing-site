@@ -39,15 +39,20 @@ export function Nav() {
         scrolled ? "bg-paper/80 backdrop-blur-xl" : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex h-[68px] w-full max-w-[1200px] items-center gap-10 px-6 sm:px-8">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Sangam home">
+      {/* three columns so the links sit dead centre, like the reference */}
+      <div className="mx-auto grid h-[72px] w-full max-w-[1240px] grid-cols-[1fr_auto_1fr] items-center px-6 sm:px-8">
+        <Link
+          href="/"
+          className="flex w-fit items-center gap-2.5"
+          aria-label="Sangam home"
+        >
           <Logomark />
-          <span className="text-[15.5px] font-medium tracking-[-0.015em] text-ink">
+          <span className="text-[16px] font-medium tracking-[-0.015em] text-ink">
             Sangam
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-9 md:flex">
           {LINKS.map((l) => {
             const active = pathname.startsWith(l.href);
             return (
@@ -66,10 +71,16 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            href="/platform"
+            className="hidden h-10 items-center rounded-full bg-surface/80 px-5 text-[13.5px] font-medium text-ink shadow-e1 ring-1 ring-line backdrop-blur transition-all duration-300 hover:shadow-e2 lg:inline-flex"
+          >
+            Platform
+          </Link>
           <Link
             href="/demo"
-            className="hidden h-9 items-center rounded-full bg-ink px-4 text-[13.5px] font-medium text-paper transition-colors duration-300 hover:bg-accent sm:inline-flex"
+            className="hidden h-10 items-center rounded-full bg-ink px-5 text-[13.5px] font-medium text-paper transition-colors duration-300 hover:bg-accent sm:inline-flex"
           >
             Request Demo
           </Link>

@@ -26,6 +26,7 @@
   --color-obsidian-2: #17171a;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: var(--font-mono-jb), ui-monospace, SFMono-Regular, monospace;
 
   /* Elevation replaces borders wherever possible */
@@ -55,12 +56,14 @@ body {
 }
 
 @layer utilities {
-  /* Large display type: light weight + tight tracking reads premium */
+  /* Page-level display type: a high-contrast serif against Inter everywhere
+     else. Serifs need far less negative tracking than the sans does. */
   .display {
     color: var(--color-ink);
+    font-family: var(--font-serif);
     font-weight: 400;
-    letter-spacing: -0.038em;
-    line-height: 0.98;
+    letter-spacing: -0.012em;
+    line-height: 1.02;
   }
   .display-sm {
     color: var(--color-ink);
