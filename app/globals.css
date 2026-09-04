@@ -132,6 +132,39 @@ body {
   }
 }
 
+/*
+ * Hairline with a light travelling along it. A plain opacity blink reads cheap
+ * because the whole rule changes at once; a sweep gives the eye something to
+ * follow, and the mask keeps both ends feathered so nothing ever stops dead.
+ */
+.rule-sweep {
+  position: relative;
+  background: rgba(255, 255, 255, 0.34);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+}
+.rule-sweep::after {
+  content: "";
+  position: absolute;
+  inset: -1px 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    transparent 100%
+  );
+  background-size: 42% 100%;
+  background-repeat: no-repeat;
+  animation: rule-sweep 7.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes rule-sweep {
+  0% { background-position: -50% 0; opacity: 0; }
+  14% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { background-position: 150% 0; opacity: 0; }
+}
+
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.3; transform: scale(0.8); }
@@ -139,6 +172,7 @@ body {
 .dot-live { animation: pulse-dot 2.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .dot-live { animation: none; }
+  .dot-live,
+  .rule-sweep::after { animation: none; }
   .card-hover { transition: none; }
 }
