@@ -33,20 +33,17 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <h1 className="display mt-11 text-[clamp(2.5rem,6.4vw,4.9rem)]">
-              Your AI.
-              <br />
-              Your infrastructure.
-              <br />
-              <span className="text-muted">Your data.</span>
-            </h1>
-          </Reveal>
+          <h1 className="display rise mt-12 text-[clamp(2.9rem,7.2vw,5.9rem)] leading-[0.95] tracking-[-0.022em]">
+            <span className="block">Your AI.</span>
+            <span className="block">Your infrastructure.</span>
+            <span className="block">Your data.</span>
+          </h1>
 
-          <Reveal delay={0.16}>
-            <p className="mt-9 max-w-[54ch] text-[17px] leading-[1.6] text-body sm:text-[18px]">
-              A sovereign, on-premise agentic AI workbench for confidential industrial work.
-              Powered by open-weight models. Nothing leaves your infrastructure.
+          <Reveal delay={0.34}>
+            <p className="mt-10 max-w-[46ch] text-[17.5px] leading-[1.6] text-body sm:text-[19px]">
+              A sovereign, on-premise agentic AI workbench for confidential industrial work,
+              powered by open-weight models.{" "}
+              <span className="text-ink">Nothing leaves your infrastructure.</span>
             </p>
           </Reveal>
 
