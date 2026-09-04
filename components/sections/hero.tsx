@@ -24,9 +24,9 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="-mt-1 flex flex-col items-center">
-              <span className="h-px w-[150px] bg-gradient-to-r from-transparent via-white/55 to-transparent" />
-              <p className="px-6 py-2.5 text-[14.5px] tracking-[-0.005em] text-accent">
+            <div className="-mt-2 flex flex-col items-center">
+              <span className="h-px w-[104px] bg-gradient-to-r from-transparent via-white/45 to-transparent" />
+              <p className="px-6 py-1.5 text-[14.5px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
               <span className="h-px w-[210px] bg-gradient-to-r from-transparent via-white/55 to-transparent" />
