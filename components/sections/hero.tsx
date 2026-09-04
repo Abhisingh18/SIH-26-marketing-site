@@ -40,9 +40,8 @@ export function Hero() {
           </h1>
 
           <Reveal delay={0.34}>
-            <p className="mt-7 max-w-[46ch] text-[17px] leading-[1.6] text-body sm:text-[18px]">
-              A sovereign, on-premise agentic AI workbench for confidential industrial work,
-              powered by open-weight models.{" "}
+            <p className="mt-7 max-w-[56ch] text-balance text-[17px] leading-[1.6] text-body sm:text-[18.5px]">
+              An on-premise agentic AI workbench for confidential industrial work.{" "}
               <span className="text-ink">Nothing leaves your infrastructure.</span>
             </p>
           </Reveal>
