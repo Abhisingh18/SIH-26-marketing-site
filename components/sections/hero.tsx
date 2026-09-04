@@ -17,29 +17,34 @@ export function Hero() {
 
           <Reveal delay={0.05}>
             <div className="mt-7 flex items-center gap-5">
-              <span className="hidden h-px w-16 bg-ink/12 sm:block" />
-              <p className="text-[14px] tracking-[-0.01em] text-accent">
+              <span className="hidden h-px w-14 bg-ink/10 sm:block" />
+              <p className="text-[13.5px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
-              <span className="hidden h-px w-16 bg-ink/12 sm:block" />
+              <span className="hidden h-px w-14 bg-ink/10 sm:block" />
             </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="display mt-8 max-w-[15ch] text-[clamp(2.8rem,7vw,5.4rem)]">
-              Intelligence inside your perimeter
+            <h1 className="display mt-9 text-[clamp(2.6rem,6.6vw,5.1rem)]">
+              Your AI.
+              <br />
+              Your infrastructure.
+              <br />
+              <span className="text-muted">Your data.</span>
             </h1>
           </Reveal>
 
           <Reveal delay={0.16}>
-            <p className="mt-8 max-w-[46ch] text-[17px] leading-[1.6] text-body sm:text-[18px]">
-              A sovereign, on-premise agentic AI workbench for confidential industrial work.
-              Powered by open-weight models. Nothing leaves your infrastructure.
+            <p className="mt-9 max-w-[52ch] text-[16.5px] leading-[1.62] text-body sm:text-[17.5px]">
+              A sovereign, on-premise agentic AI workbench for confidential industrial
+              workflows — powered by open-weight models and designed to run entirely inside
+              your organization.
             </p>
           </Reveal>
 
           <Reveal delay={0.22}>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-11 flex flex-wrap items-center justify-center gap-3">
               <Button href="/demo" size="lg" arrow>
                 Request demo
               </Button>
@@ -50,9 +55,9 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.28}>
-            <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
               {TRUST.map((t) => (
-                <li key={t} className="flex items-center gap-2 text-[12.5px] text-muted">
+                <li key={t} className="flex items-center gap-2.5 text-[12.5px] text-muted">
                   <span className="h-[3px] w-[3px] rounded-full bg-ink/20" />
                   {t}
                 </li>
@@ -72,16 +77,31 @@ export function Hero() {
 }
 
 /**
- * Two blooms meeting — warm above, cool below — then fading into the page.
- * Sangam is a confluence, and at a real one the two rivers stay visibly
- * different colours where they meet.
+ * Two blooms meeting — warm above, cool below. Sangam is a confluence, and at a
+ * real one the two rivers stay visibly different colours where they meet.
+ *
+ * Grading rules that keep it clean rather than muddy:
+ *  - the warm and cool fields barely overlap; saffron and periwinkle are near
+ *    complements, so blending them directly turns grey-brown
+ *  - a paper scrim sits between them and the type, so the headline always
+ *    lands on near-white and keeps full contrast
+ *  - both fields are low-saturation tints, not poster colour
  */
 function Bloom() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 h-[860px] overflow-hidden" aria-hidden>
-      <div className="absolute left-1/2 top-[-300px] h-[620px] w-[min(1180px,140vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(233,140,44,0.5),rgba(233,140,44,0.24)_55%,transparent_100%)] blur-[80px]" />
-      <div className="absolute left-1/2 top-[40px] h-[660px] w-[min(1560px,165vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(104,116,232,0.34),rgba(104,116,232,0.14)_58%,transparent_100%)] blur-[100px]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-paper/45 to-paper" />
+    <div
+      className="pointer-events-none absolute inset-x-0 top-0 h-[900px] overflow-hidden"
+      aria-hidden
+    >
+      {/* warm field — sits high, behind the nav and ornament, gone by the headline */}
+      <div className="absolute left-1/2 top-[-360px] h-[600px] w-[min(1080px,132vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(228,140,56,0.46),rgba(228,140,56,0.2)_52%,transparent_100%)] blur-[90px]" />
+
+      {/* cool field — wider and lower, carrying the rest of the fold */}
+      <div className="absolute left-1/2 top-[210px] h-[620px] w-[min(1560px,168vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(122,134,238,0.26),rgba(122,134,238,0.11)_58%,transparent_100%)] blur-[110px]" />
+
+      {/* paper scrim through the type band, then a clean settle into the page */}
+      <div className="absolute inset-x-0 top-[240px] h-[460px] bg-[radial-gradient(70%_100%_at_50%_45%,rgba(252,251,249,0.82),rgba(252,251,249,0.35)_60%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-paper/35 to-paper" />
     </div>
   );
 }
@@ -91,7 +111,7 @@ function Ornament() {
   return (
     <svg
       viewBox="0 0 132 22"
-      className="h-[22px] w-[132px] text-ink/35"
+      className="h-[22px] w-[132px] text-ink/30"
       aria-hidden
       fill="none"
       stroke="currentColor"
