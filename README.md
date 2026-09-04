@@ -1,7 +1,12 @@
-# Sovereign AI — Marketing Site
+# Sangam — Marketing Site
 
-Public marketing website for **Sovereign AI**, an on-premise agentic AI workbench
-for confidential industrial workflows.
+Public marketing website for **Sangam**, an on-premise agentic AI workbench for
+confidential industrial workflows.
+
+*Sangam* means confluence — models, knowledge and tools meeting in one place.
+The logomark is three streams merging into one, which is also what the model
+orchestrator does with a task. Note the split in the copy: **Sangam** is the
+brand, *sovereignty* is the property it claims — keep using both.
 
 > This repo is the **website only**. It explains the product, builds trust and
 > collects demo requests. The actual product is a **desktop application** that runs
@@ -126,3 +131,6 @@ All copy lives in plain arrays at the top of each section file (`PILLARS`,
 - Third-party components (llama-swap, vLLM, Docling, Qdrant, Mem0) are credited
   under "Powered by open-source infrastructure" — never presented as in-house.
 - Branding stays generic on purpose; no customer name appears as the product brand.
+- The word "sovereign"/"sovereignty" is used as a descriptor throughout (Sovereignty
+  Monitor, "sovereignty you can verify"). That is deliberate — don't rename those
+  to Sangam.

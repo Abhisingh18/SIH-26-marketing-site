@@ -18,10 +18,10 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sovereign-ai.example"),
+  metadataBase: new URL("https://sangam.example"),
   title: {
-    default: "Sovereign AI — Private Intelligence Infrastructure",
-    template: "%s · Sovereign AI",
+    default: "Sangam — Sovereign AI for Confidential Industrial Work",
+    template: "%s · Sangam",
   },
   description:
     "A sovereign, on-premise agentic AI workbench for confidential industrial workflows — powered by open-weight models and designed to run entirely inside your organization.",
@@ -36,14 +36,14 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    title: "Sovereign AI — Private Intelligence Infrastructure",
+    title: "Sangam — Sovereign AI for Confidential Industrial Work",
     description:
       "Run powerful open-weight AI locally. No cloud. No external APIs. No data leaving your infrastructure.",
-    siteName: "Sovereign AI",
+    siteName: "Sangam",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sovereign AI — Private Intelligence Infrastructure",
+    title: "Sangam — Sovereign AI for Confidential Industrial Work",
     description:
       "An on-premise agentic AI workbench for confidential industrial work.",
   },

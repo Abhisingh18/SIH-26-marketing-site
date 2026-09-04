@@ -40,10 +40,10 @@ export function Nav() {
       )}
     >
       <div className="mx-auto flex h-[68px] w-full max-w-[1200px] items-center gap-10 px-6 sm:px-8">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Sovereign home">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Sangam home">
           <Logomark />
           <span className="text-[15.5px] font-medium tracking-[-0.015em] text-ink">
-            Sovereign
+            Sangam
           </span>
         </Link>
 
@@ -115,20 +115,23 @@ export function Nav() {
   );
 }
 
+/**
+ * Sangam — a confluence. Three streams (reasoning, vision, knowledge) meet and
+ * continue as one, which is also what the orchestrator does with a task.
+ */
 export function Logomark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={cn("h-[21px] w-[21px]", className)} aria-hidden fill="none">
-      <path
-        d="M12 2.4 20.2 5.5v5.9c0 4.8-3.3 9-8.2 10.2-4.9-1.2-8.2-5.4-8.2-10.2V5.5L12 2.4Z"
-        className="fill-ink"
-      />
-      <path
-        d="M12 7.6v8.6M8.4 10.2 12 7.6l3.6 2.6"
-        className="stroke-paper"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg
+      viewBox="0 0 24 24"
+      className={cn("h-[21px] w-[21px]", className)}
+      aria-hidden
+      fill="none"
+      strokeWidth="1.85"
+      strokeLinecap="round"
+    >
+      <path d="M12 3.4v17.2" className="stroke-ink" />
+      <path d="M4.6 3.4c0 5.2 2.9 7.9 7.4 9.3" className="stroke-ink" />
+      <path d="M19.4 3.4c0 5.2-2.9 7.9-7.4 9.3" className="stroke-ink" />
     </svg>
   );
 }

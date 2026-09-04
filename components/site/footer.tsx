@@ -40,12 +40,16 @@ export function Footer() {
             <div className="flex items-center gap-2.5">
               <Logomark />
               <span className="text-[15.5px] font-medium tracking-[-0.015em] text-ink">
-                Sovereign
+                Sangam
               </span>
             </div>
             <p className="mt-5 max-w-[270px] text-[14px] leading-[1.6] text-body">
               Private intelligence infrastructure — an on-premise agentic AI workbench for
               confidential industrial work.
+            </p>
+            <p className="mt-4 max-w-[270px] text-[13px] leading-[1.6] text-muted">
+              <span className="text-ink">Sangam</span> — a confluence. Models, knowledge and
+              tools meeting in one place, inside your perimeter.
             </p>
           </div>
 
@@ -69,7 +73,7 @@ export function Footer() {
         </div>
 
         <div className="mt-20 flex flex-col gap-3 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label">© 2026 Sovereign AI</p>
+          <p className="label">© 2026 Sangam</p>
           <p className="label">Designed for confidential industrial environments</p>
         </div>
       </div>

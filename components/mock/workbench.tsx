@@ -58,7 +58,7 @@ export function Workbench({
           <span className="h-[9px] w-[9px] rounded-full bg-line-2" />
           <span className="h-[9px] w-[9px] rounded-full bg-line-2" />
         </div>
-        <p className="text-[12px] text-muted">Sovereign Workbench</p>
+        <p className="text-[12px] text-muted">Sangam Workbench</p>
         <div className="ml-auto flex items-center gap-2 rounded-full bg-surface px-2.5 py-1 shadow-e1 ring-1 ring-line">
           <span className="relative flex h-1.5 w-1.5">
             <span className="dot-live absolute inline-flex h-full w-full rounded-full bg-signal" />
