@@ -24,12 +24,12 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="mt-2 flex flex-col items-center">
-              <span className="h-px w-[200px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-              <p className="px-6 py-3.5 text-[15px] tracking-[-0.005em] text-accent">
+            <div className="mt-4 flex flex-col items-center">
+              <span className="h-px w-[150px] bg-gradient-to-r from-transparent via-white/55 to-transparent" />
+              <p className="px-6 py-3 text-[14.5px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
-              <span className="h-px w-[280px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+              <span className="h-px w-[210px] bg-gradient-to-r from-transparent via-white/55 to-transparent" />
             </div>
           </Reveal>
 
@@ -136,7 +136,7 @@ function Flourish() {
       alt=""
       priority
       aria-hidden
-      className="w-[270px] opacity-90 [filter:brightness(0)_invert(1)] sm:w-[300px]"
+      className="w-[186px] opacity-85 [filter:brightness(0)_invert(1)] sm:w-[208px]"
     />
   );
 }
