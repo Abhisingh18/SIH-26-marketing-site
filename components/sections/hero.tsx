@@ -1,3 +1,5 @@
+import Image from "next/image";
+import flourish from "@/components/photos/png-clipart-graphic-design-floral-design-design-text-floral-thumbnail.png";
 import { Workbench } from "@/components/mock/workbench";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
@@ -18,7 +20,7 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <div className="flex flex-col items-center text-center">
           <Reveal>
-            <Emblem />
+            <Flourish />
           </Reveal>
 
           <Reveal delay={0.05}>
@@ -118,30 +120,26 @@ function Bloom() {
 }
 
 /**
- * Hero emblem: the confluence mark set in a fine roundel. A drawn flourish felt
- * borrowed — the rest of the site is built on hairlines and restraint, and a
- * seal carries the "sovereign" positioning better than ornament does.
+ * Hero flourish. The source art is black on transparent inside a square canvas
+ * with a lot of dead space above and below, so it gets two treatments:
+ *
+ *  - `brightness(0) invert(1)` drives any dark pixel to pure white, which is
+ *    cleaner than shipping a recoloured copy of the file
+ *  - the square sits absolutely inside a short wrapper that crops to the band
+ *    the artwork actually occupies, so it does not push the kicker down the page
  */
-function Emblem() {
+function Flourish() {
   return (
-    <svg
-      viewBox="0 0 48 48"
-      className="h-[46px] w-[46px]"
+    <div
+      className="relative h-[104px] w-[290px] overflow-hidden sm:h-[116px] sm:w-[320px]"
       aria-hidden
-      fill="none"
     >
-      <circle cx="24" cy="24" r="21.5" stroke="white" strokeOpacity="0.42" />
-      <circle cx="24" cy="24" r="17.5" stroke="white" strokeOpacity="0.16" />
-      <g
-        transform="translate(12 12)"
-        stroke="white"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-      >
-        <path d="M12 3.4v17.2" />
-        <path d="M4.6 3.4c0 5.2 2.9 7.9 7.4 9.3" />
-        <path d="M19.4 3.4c0 5.2-2.9 7.9-7.4 9.3" />
-      </g>
-    </svg>
+      <Image
+        src={flourish}
+        alt=""
+        priority
+        className="absolute left-0 top-1/2 w-full -translate-y-1/2 opacity-90 [filter:brightness(0)_invert(1)]"
+      />
+    </div>
   );
 }
