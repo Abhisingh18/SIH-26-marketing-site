@@ -14,7 +14,7 @@ const DOCS = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-[84px] sm:px-8 sm:pt-[96px] md:pb-28">
+    <section className="relative overflow-hidden px-6 pb-20 pt-[76px] sm:px-8 sm:pt-[88px] md:pb-24">
       <Bloom />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
@@ -33,14 +33,14 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <h1 className="display rise mt-12 text-[clamp(2.9rem,7.2vw,5.9rem)] leading-[0.95] tracking-[-0.022em]">
+          <h1 className="display rise mt-9 text-[clamp(2.6rem,5.8vw,4.5rem)] leading-[0.96] tracking-[-0.02em]">
             <span className="block">Your AI.</span>
             <span className="block">Your infrastructure.</span>
             <span className="block">Your data.</span>
           </h1>
 
           <Reveal delay={0.34}>
-            <p className="mt-10 max-w-[46ch] text-[17.5px] leading-[1.6] text-body sm:text-[19px]">
+            <p className="mt-7 max-w-[46ch] text-[17px] leading-[1.6] text-body sm:text-[18px]">
               A sovereign, on-premise agentic AI workbench for confidential industrial work,
               powered by open-weight models.{" "}
               <span className="text-ink">Nothing leaves your infrastructure.</span>
@@ -48,7 +48,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.22}>
-            <div className="mt-11 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Button href="/demo" size="lg">
                 Request demo
               </Button>
@@ -59,9 +59,9 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="mt-24 flex flex-col items-center">
+            <div className="mt-16 flex flex-col items-center">
               <p className="label">Built for confidential industrial work</p>
-              <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+              <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-9 gap-y-3">
                 {DOCS.map((d) => (
                   <li key={d} className="text-[15px] text-body">
                     {d}
@@ -72,7 +72,7 @@ export function Hero() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.2} y={30} className="mt-20 md:mt-24">
+        <Reveal delay={0.2} y={30} className="mt-14 md:mt-16">
           <div className="mx-auto max-w-[1080px]">
             <Workbench />
           </div>
@@ -133,7 +133,7 @@ function Flourish() {
       alt=""
       priority
       aria-hidden
-      className="w-[152px] opacity-85 [filter:brightness(0)_invert(1)] sm:w-[170px]"
+      className="w-[140px] opacity-85 [filter:brightness(0)_invert(1)] sm:w-[154px]"
     />
   );
 }
