@@ -2,11 +2,17 @@ import { Workbench } from "@/components/mock/workbench";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 
-const TRUST = ["On-premise", "Air-gapped ready", "Open-weight", "Multimodal", "Agentic"];
+const DOCS = [
+  "P&IDs",
+  "SOPs",
+  "Inspection reports",
+  "Engineering data",
+  "Financial documents",
+];
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden px-6 pb-20 pt-32 sm:px-8 md:pb-28 md:pt-40">
+    <section className="relative overflow-hidden px-6 pb-20 pt-[184px] sm:px-8 md:pb-28">
       <Bloom />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
@@ -16,17 +22,17 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="mt-7 flex items-center gap-5">
-              <span className="hidden h-px w-14 bg-ink/10 sm:block" />
-              <p className="text-[13.5px] tracking-[-0.005em] text-accent">
+            <div className="mt-5 flex flex-col items-center">
+              <span className="h-px w-[240px] bg-white/55" />
+              <p className="px-6 py-4 text-[15px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
-              <span className="hidden h-px w-14 bg-ink/10 sm:block" />
+              <span className="h-px w-[280px] bg-white/55" />
             </div>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="display mt-9 text-[clamp(2.6rem,6.6vw,5.1rem)]">
+            <h1 className="display mt-11 text-[clamp(2.5rem,6.4vw,4.9rem)]">
               Your AI.
               <br />
               Your infrastructure.
@@ -36,16 +42,15 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.16}>
-            <p className="mt-9 max-w-[52ch] text-[16.5px] leading-[1.62] text-body sm:text-[17.5px]">
-              A sovereign, on-premise agentic AI workbench for confidential industrial
-              workflows — powered by open-weight models and designed to run entirely inside
-              your organization.
+            <p className="mt-9 max-w-[54ch] text-[17px] leading-[1.6] text-body sm:text-[18px]">
+              A sovereign, on-premise agentic AI workbench for confidential industrial work.
+              Powered by open-weight models. Nothing leaves your infrastructure.
             </p>
           </Reveal>
 
           <Reveal delay={0.22}>
             <div className="mt-11 flex flex-wrap items-center justify-center gap-3">
-              <Button href="/demo" size="lg" arrow>
+              <Button href="/demo" size="lg">
                 Request demo
               </Button>
               <Button href="/platform" variant="secondary" size="lg">
@@ -54,15 +59,17 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.28}>
-            <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
-              {TRUST.map((t) => (
-                <li key={t} className="flex items-center gap-2.5 text-[12.5px] text-muted">
-                  <span className="h-[3px] w-[3px] rounded-full bg-ink/20" />
-                  {t}
-                </li>
-              ))}
-            </ul>
+          <Reveal delay={0.3}>
+            <div className="mt-24 flex flex-col items-center">
+              <p className="label">Built for confidential industrial work</p>
+              <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+                {DOCS.map((d) => (
+                  <li key={d} className="text-[15px] text-body">
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         </div>
 
@@ -76,51 +83,77 @@ export function Hero() {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Backdrop                                                            */
+/* ------------------------------------------------------------------ */
+
 /**
- * Two blooms meeting — warm above, cool below. Sangam is a confluence, and at a
- * real one the two rivers stay visibly different colours where they meet.
+ * Three colours meeting: saffron above, periwinkle through the middle, paper
+ * below. Sangam is a confluence, and at a real one the rivers stay visibly
+ * different colours where they meet.
  *
- * Grading rules that keep it clean rather than muddy:
- *  - the warm and cool fields barely overlap; saffron and periwinkle are near
- *    complements, so blending them directly turns grey-brown
- *  - a paper scrim sits between them and the type, so the headline always
- *    lands on near-white and keeps full contrast
- *  - both fields are low-saturation tints, not poster colour
+ * Built the way the reference is: a saturated dome with a heavily blurred edge,
+ * not a soft radial haze. The periwinkle field sits *under* the saffron and is
+ * wider than it, so it reads at the shoulders while the centre stays clear for
+ * type — which is also what stops the two hues blending head on and going
+ * grey-brown through the middle of the fold.
  */
 function Bloom() {
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 h-[900px] overflow-hidden"
+      className="pointer-events-none absolute inset-x-0 top-0 h-[940px] overflow-hidden"
       aria-hidden
     >
-      {/* warm field — sits high, behind the nav and ornament, gone by the headline */}
-      <div className="absolute left-1/2 top-[-360px] h-[600px] w-[min(1080px,132vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(228,140,56,0.46),rgba(228,140,56,0.2)_52%,transparent_100%)] blur-[90px]" />
+      {/* periwinkle — wide, low, underneath */}
+      <div className="absolute left-1/2 top-[70px] h-[660px] w-[min(1900px,170vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#b3c0f2_0%,#b3c0f2_34%,rgba(179,192,242,0)_100%)] blur-[85px]" />
 
-      {/* cool field — wider and lower, carrying the rest of the fold */}
-      <div className="absolute left-1/2 top-[210px] h-[620px] w-[min(1560px,168vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(122,134,238,0.26),rgba(122,134,238,0.11)_58%,transparent_100%)] blur-[110px]" />
+      {/* saffron — solid core, soft edge, sitting on top */}
+      <div className="absolute left-1/2 top-[18px] h-[360px] w-[min(1480px,126vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,#f47c14_0%,#f47c14_46%,rgba(244,124,20,0)_100%)] blur-[62px]" />
 
-      {/* paper scrim through the type band, then a clean settle into the page */}
-      <div className="absolute inset-x-0 top-[240px] h-[460px] bg-[radial-gradient(70%_100%_at_50%_45%,rgba(252,251,249,0.82),rgba(252,251,249,0.35)_60%,transparent_100%)]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-paper/35 to-paper" />
+      {/* paper opens up the centre under the headline, then settles the page */}
+      <div className="absolute inset-x-0 top-[330px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[300px] bg-gradient-to-b from-transparent to-paper" />
     </div>
   );
 }
 
-/** Confluence flourish — the logomark opened out into an ornament. */
+/**
+ * Confluence flourish: two mirrored sprays running into a single point.
+ * The logomark's three streams, opened out flat.
+ */
 function Ornament() {
   return (
     <svg
-      viewBox="0 0 132 22"
-      className="h-[22px] w-[132px] text-ink/30"
+      viewBox="0 0 200 36"
+      className="h-[34px] w-[200px] text-white"
       aria-hidden
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.3"
-      strokeLinecap="round"
+      fill="currentColor"
     >
-      <path d="M3 5c0 8 12 6 27 6h32" />
-      <path d="M129 5c0 8-12 6-27 6H70" />
-      <circle cx="66" cy="11" r="1.9" fill="currentColor" stroke="none" />
+      <g>
+        <path d="M104 18c24-10 52-13 78-8-24 7-54 11-78 8Z" opacity="0.92" />
+        <path d="M104 18c22-2 46-1 64 4-20 3-44 2-64-4Z" opacity="0.62" />
+        <path
+          d="M182 10c8-2 14 2 14 8 0 5-5 8-9 6-3-1-4-6-1-8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          opacity="0.92"
+        />
+      </g>
+      <g transform="translate(200 0) scale(-1 1)">
+        <path d="M104 18c24-10 52-13 78-8-24 7-54 11-78 8Z" opacity="0.92" />
+        <path d="M104 18c22-2 46-1 64 4-20 3-44 2-64-4Z" opacity="0.62" />
+        <path
+          d="M182 10c8-2 14 2 14 8 0 5-5 8-9 6-3-1-4-6-1-8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          opacity="0.92"
+        />
+      </g>
+      <circle cx="100" cy="18" r="2.2" />
     </svg>
   );
 }

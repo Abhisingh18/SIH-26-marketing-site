@@ -1,32 +1,9 @@
 import Link from "next/link";
 import { ArrowUpRight, Bot, Layers, ShieldCheck } from "lucide-react";
 import { SovereigntyMonitor } from "@/components/mock/monitor";
-import { Label, Panel, TextLink } from "@/components/ui/primitives";
+import { Panel, TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
-
-/* ------------------------------------------------------------------ */
-/* Trust strip                                                         */
-/* ------------------------------------------------------------------ */
-
-const DOCS = ["P&IDs", "SOPs", "Inspection reports", "Engineering data", "Financials"];
-
-export function TrustStrip() {
-  return (
-    <div className="border-y border-line bg-surface px-6 py-7 sm:px-8">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 text-center md:flex-row md:justify-between md:text-left">
-        <Label className="max-w-[200px]">Designed for confidential industrial work</Label>
-        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
-          {DOCS.map((d) => (
-            <li key={d} className="text-[13.5px] text-body">
-              {d}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Editorial statement                                                 */
