@@ -1,31 +1,57 @@
 import Image from "next/image";
 import {
+  BadgeCheck,
+  Box,
   Camera,
   ClipboardList,
   FileSearch,
   FileSpreadsheet,
+  Gauge,
+  IndianRupee,
   PenLine,
-  Ruler,
+  Receipt,
   ScrollText,
+  ShieldCheck,
   Table2,
   Workflow,
+  Wrench,
 } from "lucide-react";
 import flourish from "@/components/photos/flourish-alpha.png";
 import { Workbench } from "@/components/mock/workbench";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
+import { cn } from "@/lib/utils";
+
+/**
+ * Colour carries the category, not decoration: engineering, procedure, field
+ * and commercial. It sits in a small tinted well behind each icon rather than
+ * on the chip itself — tinting whole chips turns a fifteen-item strip into
+ * confetti, while a coloured icon in a neutral chip still scans as one system.
+ */
+const TONES = {
+  eng: "bg-[#fdf3e6] text-[#b0670f]",
+  doc: "bg-accent-tint text-accent",
+  field: "bg-[#efeffb] text-[#5551c4]",
+  fin: "bg-[#e9f6ef] text-[#0f8b55]",
+} as const;
 
 const DOCS = [
-  { label: "P&IDs", icon: Workflow },
-  { label: "SOPs", icon: ClipboardList },
-  { label: "Inspection reports", icon: FileSearch },
-  { label: "Engineering drawings", icon: Ruler },
-  { label: "Thickness logs", icon: Table2 },
-  { label: "Handwritten field notes", icon: PenLine },
-  { label: "Equipment photographs", icon: Camera },
-  { label: "Compliance standards", icon: ScrollText },
-  { label: "Financial documents", icon: FileSpreadsheet },
-];
+  { label: "P&IDs", icon: Workflow, tone: "eng" },
+  { label: "SOPs", icon: ClipboardList, tone: "doc" },
+  { label: "Inspection reports", icon: FileSearch, tone: "field" },
+  { label: "Isometric drawings", icon: Box, tone: "eng" },
+  { label: "Compliance standards", icon: ScrollText, tone: "doc" },
+  { label: "Handwritten field notes", icon: PenLine, tone: "field" },
+  { label: "Thickness logs", icon: Table2, tone: "eng" },
+  { label: "Permit-to-work", icon: ShieldCheck, tone: "doc" },
+  { label: "Equipment photographs", icon: Camera, tone: "field" },
+  { label: "Equipment datasheets", icon: Gauge, tone: "eng" },
+  { label: "Calibration certificates", icon: BadgeCheck, tone: "doc" },
+  { label: "Maintenance logs", icon: Wrench, tone: "field" },
+  { label: "Financial statements", icon: FileSpreadsheet, tone: "fin" },
+  { label: "Purchase orders", icon: Receipt, tone: "fin" },
+  { label: "Vendor invoices", icon: IndianRupee, tone: "fin" },
+] satisfies { label: string; icon: typeof Workflow; tone: keyof typeof TONES }[];
 
 export function Hero() {
   return (
@@ -145,33 +171,47 @@ function Flourish() {
 }
 
 /**
- * The document types the workbench is pointed at, running as a marquee.
+ * The document types the workbench is pointed at, as two counter-running rows.
  *
- * Full-bleed on purpose: a strip that stops at the container edge looks like a
- * list that ran out, whereas one that runs off both sides reads as a longer set
- * than the screen can hold — which is the point being made. The section already
- * clips overflow, so breaking out is safe.
+ * Two rows rather than one: fifteen chips in a single line either scrolls too
+ * fast to read or takes two minutes to cycle. Split and counter-running, the
+ * strip stays calm at 72s while showing twice as much, and the opposing motion
+ * reads as deliberate where a single sliding row reads as a ticker.
+ *
+ * Full-bleed on purpose — a strip that stops at the container edge looks like a
+ * list that ran out, whereas one running off both sides reads as a longer set
+ * than the screen can hold, which is the point. The section already clips
+ * overflow, so breaking out is safe.
  */
 function DocMarquee() {
-  const track = [...DOCS, ...DOCS];
+  const rows = [DOCS.slice(0, 8), DOCS.slice(8)];
 
   return (
-    <div className="marquee relative left-1/2 mt-7 w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
-      <ul className="marquee-track gap-2.5 py-1">
-        {track.map((d, i) => (
-          <li
-            key={`${d.label}-${i}`}
-            aria-hidden={i >= DOCS.length}
-            className="group flex shrink-0 items-center gap-2.5 rounded-full bg-surface/70 py-2.5 pl-4 pr-5 shadow-e1 ring-1 ring-line/80 backdrop-blur-sm transition-shadow duration-300 hover:shadow-e2"
-          >
-            <d.icon
-              className="h-3.5 w-3.5 shrink-0 text-muted transition-colors duration-300 group-hover:text-accent"
-              strokeWidth={1.7}
-            />
-            <span className="whitespace-nowrap text-[14px] text-body">{d.label}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="marquee relative left-1/2 mt-7 w-screen max-w-[100vw] -translate-x-1/2 space-y-2.5 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_9%,#000_91%,transparent)]">
+      {rows.map((row, r) => (
+        <ul
+          key={r}
+          className={cn("marquee-track gap-2.5 py-1", r === 1 && "marquee-track--reverse")}
+        >
+          {[...row, ...row].map((d, i) => (
+            <li
+              key={`${d.label}-${i}`}
+              aria-hidden={i >= row.length}
+              className="group flex shrink-0 items-center gap-2.5 rounded-full bg-surface/75 py-2 pl-2 pr-5 shadow-e1 ring-1 ring-line/80 backdrop-blur-sm transition-shadow duration-300 hover:shadow-e2"
+            >
+              <span
+                className={cn(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-105",
+                  TONES[d.tone],
+                )}
+              >
+                <d.icon className="h-3.5 w-3.5" strokeWidth={1.8} />
+              </span>
+              <span className="whitespace-nowrap text-[14px] text-body">{d.label}</span>
+            </li>
+          ))}
+        </ul>
+      ))}
     </div>
   );
 }
