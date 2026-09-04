@@ -119,6 +119,25 @@ components/
 All copy lives in plain arrays at the top of each section file (`PILLARS`,
 `USE_CASES`, `CONTROLS`, `STACK`, `PRINCIPLES`, …) — change the data, not the JSX.
 
+## The hero flourish
+
+`components/photos/flourish-alpha.png` is generated, not hand-made. The supplied
+clipart had its checkerboard **painted into the pixels** — the PNG carries no
+`tRNS` chunk and no alpha channel — so recolouring it in CSS turned the whole
+square white. It was pre-processed once:
+
+1. alpha derived from luminance (anything at/above 200 becomes transparent, so
+   anti-aliased edges stay soft)
+2. cropped to the artwork's bounding box, 348x348 down to 308x106, which removes
+   the dead canvas that was pushing the kicker down the fold
+
+The art stays dark on transparent and the page inverts it to white in CSS, so
+the same file still works on a light background. To swap in different artwork,
+run the same two steps rather than dropping the raw file in.
+
+Licence: the source came from a stock clipart site — confirm commercial use is
+allowed before this goes public.
+
 ## Before going live
 
 - **Wire the demo form.** [`components/sections/demo-form.tsx`](components/sections/demo-form.tsx)

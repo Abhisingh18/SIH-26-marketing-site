@@ -1,5 +1,5 @@
 import Image from "next/image";
-import flourish from "@/components/photos/png-clipart-graphic-design-floral-design-design-text-floral-thumbnail.png";
+import flourish from "@/components/photos/flourish-alpha.png";
 import { Workbench } from "@/components/mock/workbench";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
@@ -120,26 +120,23 @@ function Bloom() {
 }
 
 /**
- * Hero flourish. The source art is black on transparent inside a square canvas
- * with a lot of dead space above and below, so it gets two treatments:
+ * Hero flourish.
  *
- *  - `brightness(0) invert(1)` drives any dark pixel to pure white, which is
- *    cleaner than shipping a recoloured copy of the file
- *  - the square sits absolutely inside a short wrapper that crops to the band
- *    the artwork actually occupies, so it does not push the kicker down the page
+ * The supplied artwork had its checkerboard painted into the pixels — no alpha
+ * channel at all — so inverting it in CSS turned the whole square white. The
+ * file is pre-processed instead (see the note in the README): alpha derived
+ * from luminance, then cropped to the artwork's bounding box. It stays dark on
+ * transparent here and is inverted to white in CSS, so the same asset still
+ * works on a light background if it is ever needed there.
  */
 function Flourish() {
   return (
-    <div
-      className="relative h-[104px] w-[290px] overflow-hidden sm:h-[116px] sm:w-[320px]"
+    <Image
+      src={flourish}
+      alt=""
+      priority
       aria-hidden
-    >
-      <Image
-        src={flourish}
-        alt=""
-        priority
-        className="absolute left-0 top-1/2 w-full -translate-y-1/2 opacity-90 [filter:brightness(0)_invert(1)]"
-      />
-    </div>
+      className="w-[270px] opacity-90 [filter:brightness(0)_invert(1)] sm:w-[300px]"
+    />
   );
 }

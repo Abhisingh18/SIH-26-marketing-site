@@ -51,7 +51,7 @@ export function Nav() {
         className={cn(
           "grid w-full grid-cols-[1fr_auto_1fr] items-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           scrolled
-            ? "h-[58px] max-w-[1040px] rounded-full bg-paper/70 pl-6 pr-2 shadow-e2 ring-1 ring-line/80 backdrop-blur-xl"
+            ? "h-[58px] max-w-[1128px] rounded-full bg-paper/70 pl-6 pr-2 shadow-e2 ring-1 ring-line/80 backdrop-blur-xl"
             : "h-[74px] max-w-[1216px] rounded-full px-2 sm:px-4",
         )}
       >
