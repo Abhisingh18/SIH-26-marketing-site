@@ -18,16 +18,16 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <div className="flex flex-col items-center text-center">
           <Reveal>
-            <Ornament />
+            <Emblem />
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="mt-5 flex flex-col items-center">
-              <span className="h-px w-[240px] bg-white/55" />
+            <div className="mt-7 flex flex-col items-center">
+              <span className="h-px w-[200px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
               <p className="px-6 py-4 text-[15px] tracking-[-0.005em] text-accent">
                 Sovereign AI infrastructure
               </p>
-              <span className="h-px w-[280px] bg-white/55" />
+              <span className="h-px w-[280px] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             </div>
           </Reveal>
 
@@ -118,42 +118,30 @@ function Bloom() {
 }
 
 /**
- * Confluence flourish: two mirrored sprays running into a single point.
- * The logomark's three streams, opened out flat.
+ * Hero emblem: the confluence mark set in a fine roundel. A drawn flourish felt
+ * borrowed — the rest of the site is built on hairlines and restraint, and a
+ * seal carries the "sovereign" positioning better than ornament does.
  */
-function Ornament() {
+function Emblem() {
   return (
     <svg
-      viewBox="0 0 200 36"
-      className="h-[34px] w-[200px] text-white"
+      viewBox="0 0 48 48"
+      className="h-[46px] w-[46px]"
       aria-hidden
-      fill="currentColor"
+      fill="none"
     >
-      <g>
-        <path d="M104 18c24-10 52-13 78-8-24 7-54 11-78 8Z" opacity="0.92" />
-        <path d="M104 18c22-2 46-1 64 4-20 3-44 2-64-4Z" opacity="0.62" />
-        <path
-          d="M182 10c8-2 14 2 14 8 0 5-5 8-9 6-3-1-4-6-1-8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          opacity="0.92"
-        />
+      <circle cx="24" cy="24" r="21.5" stroke="white" strokeOpacity="0.42" />
+      <circle cx="24" cy="24" r="17.5" stroke="white" strokeOpacity="0.16" />
+      <g
+        transform="translate(12 12)"
+        stroke="white"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      >
+        <path d="M12 3.4v17.2" />
+        <path d="M4.6 3.4c0 5.2 2.9 7.9 7.4 9.3" />
+        <path d="M19.4 3.4c0 5.2-2.9 7.9-7.4 9.3" />
       </g>
-      <g transform="translate(200 0) scale(-1 1)">
-        <path d="M104 18c24-10 52-13 78-8-24 7-54 11-78 8Z" opacity="0.92" />
-        <path d="M104 18c22-2 46-1 64 4-20 3-44 2-64-4Z" opacity="0.62" />
-        <path
-          d="M182 10c8-2 14 2 14 8 0 5-5 8-9 6-3-1-4-6-1-8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          opacity="0.92"
-        />
-      </g>
-      <circle cx="100" cy="18" r="2.2" />
     </svg>
   );
 }
