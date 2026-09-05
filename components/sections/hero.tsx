@@ -154,18 +154,29 @@ function WorkbenchStage({ children }: { children: ReactNode }) {
     <div className="relative">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[142%] w-screen max-w-[100vw] -translate-x-1/2 -translate-y-1/2 [mask-image:linear-gradient(to_bottom,transparent,#000_16%,#000_84%,transparent)]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[150%] w-screen max-w-[100vw] -translate-x-1/2 -translate-y-1/2 [mask-image:linear-gradient(to_bottom,transparent,#000_13%,#000_87%,transparent)]"
       >
-        <div className="absolute left-[-8%] top-1/2 h-[76%] w-[48%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(146,163,244,0.52),rgba(146,163,244,0.16)_58%,transparent_100%)] blur-[80px]" />
-        <div className="absolute right-[-8%] top-1/2 h-[76%] w-[48%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(146,163,244,0.52),rgba(146,163,244,0.16)_58%,transparent_100%)] blur-[80px]" />
-        {/* a warm trace at the outer corners, carrying the saffron down the page */}
-        <div className="absolute inset-x-0 top-0 h-[45%] bg-[radial-gradient(120%_100%_at_50%_0%,rgba(240,160,90,0.16),transparent_62%)]" />
+        {/* Left cluster: a deep indigo core opening out through periwinkle.
+            Multi-stop rather than one flat tint — a single colour fading to
+            transparent reads as a smudge, while a core that lightens as it
+            spreads reads as light. */}
+        <div className="absolute left-[-15%] top-[44%] h-[88%] w-[48%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(70,90,226,0.5),rgba(126,150,246,0.34)_42%,rgba(158,176,250,0.12)_72%,transparent_100%)] blur-[70px]" />
+        <div className="absolute left-[1%] top-[64%] h-[60%] w-[32%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(138,108,226,0.32),transparent_100%)] blur-[85px]" />
+
+        {/* Right cluster: offset, not mirrored. Perfect symmetry reads as a
+            shape; an offset pair reads as light falling on something. */}
+        <div className="absolute right-[-15%] top-[53%] h-[90%] w-[48%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(70,90,226,0.47),rgba(126,150,246,0.32)_42%,rgba(158,176,250,0.12)_72%,transparent_100%)] blur-[70px]" />
+        <div className="absolute right-[0%] top-[33%] h-[56%] w-[30%] -translate-y-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,140,246,0.32),transparent_100%)] blur-[85px]" />
+
+        {/* a warm trace along the top, carrying the saffron down from the fold */}
+        <div className="absolute inset-x-0 top-0 h-[42%] bg-[radial-gradient(120%_100%_at_50%_0%,rgba(240,158,88,0.19),transparent_60%)]" />
       </div>
 
-      {/* grounding shadow, so the panel sits on the wash rather than over it */}
+      {/* Grounding shadow, tinted indigo rather than neutral black — a grey
+          shadow over a blue wash desaturates it and the card looks stuck on. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-[8%] bottom-[-3%] h-[14%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(17,17,19,0.16),transparent_100%)] blur-[36px]"
+        className="pointer-events-none absolute inset-x-[7%] bottom-[-4%] h-[16%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(34,42,112,0.24),transparent_100%)] blur-[44px]"
       />
 
       <div className="relative mx-auto max-w-[1080px]">{children}</div>
