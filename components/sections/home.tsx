@@ -121,22 +121,89 @@ export function ProductMoment() {
 
 export function SovereigntyTeaser() {
   return (
-    <Section>
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-16">
-        <Reveal delay={0.05}>
-          <SovereigntyMonitor compact />
-        </Reveal>
+    <section className="relative overflow-hidden px-6 py-24 sm:px-8 md:py-32">
+      <SovereigntyBackdrop />
 
-        <SectionHead
-          label="Sovereignty"
-          title="Don't trust the claim. Verify the boundary."
-          body="Security here is not a promise on a slide — it is an observable property of the system. The workbench shows you the perimeter and counts every attempt to cross it."
-          className="lg:order-first"
-        >
-          <TextLink href="/security">See how it is enforced</TextLink>
-        </SectionHead>
+      <div className="relative mx-auto w-full max-w-[1200px]">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-16">
+          <Reveal delay={0.05} className="relative">
+            {/* the sweep is centred on the panel, so the rings read as this
+                object watching its perimeter rather than as page decoration */}
+            <PerimeterRings />
+            <div className="relative">
+              <SovereigntyMonitor compact />
+            </div>
+          </Reveal>
+
+          <SectionHead
+            label="Sovereignty"
+            animateTitle="Don't trust the claim. Verify the boundary."
+            body="Security here is not a promise on a slide — it is an observable property of the system. The workbench shows you the perimeter and counts every attempt to cross it."
+            className="relative lg:order-first"
+          >
+            <TextLink href="/security">See how it is enforced</TextLink>
+          </SectionHead>
+        </div>
       </div>
-    </Section>
+    </section>
+  );
+}
+
+/**
+ * Three rings leaving the panel on one long cycle, a third of a turn apart.
+ *
+ * Green leads because it is the tone this site uses for anything verified, and
+ * a boundary reporting zero crossings is the most verified thing on the page.
+ */
+function PerimeterRings() {
+  const rings = [
+    { size: "150%", colour: "rgba(21,160,92,0.42)", delay: "0s" },
+    { size: "150%", colour: "rgba(35,56,204,0.32)", delay: "2.9s" },
+    { size: "150%", colour: "rgba(138,108,226,0.28)", delay: "5.8s" },
+  ];
+
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0">
+      {rings.map((r, i) => (
+        <div
+          key={i}
+          className="ring-pulse absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[36px]"
+          style={{
+            width: r.size,
+            height: r.size,
+            boxShadow: `inset 0 0 0 1.5px ${r.colour}`,
+            animationDuration: "8.7s",
+            animationDelay: r.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Green, blue and violet drifting behind the section — the same three the rings
+ * use, so the wash and the sweep are one system rather than two effects sharing
+ * a section.
+ *
+ * Full-bleed and radially masked, with a paper scrim across the copy side: the
+ * headline sits on this, and the dark monitor sits over it, so it has to stay
+ * quiet enough for both.
+ */
+function SovereigntyBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute left-1/2 top-0 h-full w-screen max-w-[100vw] -translate-x-1/2 [mask-image:radial-gradient(86%_82%_at_50%_50%,#000_28%,transparent_100%)]"
+    >
+      <div className="grid-paper absolute inset-0 opacity-45" />
+
+      <div className="drift-a absolute right-[4%] top-[2%] h-[76%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(30,168,110,0.30),rgba(110,206,164,0.11)_56%,transparent_100%)] blur-[90px]" />
+      <div className="drift-b absolute left-[2%] top-[16%] h-[80%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(88,114,246,0.32),rgba(142,166,250,0.12)_56%,transparent_100%)] blur-[95px]" />
+      <div className="drift-c absolute bottom-[-6%] left-[30%] h-[62%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(132,96,228,0.24),rgba(160,130,236,0.09)_58%,transparent_100%)] blur-[100px]" />
+
+      <div className="absolute inset-y-[10%] left-[4%] w-[52%] bg-[radial-gradient(62%_60%_at_40%_50%,rgba(252,251,249,0.82),transparent_74%)]" />
+    </div>
   );
 }
 

@@ -250,6 +250,25 @@ body {
 }
 
 /*
+ * A perimeter being swept: rings leaving the centre and fading out.
+ *
+ * They start part-grown rather than at nothing — a ring expanding from zero
+ * reads as a ripple from an impact, and nothing is hitting anything here. This
+ * is a boundary being checked, over and over.
+ */
+@keyframes ring-pulse {
+  0% { transform: scale(0.62); opacity: 0; }
+  18% { opacity: 0.55; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+.ring-pulse {
+  animation-name: ring-pulse;
+  animation-timing-function: cubic-bezier(0.25, 0.5, 0.35, 1);
+  animation-iteration-count: infinite;
+}
+
+/*
  * The orbs riding the solutions wave. Bob and rotation share one keyframe; the
  * per-orb rotation comes in as a custom property so a single rule can turn some
  * of them one way and some the other.
@@ -429,6 +448,7 @@ body {
   .net-node,
   .orb-bob,
   .orb-turn,
+  .ring-pulse,
   .letter-wave { animation: none; }
   .letter-in { opacity: 1; animation: none; }
   .card-hover { transition: none; }
