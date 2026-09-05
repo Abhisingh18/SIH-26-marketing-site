@@ -19,6 +19,7 @@ import {
 import { Flourish } from "@/components/ui/flourish";
 import { Workbench } from "@/components/mock/workbench";
 import { PlatformTitle } from "@/components/sections/platform-title";
+import { Wordmark } from "@/components/sections/wordmark";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
@@ -54,49 +55,6 @@ const DOCS = [
   { label: "Vendor invoices", icon: IndianRupee, tone: "fin" },
 ] satisfies { label: string; icon: typeof Workflow; tone: keyof typeof TONES }[];
 
-/**
- * Three colours across six letters, two letters each — saffron, blue, green.
- *
- * Six separate hues was a rainbow, and a rainbow on a page selling
- * infrastructure to refineries reads as a consumer toy. Three fields read as a
- * flag, which the audience for this page will notice, and all three are already
- * in the site's palette, so the mark does not introduce a colour the rest of the
- * page never uses.
- */
-const LETTERS = [
-  { char: "S", colour: "#dd7a15" },
-  { char: "a", colour: "#dd7a15" },
-  { char: "n", colour: "#2338cc" },
-  { char: "g", colour: "#2338cc" },
-  { char: "a", colour: "#0f8b55" },
-  { char: "m", colour: "#0f8b55" },
-];
-
-function Wordmark() {
-  return (
-    <h1
-      className="wordmark text-[clamp(3.4rem,9.4vw,7rem)]"
-      aria-label="Sangam"
-    >
-      {LETTERS.map((l, i) => (
-        <span
-          key={i}
-          aria-hidden
-          className="letter-in"
-          style={{ animationDelay: `${0.06 + i * 0.075}s` }}
-        >
-          <span
-            className="letter-wave"
-            style={{ color: l.colour, animationDelay: `${i * 0.16}s` }}
-          >
-            {l.char}
-          </span>
-        </span>
-      ))}
-    </h1>
-  );
-}
-
 export function Hero() {
   return (
     <section className="relative overflow-hidden px-6 pb-20 pt-[76px] sm:px-8 sm:pt-[88px] md:pb-24">
@@ -125,7 +83,8 @@ export function Hero() {
             <Wordmark />
             <p
               className="letter-in display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted"
-              style={{ animationDelay: `${0.06 + LETTERS.length * 0.075}s` }}
+              // lands after the six letters have converged and coloured
+              style={{ animationDelay: "1.05s" }}
             >
               for all from India
             </p>
