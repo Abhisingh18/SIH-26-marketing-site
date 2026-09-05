@@ -3,14 +3,28 @@
 import { motion, useReducedMotion } from "motion/react";
 
 /**
+ * The ramp the mark is painted with, one stop per letter boundary.
+ *
+ * It travels orange to green the long way round the wheel — through rose,
+ * orchid, violet, blue and teal — rather than straight across. Interpolating
+ * saffron directly into green passes through grey, and a wordmark that goes
+ * muddy in the middle is worse than a flat one.
+ */
+const STOPS = [
+  "#dd7a15",
+  "#d2557e",
+  "#a455c6",
+  "#6a57d8",
+  "#2f5bd0",
+  "#1b8fa8",
+  "#0f8b55",
+];
+
+/**
  * `from` is where each letter starts before it converges. Sangam means a
  * confluence, so the word assembles the way the name describes: six things
  * arriving from different directions and settling into one. The scatter is
  * deliberately uneven — a symmetrical explosion reads as a template.
- *
- * The mark is set in ink. Colour is carried by everything around it — the
- * flourish, the wash, the document strip — and a black logotype in the middle
- * of that is the thing the eye lands on.
  */
 const LETTERS = [
   { char: "S", from: { x: -78, y: -40, r: -15 } },
@@ -49,11 +63,11 @@ export function Wordmark() {
                   y: l.from.y,
                   rotate: l.from.r,
                   scale: 0.86,
-                  filter: "blur(16px)",
-                  // arrives light and darkens as it lands, so the mark sets
-                  // itself on the last beat rather than being fully there while
-                  // it is still travelling
-                  color: "#b4b4bb",
+                  // Colour arrives by desaturating rather than by animating
+                  // `color`, which the gradient fill has already spent. It also
+                  // means the mark sets itself on the last beat instead of
+                  // being fully there while it is still travelling.
+                  filter: "blur(16px) grayscale(1)",
                 },
             show: {
               opacity: 1,
@@ -61,24 +75,31 @@ export function Wordmark() {
               y: 0,
               rotate: 0,
               scale: 1,
-              filter: "blur(0px)",
-              color: "#111113",
+              filter: "blur(0px) grayscale(0)",
               transition: {
                 default: { type: "spring", stiffness: 118, damping: 15, mass: 0.9 },
-                filter: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+                filter: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
                 opacity: { duration: 0.45 },
-                color: { duration: 0.55, delay: 0.42 },
               },
             },
           }}
           whileHover={reduce ? undefined : { y: -10, scale: 1.07 }}
           transition={{ type: "spring", stiffness: 380, damping: 18 }}
         >
-          {/* the standing wave lives on its own element: convergence and the
-              swell are both transforms, and one element cannot run two */}
+          {/* Each letter carries its own slice of the ramp rather than the word
+              carrying one background. `background-clip: text` on a parent whose
+              children are transformed paints unreliably, and every letter here
+              moves — so the gradient is cut into six continuous pieces instead,
+              which looks identical and cannot break.
+
+              This span also runs the standing wave: converging and swelling are
+              both transforms, and one element cannot run two. */}
           <span
-            className="letter-wave"
-            style={{ animationDelay: `${1.1 + i * 0.16}s` }}
+            className="letter-wave bg-clip-text text-transparent"
+            style={{
+              backgroundImage: `linear-gradient(100deg, ${STOPS[i]}, ${STOPS[i + 1]})`,
+              animationDelay: `${1.1 + i * 0.16}s`,
+            }}
           >
             {l.char}
           </span>
