@@ -3,8 +3,14 @@
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import {
+  BookMarked,
   Boxes,
   Database,
+  FileCode2,
+  FolderTree,
+  HardDrive,
+  Plug,
+  Settings2,
   FileSpreadsheet,
   FileText,
   Plus,
@@ -12,17 +18,52 @@ import {
   Sparkles,
 } from "lucide-react";
 import { KnowledgeGraph } from "./knowledge-graph";
+import { SovereigntyMonitor } from "./monitor";
 import { cn } from "@/lib/utils";
 
-type View = "task" | "knowledge";
+type View = "task" | "workspace" | "knowledge" | "models" | "security";
 
 const NAV = [
   { icon: Plus, label: "New task", view: "task" as View },
-  { icon: Boxes, label: "Projects" },
+  { icon: Boxes, label: "Workspace", view: "workspace" as View },
   { icon: Database, label: "Knowledge", view: "knowledge" as View },
-  { icon: Sparkles, label: "Models" },
-  { icon: Shield, label: "Security" },
+  { icon: Sparkles, label: "Models", view: "models" as View },
+  { icon: Shield, label: "Security", view: "security" as View },
 ];
+
+/**
+ * What the runtime is pointed at. Mirrors the project-workspace half of the
+ * architecture: the agent reads and writes these in place, on disk, rather than
+ * through an upload.
+ */
+const WORKSPACE = [
+  { icon: FolderTree, label: "Document root", meta: "\\plant-fs\inspection", tone: "parse" },
+  { icon: FileCode2, label: "AGENTS.md", meta: "12 rules · project instructions", tone: "reasoning" },
+  { icon: Settings2, label: "Configuration", meta: "models, routing, retention", tone: "reasoning" },
+  { icon: Plug, label: "MCP servers", meta: "3 connected · all on-prem", tone: "retrieval" },
+  { icon: BookMarked, label: "Skills", meta: "8 Skill.md files loaded", tone: "vision" },
+  { icon: HardDrive, label: "Local storage", meta: "412 GB indexed", tone: "parse" },
+] satisfies { icon: typeof Plus; label: string; meta: string; tone: keyof typeof TONES }[];
+
+/**
+ * The provider layer, resolved the only way this product can resolve it. The
+ * reference architecture puts hosted APIs here; every one of them would put a
+ * number on the sovereignty monitor, so the runtimes are local and the last row
+ * says so explicitly.
+ */
+const RUNTIMES = [
+  { name: "Reasoning · 30B", role: "Analysis, planning, drafting", vram: 78, rate: "42 tok/s", tone: "reasoning", loaded: true },
+  { name: "Coding · 14B", role: "Scripts, transforms, tooling", vram: 41, rate: "idle", tone: "eng", loaded: true },
+  { name: "Vision · VLM", role: "Scans, drawings, photographs", vram: 55, rate: "idle", tone: "vision", loaded: true },
+  { name: "Embedding", role: "Indexing and retrieval", vram: 12, rate: "resident", tone: "retrieval", loaded: true },
+] satisfies {
+  name: string;
+  role: string;
+  vram: number;
+  rate: string;
+  tone: keyof typeof TONES;
+  loaded: boolean;
+}[];
 
 /**
  * One tone per subsystem, matching the categories used on the document strip:
@@ -35,6 +76,7 @@ const TONES = {
   vision: "bg-[#efeffb] text-[#5551c4]",
   retrieval: "bg-[#e9f6ef] text-[#0f8b55]",
   reasoning: "bg-[#fdf3e6] text-[#b0670f]",
+  eng: "bg-[#fdf3e6] text-[#b0670f]",
 } as const;
 
 const STEPS = [
@@ -224,22 +266,28 @@ export function Workbench({ className }: { className?: string }) {
         <div className="min-w-0 flex-1 space-y-5 p-5 sm:p-6">
           {/* the sidebar is hidden on small screens, so the views need a way in */}
           <div className="flex gap-1 rounded-full bg-veil p-1 sm:hidden">
-            {(["task", "knowledge"] as View[]).map((v) => (
+            {(["task", "workspace", "knowledge", "models"] as View[]).map((v) => (
               <button
                 key={v}
                 type="button"
                 onClick={() => setPinned(v)}
                 className={cn(
-                  "flex-1 rounded-full px-3 py-1.5 text-[12.5px] capitalize transition-colors duration-300",
+                  "flex-1 rounded-full px-2.5 py-1.5 text-[11.5px] capitalize transition-colors duration-300",
                   view === v ? "bg-surface text-ink shadow-e1" : "text-body",
                 )}
               >
-                {v === "task" ? "Task" : "Knowledge"}
+                {v === "task" ? "Task" : v === "workspace" ? "Files" : v === "models" ? "Models" : "Graph"}
               </button>
             ))}
           </div>
 
-          {view === "knowledge" ? (
+          {view === "workspace" ? (
+            <WorkspaceView />
+          ) : view === "models" ? (
+            <ModelsView />
+          ) : view === "security" ? (
+            <SecurityView />
+          ) : view === "knowledge" ? (
             <>
               <div>
                 <p className="label">Knowledge</p>
@@ -470,6 +518,160 @@ export function Workbench({ className }: { className?: string }) {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * What the runtime works on. Presented as locations on a network the customer
+ * already owns rather than as a list of uploads — the distinction is the entire
+ * product, so the paths are doing argumentative work, not decorative.
+ */
+function WorkspaceView() {
+  const reduce = useReducedMotion();
+
+  return (
+    <>
+      <div>
+        <p className="label">Workspace</p>
+        <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
+          Turnaround 2026 · TK-402
+        </p>
+      </div>
+
+      <ul className="space-y-2">
+        {WORKSPACE.map((w, i) => (
+          <motion.li
+            key={w.label}
+            className="group flex items-center gap-3 rounded-[11px] bg-veil/60 px-3 py-2.5 transition-colors duration-300 hover:bg-veil"
+            initial={reduce ? false : { opacity: 0, x: -6 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.05 + i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span
+              className={cn(
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]",
+                TONES[w.tone],
+              )}
+            >
+              <w.icon className="h-3.5 w-3.5" strokeWidth={1.8} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[13px] text-ink">{w.label}</span>
+              <span className="block truncate font-mono text-[10.5px] text-muted">
+                {w.meta}
+              </span>
+            </span>
+            <span className="ml-auto shrink-0 font-mono text-[9.5px] uppercase tracking-[0.12em] text-muted">
+              local
+            </span>
+          </motion.li>
+        ))}
+      </ul>
+
+      <div className="flex items-center gap-2.5 rounded-[12px] bg-veil/70 px-3.5 py-3">
+        <span className="dot-live h-1.5 w-1.5 shrink-0 rounded-full bg-signal" />
+        <p className="text-[12px] text-body">
+          Watching for changes. Nothing is copied out to index it.
+        </p>
+      </div>
+    </>
+  );
+}
+
+/**
+ * The provider layer. The reference architecture this follows lists hosted APIs
+ * here; each one would put a number on the sovereignty monitor, so what is shown
+ * is the local equivalent — weights resident on a GPU the customer owns, swapped
+ * rather than called.
+ */
+function ModelsView() {
+  const reduce = useReducedMotion();
+
+  return (
+    <>
+      <div>
+        <p className="label">Models</p>
+        <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
+          Four open-weight runtimes on gpu-01.
+        </p>
+      </div>
+
+      <ul className="space-y-2.5">
+        {RUNTIMES.map((m, i) => {
+          const active = m.rate.endsWith("tok/s");
+          return (
+            <motion.li
+              key={m.name}
+              className="rounded-[12px] bg-veil/60 p-3.5"
+              initial={reduce ? false : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 + i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span className="text-[13px] text-ink">{m.name}</span>
+                <span
+                  className={cn(
+                    "rounded-full px-1.5 py-px font-mono text-[9.5px] tracking-[0.04em]",
+                    TONES[m.tone],
+                  )}
+                >
+                  {m.loaded ? "resident" : "staged"}
+                </span>
+                <span
+                  className={cn(
+                    "ml-auto flex items-center gap-1.5 font-mono text-[10px] tabular-nums",
+                    active ? "text-signal" : "text-muted",
+                  )}
+                >
+                  {active ? <span className="dot-live h-1 w-1 rounded-full bg-signal" /> : null}
+                  {m.rate}
+                </span>
+              </div>
+
+              <p className="mt-1 text-[11px] text-muted">{m.role}</p>
+
+              {/* VRAM, because "runs locally" is a hardware claim and this is
+                  the number an infrastructure team will actually ask about */}
+              <div className="mt-2.5 flex items-center gap-2.5">
+                <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-ink/[0.07]">
+                  <motion.div
+                    className={cn("h-full rounded-full", active ? "bg-signal" : "bg-line-2")}
+                    initial={reduce ? false : { width: 0 }}
+                    animate={{ width: `${m.vram}%` }}
+                    transition={{ delay: 0.2 + i * 0.07, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </div>
+                <span className="shrink-0 font-mono text-[9.5px] tabular-nums text-muted">
+                  {m.vram}% vram
+                </span>
+              </div>
+            </motion.li>
+          );
+        })}
+      </ul>
+
+      <div className="flex items-center gap-2.5 rounded-[12px] bg-accent-tint px-3.5 py-3 ring-1 ring-accent/12">
+        <Plug className="h-3.5 w-3.5 shrink-0 text-accent" strokeWidth={1.8} />
+        <p className="text-[12px] text-body">
+          <span className="text-ink">No hosted providers configured.</span> Weights are
+          swapped on the GPU, never called over a network.
+        </p>
+      </div>
+    </>
+  );
+}
+
+function SecurityView() {
+  return (
+    <>
+      <div>
+        <p className="label">Security</p>
+        <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
+          The boundary, as the application sees it.
+        </p>
+      </div>
+      <SovereigntyMonitor compact />
+    </>
   );
 }
 
