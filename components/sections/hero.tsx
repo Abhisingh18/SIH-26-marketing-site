@@ -83,7 +83,7 @@ export function Hero() {
               Sangam
             </h1>
             <p className="display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted">
-              for India&rsquo;s hardest work
+              for all from India
             </p>
           </div>
 
