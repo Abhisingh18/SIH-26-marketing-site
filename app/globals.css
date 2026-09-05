@@ -27,7 +27,7 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument), ui-serif, Georgia, "Times New Roman", serif;
-  --font-wordmark: var(--font-bricolage), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-wordmark: var(--font-figtree), var(--font-inter), ui-sans-serif, sans-serif;
   --font-mono: var(--font-mono-jb), ui-monospace, SFMono-Regular, monospace;
 
   /* Elevation replaces borders wherever possible */
@@ -192,15 +192,15 @@ body {
  * rises once; the inner one never stops.
  */
 /*
- * The wordmark sits in its own face. A heavy grotesque against the serif the
- * headings use is a deliberate pairing: the name should read as a mark, not as
- * one more line of display type.
+ * The wordmark sits in its own face: a geometric sans against the serif every
+ * heading uses. The name should read as a mark, not as one more line of display
+ * type, and at this tracking it sets like a logotype rather than a word.
  */
 .wordmark {
   font-family: var(--font-wordmark);
   font-weight: 700;
-  letter-spacing: -0.045em;
-  line-height: 0.86;
+  letter-spacing: -0.038em;
+  line-height: 0.9;
   color: var(--color-ink);
 }
 

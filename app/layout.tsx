@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  Bricolage_Grotesque,
+  Figtree,
   Inter,
   Instrument_Serif,
   JetBrains_Mono,
@@ -24,8 +24,8 @@ const instrument = Instrument_Serif({
 });
 
 /** one word on the whole site wears this, so it is loaded for the wordmark alone */
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
   weight: ["700"],
   display: "swap",
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrument.variable} ${bricolage.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${instrument.variable} ${figtree.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full">
         <SmoothScroll />
