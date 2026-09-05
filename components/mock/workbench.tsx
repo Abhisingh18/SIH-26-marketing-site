@@ -4,7 +4,6 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import {
   Boxes,
-  Check,
   Database,
   FileSpreadsheet,
   FileText,
@@ -41,6 +40,7 @@ const TONES = {
 const STEPS = [
   {
     doing: "Reading inspection_report.pdf",
+    took: "1.4s",
     done: "Read inspection_report.pdf",
     meta: "24 pages parsed",
     tag: "docling",
@@ -48,6 +48,7 @@ const STEPS = [
   },
   {
     doing: "Extracting findings and tag numbers",
+    took: "2.1s",
     done: "Extracted findings and tag numbers",
     meta: "7 figures analysed",
     tag: "vision",
@@ -55,6 +56,7 @@ const STEPS = [
   },
   {
     doing: "Searching the knowledge base",
+    took: "0.9s",
     done: "Retrieved SOP-114, SOP-232",
     meta: "2 documents cited",
     tag: "local rag",
@@ -62,6 +64,7 @@ const STEPS = [
   },
   {
     doing: "Cross-checking thickness limits",
+    took: "1.7s",
     done: "Cross-checked thickness limits",
     meta: "against API 570",
     tag: "reasoning",
@@ -69,6 +72,7 @@ const STEPS = [
   },
   {
     doing: "Drafting approval note",
+    took: "4.2s",
     done: "Drafted approval note",
     meta: "1,240 words written",
     tag: "generating",
@@ -76,11 +80,16 @@ const STEPS = [
   },
 ] satisfies {
   doing: string;
+  took: string;
   done: string;
   meta: string;
   tag: string;
   tone: keyof typeof TONES;
 }[];
+
+const TASK = "Analyse this inspection report and prepare an approval note.";
+/** the prompt is retyped at the top of every cycle, over roughly this long */
+const TYPE_MS = 1100;
 
 /** how long each step appears to take, and the beat held on the finished run */
 const STEP_MS = 1500;
@@ -117,6 +126,21 @@ export function Workbench({ className }: { className?: string }) {
         : STEP_MS;
     const timer = setTimeout(() => setActive(finished ? 0 : active + 1), wait);
     return () => clearTimeout(timer);
+  }, [active, inView, reduce]);
+
+  // The prompt retypes at the top of each cycle. Driven off elapsed time rather
+  // than an incrementing counter so a dropped frame shortens the tail instead of
+  // stretching the whole line.
+  const [typed, setTyped] = useState(TASK.length);
+  useEffect(() => {
+    if (reduce || !inView || active !== 0) return;
+    const start = performance.now();
+    const id = setInterval(() => {
+      const chars = ((performance.now() - start) / TYPE_MS) * TASK.length;
+      setTyped(Math.min(TASK.length, Math.round(chars)));
+      if (chars >= TASK.length) clearInterval(id);
+    }, 40);
+    return () => clearInterval(id);
   }, [active, inView, reduce]);
 
   // reduced motion gets the completed run, held still
@@ -231,8 +255,11 @@ export function Workbench({ className }: { className?: string }) {
             <>
               <div>
                 <p className="label">Task</p>
-                <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
-                  Analyse this inspection report and prepare an approval note.
+                <p className="mt-2 min-h-[3.1em] text-[18px] tracking-[-0.015em] text-ink sm:min-h-[2.4em] sm:text-[20px]">
+                  {TASK.slice(0, typed)}
+                  {typed < TASK.length ? (
+                    <span className="dot-live ml-0.5 inline-block h-[0.95em] w-[2px] translate-y-[0.12em] bg-accent" />
+                  ) : null}
                 </p>
               </div>
 
@@ -272,41 +299,66 @@ export function Workbench({ className }: { className?: string }) {
                   />
                 </div>
 
-                <ol className="space-y-3">
+                <ol className="space-y-3.5">
                   {STEPS.map((step, i) => {
                     const state =
                       i < at ? "done" : i === at ? "running" : "pending";
+                    const last = i === STEPS.length - 1;
+
                     return (
                       <motion.li
                         key={step.done}
-                        className="flex items-start gap-2.5"
-                        animate={{ opacity: state === "pending" ? 0.32 : 1 }}
-                        transition={{
-                          duration: 0.45,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
+                        className="relative flex items-start gap-2.5"
+                        animate={{ opacity: state === "pending" ? 0.34 : 1 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                       >
+                        {/* The rail that turns a checklist into a timeline: it
+                            fills downward only once the step above has landed,
+                            so the run has a direction you can follow rather than
+                            five rows changing colour independently. */}
+                        {!last ? (
+                          <>
+                            <span className="absolute bottom-[-16px] left-[8px] top-[20px] w-px bg-line-2" />
+                            <motion.span
+                              className="absolute bottom-[-16px] left-[8px] top-[20px] w-px origin-top bg-signal/45"
+                              animate={{ scaleY: state === "done" ? 1 : 0 }}
+                              transition={
+                                reduce
+                                  ? { duration: 0 }
+                                  : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                              }
+                            />
+                          </>
+                        ) : null}
+
                         <span
                           className={cn(
-                            "mt-px flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full transition-colors duration-300",
+                            "relative z-10 mt-px flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-full transition-colors duration-300",
                             state === "done"
                               ? "bg-signal/15 text-signal"
                               : "bg-surface ring-1 ring-line-2",
                           )}
                         >
                           {state === "done" ? (
-                            <motion.span
-                              initial={
-                                reduce ? false : { scale: 0.4, opacity: 0 }
-                              }
-                              animate={{ scale: 1, opacity: 1 }}
-                              transition={{
-                                duration: 0.35,
-                                ease: [0.22, 1, 0.36, 1],
-                              }}
+                            // the tick is drawn rather than popped in — a mark
+                            // being made reads as work finishing, a mark
+                            // appearing reads as a state flag
+                            <svg
+                              viewBox="0 0 12 12"
+                              className="h-2.5 w-2.5"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             >
-                              <Check className="h-2.5 w-2.5" strokeWidth={3} />
-                            </motion.span>
+                              <motion.path
+                                d="M2.6 6.3 5 8.7 9.4 3.5"
+                                initial={reduce ? false : { pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                              />
+                            </svg>
                           ) : state === "running" ? (
                             <span className="dot-live h-[5px] w-[5px] rounded-full bg-[#b0670f]" />
                           ) : (
@@ -334,6 +386,16 @@ export function Workbench({ className }: { className?: string }) {
                                 {step.tag}
                               </span>
                             ) : null}
+                            {state === "done" ? (
+                              <motion.span
+                                className="ml-auto font-mono text-[9.5px] tabular-nums text-muted"
+                                initial={reduce ? false : { opacity: 0, x: -4 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.4, delay: 0.15 }}
+                              >
+                                {step.took}
+                              </motion.span>
+                            ) : null}
                           </span>
 
                           {state === "running" ? (
@@ -343,9 +405,14 @@ export function Workbench({ className }: { className?: string }) {
                               <span className="shimmer-bar block h-1.5 w-[62%] rounded-full [animation-delay:0.25s]" />
                             </span>
                           ) : state === "done" ? (
-                            <span className="text-[11px] text-muted">
+                            <motion.span
+                              className="block text-[11px] text-muted"
+                              initial={reduce ? false : { opacity: 0, y: -3 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: 0.1 }}
+                            >
                               {step.meta}
-                            </span>
+                            </motion.span>
                           ) : null}
                         </span>
                       </motion.li>
@@ -354,25 +421,38 @@ export function Workbench({ className }: { className?: string }) {
                 </ol>
               </div>
 
-              {/* stays in the layout so nothing jumps when the run completes */}
+              {/* Holds its place in the layout so nothing jumps when the run
+                  completes, but arrives rather than simply brightening — this is
+                  the payoff of the whole loop and it should look delivered. */}
               <motion.div
-                className="flex items-center gap-3 rounded-[13px] bg-accent-tint px-4 py-3.5 ring-1 ring-accent/12"
+                className="relative flex items-center gap-3 overflow-hidden rounded-[13px] bg-accent-tint px-4 py-3.5 ring-1 ring-accent/12"
                 animate={
                   complete
                     ? { opacity: 1, y: 0, scale: 1 }
-                    : { opacity: 0.25, y: 4, scale: 0.995 }
+                    : { opacity: 0.22, y: 6, scale: 0.99 }
                 }
                 transition={
                   reduce
                     ? { duration: 0 }
-                    : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+                    : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
                 }
               >
+                {/* one sheen across the card as it lands */}
+                {complete && !reduce ? (
+                  <motion.span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/55 to-transparent"
+                    initial={{ x: "-140%" }}
+                    animate={{ x: "420%" }}
+                    transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                ) : null}
+
                 <FileText
-                  className="h-4 w-4 shrink-0 text-accent"
+                  className="relative h-4 w-4 shrink-0 text-accent"
                   strokeWidth={1.75}
                 />
-                <div className="min-w-0">
+                <div className="relative min-w-0">
                   <p className="truncate text-[13px] text-ink">
                     Approval_Note_TK-402.docx
                   </p>
@@ -380,7 +460,8 @@ export function Workbench({ className }: { className?: string }) {
                     generated locally · never left this machine
                   </p>
                 </div>
-                <span className="ml-auto hidden shrink-0 rounded-full bg-ink px-3.5 py-1.5 text-[11.5px] text-paper sm:block">
+                <span className="relative ml-auto hidden shrink-0 items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 text-[11.5px] text-paper sm:flex">
+                  <span className="dot-live h-1 w-1 rounded-full bg-signal" />
                   Open
                 </span>
               </motion.div>
