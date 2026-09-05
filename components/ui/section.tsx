@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { Reveal } from "./reveal";
+import { Reveal, RevealGroup, RevealItem } from "./reveal";
 import { WordRise } from "./word-rise";
 
 export function Section({
@@ -96,42 +96,74 @@ export function SectionHead({
 export function PageHero({
   label,
   title,
+  animateTitle,
   body,
   meta,
+  align = "left",
   art,
 }: {
   label: string;
-  title: ReactNode;
+  title?: ReactNode;
+  /** pass the heading here instead of `title` for a word-by-word entry */
+  animateTitle?: string;
   body: string;
   meta?: string[];
+  align?: "left" | "center";
   /** full-bleed artwork closing the band, under the copy */
   art?: ReactNode;
 }) {
+  const centred = align === "center";
+
   return (
     <section className="relative overflow-hidden border-b border-line bg-paper px-6 pb-20 pt-36 sm:px-8 md:pb-28 md:pt-44">
       <div className="grid-paper pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(110%_75%_at_50%_0%,#000_10%,transparent_70%)]" />
-      <div className="relative mx-auto w-full max-w-[1200px]">
+      <div
+        className={cn(
+          "relative mx-auto w-full max-w-[1200px]",
+          centred && "flex flex-col items-center text-center",
+        )}
+      >
         <Reveal>
           <p className="label">{label}</p>
         </Reveal>
         <Reveal delay={0.06}>
-          <h1 className="display mt-7 max-w-[16ch] text-[clamp(2.4rem,5.6vw,4.2rem)]">
-            {title}
+          <h1
+            className={cn(
+              "display mt-7 max-w-[16ch] text-[clamp(2.4rem,5.6vw,4.2rem)]",
+              centred && "mx-auto",
+            )}
+          >
+            {animateTitle ? <WordRise segments={[{ text: animateTitle }]} /> : title}
           </h1>
         </Reveal>
         <Reveal delay={0.12}>
-          <p className="measure mt-8 text-[17px] leading-[1.65] text-body">{body}</p>
+          <p
+            className={cn(
+              "measure mt-8 text-[17px] leading-[1.65] text-body",
+              centred && "mx-auto text-balance",
+            )}
+          >
+            {body}
+          </p>
         </Reveal>
         {meta?.length ? (
-          <Reveal delay={0.18}>
-            <ul className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
-              {meta.map((m) => (
-                <li key={m} className="label text-body/70">
+          <RevealGroup
+            className={cn(
+              "mt-12 flex flex-wrap items-center gap-x-2.5 gap-y-2",
+              centred && "justify-center",
+            )}
+            stagger={0.06}
+          >
+            {meta.map((m) => (
+              <RevealItem key={m}>
+                {/* elevated chips rather than bare words: the row reads as a
+                    set of facets you could pick from, which is what it is */}
+                <span className="rounded-full bg-surface px-3.5 py-1.5 text-[13px] text-body shadow-e1 ring-1 ring-line/70">
                   {m}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+                </span>
+              </RevealItem>
+            ))}
+          </RevealGroup>
         ) : null}
       </div>
 

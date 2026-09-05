@@ -15,7 +15,8 @@ export default function SolutionsPage() {
     <>
       <PageHero
         label="Solutions"
-        title="Real workflows, not demos."
+        animateTitle="Real workflows, not demos."
+        align="center"
         body="Six industrial workflows where the bottleneck is not intelligence but access — documents too sensitive to upload, and too slow to process by hand."
         meta={["Operations", "Engineering", "Maintenance", "Compliance"]}
         art={<SolutionsWave />}
