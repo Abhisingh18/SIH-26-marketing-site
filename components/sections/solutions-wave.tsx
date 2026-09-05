@@ -122,3 +122,31 @@ export function SolutionsWave() {
     </svg>
   );
 }
+
+/**
+ * The wash behind the solutions hero: saffron, periwinkle and a mint green,
+ * drifting on unrelated cycles so they never line up.
+ *
+ * Green earns its place here rather than being a third colour for its own sake
+ * — it is the tone this site uses for anything verified, and the orbs riding the
+ * wave below already carry it, so the band and the artwork read as one piece.
+ *
+ * All three sit at low alpha under heavy blur with a paper scrim through the
+ * middle: the heading sits directly on this, so it has to be felt and never
+ * read.
+ */
+export function SolutionsWash() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(88%_82%_at_50%_42%,#000_30%,transparent_100%)]"
+    >
+      <div className="drift-a absolute left-[2%] top-[-6%] h-[74%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,150,70,0.26),rgba(240,170,110,0.10)_58%,transparent_100%)] blur-[90px]" />
+      <div className="drift-b absolute right-[0%] top-[6%] h-[80%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,120,244,0.30),rgba(140,164,248,0.12)_56%,transparent_100%)] blur-[95px]" />
+      <div className="drift-c absolute bottom-[-8%] left-[24%] h-[68%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(74,186,134,0.26),rgba(126,206,166,0.10)_58%,transparent_100%)] blur-[100px]" />
+
+      {/* keeps the type band near-white so the headline holds full contrast */}
+      <div className="absolute inset-x-[6%] top-[8%] h-[62%] bg-[radial-gradient(60%_62%_at_50%_46%,rgba(252,251,249,0.86),transparent_74%)]" />
+    </div>
+  );
+}

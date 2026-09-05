@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/section";
-import { SolutionsWave } from "@/components/sections/solutions-wave";
+import { SolutionsWash, SolutionsWave } from "@/components/sections/solutions-wave";
 import { Problem, Sectors, UseCases } from "@/components/sections/solutions";
 import { CTA } from "@/components/sections/cta";
 
@@ -19,6 +19,7 @@ export default function SolutionsPage() {
         align="center"
         body="Six industrial workflows where the bottleneck is not intelligence but access — documents too sensitive to upload, and too slow to process by hand."
         meta={["Operations", "Engineering", "Maintenance", "Compliance"]}
+        backdrop={<SolutionsWash />}
         art={<SolutionsWave />}
       />
       <Problem />

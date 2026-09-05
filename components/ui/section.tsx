@@ -100,6 +100,7 @@ export function PageHero({
   body,
   meta,
   align = "left",
+  backdrop,
   art,
 }: {
   label: string;
@@ -109,6 +110,8 @@ export function PageHero({
   body: string;
   meta?: string[];
   align?: "left" | "center";
+  /** an animated wash behind the copy — opt-in, so a page can stay quiet */
+  backdrop?: ReactNode;
   /** full-bleed artwork closing the band, under the copy */
   art?: ReactNode;
 }) {
@@ -117,6 +120,7 @@ export function PageHero({
   return (
     <section className="relative overflow-hidden border-b border-line bg-paper px-6 pb-20 pt-36 sm:px-8 md:pb-28 md:pt-44">
       <div className="grid-paper pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(110%_75%_at_50%_0%,#000_10%,transparent_70%)]" />
+      {backdrop}
       <div
         className={cn(
           "relative mx-auto w-full max-w-[1200px]",
