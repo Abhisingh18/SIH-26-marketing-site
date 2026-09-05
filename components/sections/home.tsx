@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SovereigntyMonitor } from "@/components/mock/monitor";
 import { PillarCards } from "@/components/sections/pillar-cards";
+import { ProductFacts } from "@/components/sections/product-facts";
 import { TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
@@ -96,24 +97,6 @@ export function Pillars() {
 /* Product moment                                                      */
 /* ------------------------------------------------------------------ */
 
-const PRODUCT_FACTS = [
-  {
-    n: "01",
-    title: "Installed, not accessed",
-    body: "A desktop client on managed machines — no browser upload, no tenant, no account with anyone else.",
-  },
-  {
-    n: "02",
-    title: "Runs against your GPU",
-    body: "Points at a workstation card or a shared on-premise inference server behind your firewall.",
-  },
-  {
-    n: "03",
-    title: "Works offline",
-    body: "Once models are staged, the application needs no network route to do its job.",
-  },
-];
-
 export function ProductMoment() {
   return (
     <Section tone="veil" size="lg">
@@ -126,19 +109,7 @@ export function ProductMoment() {
           <TextLink href="/platform">Explore the workbench</TextLink>
         </SectionHead>
 
-        <RevealGroup className="border-t border-line">
-          {PRODUCT_FACTS.map((f) => (
-            <RevealItem key={f.n}>
-              <div className="flex gap-6 border-b border-line py-7">
-                <span className="font-mono text-[11px] tracking-[0.14em] text-muted">{f.n}</span>
-                <div>
-                  <p className="text-[16px] font-medium tracking-[-0.01em] text-ink">{f.title}</p>
-                  <p className="mt-2 text-[14px] leading-[1.6] text-body">{f.body}</p>
-                </div>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+        <ProductFacts />
       </div>
     </Section>
   );
