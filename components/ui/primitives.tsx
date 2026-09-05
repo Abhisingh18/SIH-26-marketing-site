@@ -95,30 +95,6 @@ export function Label({
   return <p className={cn("label", invert && "text-white/40", className)}>{children}</p>;
 }
 
-export function Pill({
-  children,
-  className,
-  invert = false,
-}: {
-  children: ReactNode;
-  className?: string;
-  invert?: boolean;
-}) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[12.5px]",
-        invert
-          ? "bg-white/8 text-paper/75"
-          : "bg-surface text-body shadow-e1 ring-1 ring-line",
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
 export function LiveDot({ className }: { className?: string }) {
   return (
     <span className={cn("relative flex h-1.5 w-1.5", className)} aria-hidden>

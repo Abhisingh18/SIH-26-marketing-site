@@ -22,7 +22,7 @@ const CLUSTERS: Cluster[] = [
     id: "inspection",
     label: "Inspection",
     colour: "#5551c4",
-    count: 46,
+    count: 92,
     kind: "Field records",
     stats: [
       ["Documents", "412"],
@@ -35,7 +35,7 @@ const CLUSTERS: Cluster[] = [
     id: "drawings",
     label: "Drawings",
     colour: "#b0670f",
-    count: 38,
+    count: 76,
     kind: "Engineering",
     stats: [
       ["Drawings", "1,860"],
@@ -48,7 +48,7 @@ const CLUSTERS: Cluster[] = [
     id: "procedures",
     label: "Procedures",
     colour: "#2338cc",
-    count: 42,
+    count: 84,
     kind: "SOPs",
     stats: [
       ["Procedures", "630"],
@@ -61,7 +61,7 @@ const CLUSTERS: Cluster[] = [
     id: "standards",
     label: "Standards",
     colour: "#8a6ce2",
-    count: 30,
+    count: 60,
     kind: "Reference",
     stats: [
       ["Standards", "78"],
@@ -74,7 +74,7 @@ const CLUSTERS: Cluster[] = [
     id: "photos",
     label: "Photographs",
     colour: "#7e96f6",
-    count: 34,
+    count: 68,
     kind: "Image sets",
     stats: [
       ["Images", "12,700"],
@@ -87,7 +87,7 @@ const CLUSTERS: Cluster[] = [
     id: "maintenance",
     label: "Maintenance",
     colour: "#0f8b55",
-    count: 32,
+    count: 64,
     kind: "Work history",
     stats: [
       ["Work orders", "8,400"],
@@ -100,7 +100,7 @@ const CLUSTERS: Cluster[] = [
     id: "commercial",
     label: "Commercial",
     colour: "#c2557a",
-    count: 22,
+    count: 44,
     kind: "Procurement",
     stats: [
       ["Orders", "3,260"],
@@ -141,7 +141,7 @@ function build() {
     const t = (ci + 0.5) / CLUSTERS.length;
     const phi = Math.acos(1 - 2 * t);
     const theta = Math.PI * (1 + Math.sqrt(5)) * ci;
-    const R = 118;
+    const R = 138;
 
     const hub = nodes.length;
     hubs.push(hub);
@@ -149,7 +149,7 @@ function build() {
       x: R * Math.sin(phi) * Math.cos(theta),
       y: R * Math.sin(phi) * Math.sin(theta) * 0.66,
       z: R * Math.cos(phi),
-      r: 6,
+      r: 7,
       cluster: ci,
       hub: true,
     });
@@ -160,7 +160,7 @@ function build() {
       const s = ci * 977 + i * 31;
       const u = noise(s) * 2 - 1;
       const a = noise(s + 1) * Math.PI * 2;
-      const rad = 24 + noise(s + 2) * 62;
+      const rad = 26 + noise(s + 2) * 74;
       const k = Math.sqrt(1 - u * u);
 
       const index = nodes.length;
@@ -168,7 +168,7 @@ function build() {
         x: centre.x + rad * k * Math.cos(a),
         y: centre.y + rad * k * Math.sin(a) * 0.72,
         z: centre.z + rad * u,
-        r: 1.5 + noise(s + 3) * 2.1,
+        r: 1.3 + noise(s + 3) * 2.4,
         cluster: ci,
         hub: false,
       });
@@ -193,15 +193,27 @@ function build() {
 const { nodes: NODES, edges: EDGES } = build();
 
 const TOUR_MS = 1900;
-const FOCAL = 620;
-const SPIN = 0.00016; // radians per ms — a little under a minute per turn
+const FOCAL = 700;
+const SPIN = 0.00014; // radians per ms — a little over a minute per turn
+
+/**
+ * A slow nod about X on top of the spin. A single-axis rotation reads as a flat
+ * disc turning; adding a second, slower axis is what makes the cloud read as a
+ * volume.
+ */
+const TILT = 0.2;
+const TILT_RATE = 0.55;
+
+/** how fast a cluster fades in or out of focus — see `lit` in the draw loop */
+const EASE = 0.09;
 
 /* ------------------------------------------------------------------ */
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 
 /**
- * The whole index as one rotating graph.
+ * The whole index as one rotating graph — roughly 500 nodes across seven
+ * clusters.
  *
  * Canvas rather than SVG: this is ~250 nodes and ~350 edges redrawn every
  * frame, and that many DOM elements carrying their own transforms drops frames
@@ -233,6 +245,9 @@ export function KnowledgeGraph({
     selectedRef.current = selected;
   }, [selected]);
 
+  // hover is read only by the draw loop, so it never needs to be React state
+  const hoverRef = useRef(-1);
+
   // the graph walks itself until someone clicks, then hands over for good
   useEffect(() => {
     if (!tour || taken || reduce) return;
@@ -258,6 +273,8 @@ export function KnowledgeGraph({
     let running = false;
 
     const projected = NODES.map(() => ({ x: 0, y: 0, s: 0, z: 0 }));
+    const order = NODES.map((_, i) => i);
+    const lit = CLUSTERS.map((_, i) => (i === selectedRef.current ? 1 : 0));
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -272,18 +289,23 @@ export function KnowledgeGraph({
     const project = () => {
       const cx = width / 2;
       const cy = height / 2;
-      const fit = Math.min(width / 620, height / 400);
+      const fit = Math.min(width / 640, height / 460);
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
+      const tilt = Math.sin(angle * TILT_RATE) * TILT;
+      const tcos = Math.cos(tilt);
+      const tsin = Math.sin(tilt);
 
       for (let i = 0; i < NODES.length; i++) {
         const n = NODES[i];
         const x = n.x * cos - n.z * sin;
-        const z = n.x * sin + n.z * cos;
+        const zy = n.x * sin + n.z * cos;
+        const y = n.y * tcos - zy * tsin;
+        const z = n.y * tsin + zy * tcos;
         const s = (FOCAL / (FOCAL + z)) * fit;
         const p = projected[i];
         p.x = cx + x * s;
-        p.y = cy + n.y * s;
+        p.y = cy + y * s;
         p.s = s;
         p.z = z;
       }
@@ -298,7 +320,15 @@ export function KnowledgeGraph({
       project();
       ctx.clearRect(0, 0, width, height);
 
-      const active = selectedRef.current;
+      // Focus is a per-cluster value eased toward its target rather than a
+      // boolean. Switching clusters on the tour would otherwise snap two
+      // hundred nodes at once, which reads as a glitch; easing turns the same
+      // change into a cross-fade.
+      const target = selectedRef.current;
+      for (let c = 0; c < CLUSTERS.length; c++) {
+        const want = c === target ? 1 : c === hoverRef.current ? 0.6 : 0;
+        lit[c] += (want - lit[c]) * EASE;
+      }
 
       // edges first, faint, and faded by depth so the far side recedes
       ctx.lineWidth = 0.6;
@@ -307,29 +337,49 @@ export function KnowledgeGraph({
         const pb = projected[b];
         const ca = NODES[a].cluster;
         const cb = NODES[b].cluster;
-        const lit = ca === active || cb === active;
+        const focus = Math.max(lit[ca], lit[cb]);
         const depth = (pa.s + pb.s) / 2;
-        ctx.globalAlpha = (lit ? 0.3 : 0.07) * Math.min(1, depth * 1.4);
-        ctx.strokeStyle = lit ? CLUSTERS[ca].colour : "#111113";
+        ctx.globalAlpha = (0.045 + focus * 0.26) * Math.min(1, depth * 1.4);
+        ctx.strokeStyle = focus > 0.5 ? CLUSTERS[ca].colour : "#111113";
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
         ctx.stroke();
       }
 
-      // nodes back to front, so near ones overlap far ones correctly
-      const order = projected
-        .map((p, i) => [p.z, i] as const)
-        .sort((m, n) => n[0] - m[0]);
+      // back to front, so near nodes correctly overlap far ones. The order
+      // array is reused and sorted in place — rebuilding it every frame at this
+      // node count is measurable garbage.
+      order.sort((a, b) => projected[b].z - projected[a].z);
 
-      for (const [, i] of order) {
+      for (let k = 0; k < order.length; k++) {
+        const i = order[k];
         const n = NODES[i];
         const p = projected[i];
-        const lit = n.cluster === active;
-        ctx.globalAlpha = (lit ? 0.95 : 0.22) * Math.min(1, p.s * 1.6);
-        ctx.fillStyle = lit ? CLUSTERS[n.cluster].colour : "#8a8a92";
+        const focus = lit[n.cluster];
+        const cluster = CLUSTERS[n.cluster];
+
+        ctx.globalAlpha = (0.18 + focus * 0.78) * Math.min(1, p.s * 1.6);
+        ctx.fillStyle = focus > 0.35 ? cluster.colour : "#8a8a92";
+
+        // hubs get a halo, which is what stops them reading as slightly larger
+        // dots once the cloud is this dense
+        if (n.hub && focus > 0.02) {
+          const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 34 * p.s);
+          glow.addColorStop(0, `${cluster.colour}${Math.round(focus * 54).toString(16).padStart(2, "0")}`);
+          glow.addColorStop(1, `${cluster.colour}00`);
+          ctx.save();
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 34 * p.s, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          ctx.fillStyle = cluster.colour;
+        }
+
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.6, n.r * p.s), 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.5, n.r * p.s), 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -341,12 +391,12 @@ export function KnowledgeGraph({
         const n = NODES[i];
         if (!n.hub) continue;
         const p = projected[i];
-        const lit = n.cluster === active;
-        ctx.globalAlpha = lit ? 1 : 0.4;
+        const focus = lit[n.cluster];
+        ctx.globalAlpha = 0.36 + focus * 0.64;
         ctx.lineWidth = 3;
         ctx.strokeStyle = "#fcfbf9";
         ctx.strokeText(CLUSTERS[n.cluster].label, p.x, p.y - 14 * p.s);
-        ctx.fillStyle = lit ? "#111113" : "#56565c";
+        ctx.fillStyle = focus > 0.5 ? "#111113" : "#56565c";
         ctx.fillText(CLUSTERS[n.cluster].label, p.x, p.y - 14 * p.s);
       }
 
@@ -374,7 +424,7 @@ export function KnowledgeGraph({
     );
     visible.observe(wrap);
 
-    const onClick = (event: MouseEvent) => {
+    const nearest = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const mx = event.clientX - rect.left;
       const my = event.clientY - rect.top;
@@ -382,20 +432,37 @@ export function KnowledgeGraph({
       let bestDist = 26;
       for (let i = 0; i < NODES.length; i++) {
         const p = projected[i];
-        // hubs win ties, so clicking near a label picks its cluster
-        const d = Math.hypot(p.x - mx, p.y - my) - (NODES[i].hub ? 12 : 0);
+        // hubs win ties, so a click near a label picks its cluster
+        const d = Math.hypot(p.x - mx, p.y - my) - (NODES[i].hub ? 14 : 0);
         if (d < bestDist) {
           bestDist = d;
           best = i;
         }
       }
-      if (best >= 0) {
-        setTaken(true);
-        setSelected(NODES[best].cluster);
-        onInteract?.();
-      }
+      return best;
     };
+
+    const onClick = (event: MouseEvent) => {
+      const hit = nearest(event);
+      if (hit < 0) return;
+      setTaken(true);
+      setSelected(NODES[hit].cluster);
+      onInteract?.();
+    };
+
+    const onMove = (event: MouseEvent) => {
+      const hit = nearest(event);
+      hoverRef.current = hit < 0 ? -1 : NODES[hit].cluster;
+      canvas.style.cursor = hit < 0 ? "default" : "pointer";
+    };
+
+    const onLeave = () => {
+      hoverRef.current = -1;
+    };
+
     canvas.addEventListener("click", onClick);
+    canvas.addEventListener("mousemove", onMove);
+    canvas.addEventListener("mouseleave", onLeave);
 
     return () => {
       running = false;
@@ -403,6 +470,8 @@ export function KnowledgeGraph({
       sizes.disconnect();
       visible.disconnect();
       canvas.removeEventListener("click", onClick);
+      canvas.removeEventListener("mousemove", onMove);
+      canvas.removeEventListener("mouseleave", onLeave);
     };
   }, [reduce, onInteract]);
 
@@ -412,12 +481,12 @@ export function KnowledgeGraph({
     <div className="space-y-3">
       <div
         ref={wrapRef}
-        className="relative h-[250px] overflow-hidden rounded-[13px] bg-veil/60 sm:h-[290px]"
+        className="relative h-[330px] overflow-hidden rounded-[13px] bg-veil/60 sm:h-[430px]"
       >
         <div className="grid-paper absolute inset-0 opacity-45" />
         <canvas
           ref={canvasRef}
-          className="relative block h-full w-full cursor-pointer"
+          className="relative block h-full w-full"
           role="img"
           aria-label="Rotating graph of the indexed knowledge base"
         />

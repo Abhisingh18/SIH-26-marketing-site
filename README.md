@@ -76,7 +76,16 @@ Three rules the whole design leans on:
 3. **Three text steps only** — `ink` / `body` / `muted`. No fourth grey.
 
 Utilities: `.display`, `.display-sm`, `.label`, `.measure`, `.grid-paper`,
-`.card-hover`, `.link-underline`.
+`.card-hover`, `.link-underline`, `.rise`, `.rule-sweep`, `.flow-text`,
+`.drift-a/b/c`, `.marquee-track`, `.net-pulse`, `.net-node`, `.shimmer-bar`.
+Every one of them is switched off under `prefers-reduced-motion`.
+
+A fourth rule the pages share: **colour marks category, never decorates.** The
+same four tones run across the hero document strip, the workbench tag pills, the
+knowledge graph and the inner pages — engineering `#b0670f` on `#fdf3e6`,
+procedure `accent` on `accent-tint`, field `#5551c4` on `#efeffb`, commercial
+`#0f8b55` on `#e9f6ef`. Colour sits in a small tinted well behind an icon, not
+on the card: tint whole cards across a six-item grid and it reads as confetti.
 
 Type: **Inter** for everything, **JetBrains Mono** only for labels, counters and
 file names.
@@ -88,30 +97,28 @@ app/
   layout.tsx              fonts, metadata, nav + footer shell
   globals.css             design tokens + utilities
   page.tsx                home
-  platform/page.tsx
-  solutions/page.tsx
-  security/page.tsx
-  architecture/page.tsx
-  demo/page.tsx
+  not-found.tsx           404
+  opengraph-image.png     social card (generated, see below)
+  platform/  solutions/  security/  architecture/  demo/
 components/
-  site/                   nav (active route state), footer
+  site/                   nav (sliding pill, scroll capsule), footer
   mock/
     workbench.tsx         desktop-app mockup, runs as a looping demo
-    monitor.tsx           sovereignty monitor panel
+    knowledge-graph.tsx   ~500-node index, rotating in perspective on canvas
+    monitor.tsx           sovereignty monitor, live but pinned at zero
   ui/
-    primitives.tsx        Button, TextLink, Label, Pill, LiveDot, Panel
+    primitives.tsx        Button, TextLink, Label, LiveDot, Panel
     diagram.tsx           Node, Down, Split, Layer, DiagramFrame
-    section.tsx           Section, SectionHead, PageHero
-    reveal.tsx            scroll-in animation wrappers
+    section.tsx           Section, SectionHead (animateTitle), PageHero
+    reveal.tsx            scroll-in wrappers
+    word-rise.tsx         word-by-word blur reveal
+    neural-field.tsx      animated feed-forward graph backdrop
   sections/
-    hero.tsx              home hero
-    home.tsx              trust strip, statement, pillars, teasers
-    platform.tsx          agentic, model routing, multimodal, knowledge, outputs
-    solutions.tsx         problem, use cases, sectors
-    security.tsx          boundary, monitor, controls
-    architecture.tsx      layers, principles, stack, deployment
-    demo-form.tsx         demo request form (client)
-    cta.tsx               shared dark CTA band
+    hero.tsx              hero, document marquee, workbench stage
+    platform-title.tsx    animated title over the product canvas
+    home.tsx              statement, pillars, teasers
+    platform.tsx  solutions.tsx  security.tsx  architecture.tsx
+    demo-form.tsx  cta.tsx
 ```
 
 ## Editing copy
