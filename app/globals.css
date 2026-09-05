@@ -184,6 +184,24 @@ body {
 
 
 /*
+ * The orbs riding the solutions wave. Bob and rotation share one keyframe; the
+ * per-orb rotation comes in as a custom property so a single rule can turn some
+ * of them one way and some the other.
+ */
+@keyframes orb-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-11px) rotate(var(--spin, 8deg)); }
+}
+
+.orb-bob {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: orb-bob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
  * Signals running along the neural field's edges. A short dash travelling a
  * long dasharray reads as one packet moving forward; animating the whole line's
  * opacity instead would just make the graph blink.
@@ -342,6 +360,7 @@ body {
   .drift-c,
   .net-pulse,
   .net-node,
-  .net-node { animation: none; }
+  .net-node,
+  .orb-bob { animation: none; }
   .card-hover { transition: none; }
 }

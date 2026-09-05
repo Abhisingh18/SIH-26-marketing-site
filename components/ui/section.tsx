@@ -98,11 +98,14 @@ export function PageHero({
   title,
   body,
   meta,
+  art,
 }: {
   label: string;
   title: ReactNode;
   body: string;
   meta?: string[];
+  /** full-bleed artwork closing the band, under the copy */
+  art?: ReactNode;
 }) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-paper px-6 pb-20 pt-36 sm:px-8 md:pb-28 md:pt-44">
@@ -131,6 +134,16 @@ export function PageHero({
           </Reveal>
         ) : null}
       </div>
+
+      {art ? (
+        // breaks the 1200px column: the artwork is a horizon, and a horizon that
+        // stops at the gutter draws a box instead
+        <div className="relative -mb-20 mt-14 md:-mb-28 md:mt-16">
+          <div className="w-screen max-w-[100vw] -translate-x-1/2 [margin-left:50%]">
+            {art}
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
