@@ -193,6 +193,11 @@ function build() {
 
 const { nodes: NODES, edges: EDGES, bridgeFrom: BRIDGE_FROM } = build();
 
+/** the hub each cluster centres on, so the tour always has a node to point at */
+const HUB_OF = CLUSTERS.map((_, ci) =>
+  NODES.findIndex((n) => n.hub && n.cluster === ci),
+);
+
 const TOUR_MS = 1900;
 const FOCAL = 700;
 const SPIN = 0.00014; // radians per ms — a little over a minute per turn
@@ -246,8 +251,25 @@ export function KnowledgeGraph({
     selectedRef.current = selected;
   }, [selected]);
 
-  // hover is read only by the draw loop, so it never needs to be React state
+  // Hover and the picked node are read only by the draw loop, so they never
+  // need to be React state — re-rendering the panel on every mouse move would
+  // be work for nothing.
   const hoverRef = useRef(-1);
+  const hoverNodeRef = useRef(-1);
+  const pickedRef = useRef(HUB_OF[0]);
+  // eased 0..1, restarted whenever the pick changes, so the node grows into
+  // focus instead of jumping
+  const pickTRef = useRef(1);
+
+  // A pick outside the selected cluster is stale — that happens when the tour
+  // moves on — so it falls back to that cluster's hub. A pick already inside it
+  // is the viewer's own click and is left alone.
+  useEffect(() => {
+    const current = pickedRef.current;
+    if (current >= 0 && NODES[current].cluster === selected) return;
+    pickedRef.current = HUB_OF[selected];
+    pickTRef.current = 0;
+  }, [selected]);
 
   // the graph walks itself until someone clicks, then hands over for good
   useEffect(() => {
@@ -372,14 +394,23 @@ export function KnowledgeGraph({
       // node count is measurable garbage.
       order.sort((a, b) => projected[b].z - projected[a].z);
 
+      const picked = pickedRef.current;
+      pickTRef.current += (1 - pickTRef.current) * 0.11;
+      const pickT = pickTRef.current;
+
       for (let k = 0; k < order.length; k++) {
         const i = order[k];
+        // the picked node is painted afterwards so it is never buried by a
+        // node that happens to be nearer the camera
+        if (i === picked) continue;
         const n = NODES[i];
         const p = projected[i];
         const focus = lit[n.cluster];
         const cluster = CLUSTERS[n.cluster];
 
-        ctx.globalAlpha = (0.52 + focus * 0.46) * Math.min(1, p.s * 1.6);
+        const hovered = i === hoverNodeRef.current;
+        ctx.globalAlpha =
+          (0.52 + focus * 0.46) * Math.min(1, p.s * 1.6) * (hovered ? 1.25 : 1);
         ctx.fillStyle = cluster.colour;
 
         // hubs get a halo, which is what stops them reading as slightly larger
@@ -399,7 +430,47 @@ export function KnowledgeGraph({
         }
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.5, n.r * p.s), 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.5, n.r * p.s) * (hovered ? 1.5 : 1), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // the picked node, on top of everything
+      if (picked >= 0) {
+        const n = NODES[picked];
+        const p = projected[picked];
+        const colour = CLUSTERS[n.cluster].colour;
+        const grow = 1 + 1.9 * pickT;
+        const r = Math.max(3.4, n.r * p.s) * grow;
+
+        const halo = ctx.createRadialGradient(p.x, p.y, r, p.x, p.y, r * 4.4);
+        halo.addColorStop(0, `${colour}52`);
+        halo.addColorStop(1, `${colour}00`);
+        ctx.globalAlpha = pickT;
+        ctx.fillStyle = halo;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r * 4.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // a paper gap between the node and its ring, so the ring reads as a
+        // selection marker rather than a fatter node
+        ctx.globalAlpha = 0.9 * pickT;
+        ctx.strokeStyle = "#fcfbf9";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + 4.5, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.globalAlpha = pickT;
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + 4.5, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = colour;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
       }
 
@@ -465,6 +536,8 @@ export function KnowledgeGraph({
     const onClick = (event: MouseEvent) => {
       const hit = nearest(event);
       if (hit < 0) return;
+      pickedRef.current = hit;
+      pickTRef.current = 0;
       setTaken(true);
       setSelected(NODES[hit].cluster);
       onInteract?.();
@@ -472,12 +545,14 @@ export function KnowledgeGraph({
 
     const onMove = (event: MouseEvent) => {
       const hit = nearest(event);
+      hoverNodeRef.current = hit;
       hoverRef.current = hit < 0 ? -1 : NODES[hit].cluster;
       canvas.style.cursor = hit < 0 ? "default" : "pointer";
     };
 
     const onLeave = () => {
       hoverRef.current = -1;
+      hoverNodeRef.current = -1;
     };
 
     canvas.addEventListener("click", onClick);
