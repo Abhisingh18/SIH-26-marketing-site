@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,10 @@ export function WordRise({
 }) {
   const reduce = useReducedMotion();
 
+  const words = segments.flatMap((segment) =>
+    segment.text.split(" ").map((word) => ({ word, className: segment.className })),
+  );
+
   const rise: Variants = {
     hidden: reduce ? {} : { opacity: 0, y: "0.4em", filter: "blur(9px)" },
     show: {
@@ -49,17 +54,20 @@ export function WordRise({
         show: { transition: { staggerChildren: reduce ? 0 : stagger } },
       }}
     >
-      {segments.flatMap((segment, si) =>
-        segment.text.split(" ").map((word, wi) => (
+      {words.map(({ word, className: wordClass }, i) => (
+        <Fragment key={`${i}-${word}`}>
           <motion.span
-            key={`${si}-${wi}-${word}`}
             variants={rise}
-            className={cn("mr-[0.26em] inline-block", segment.className)}
+            className={cn("inline-block", wordClass)}
           >
             {word}
           </motion.span>
-        )),
-      )}
+          {/* A real space, not a margin. Margins look right but copy as
+              nothing, so the headline pastes as one run-together string and
+              reads that way to a screen reader. */}
+          {i < words.length - 1 ? " " : null}
+        </Fragment>
+      ))}
     </motion.span>
   );
 }

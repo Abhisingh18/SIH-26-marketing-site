@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 
 const LEAD = ["The", "AI", "platform"];
@@ -12,6 +13,10 @@ const LEAD = ["The", "AI", "platform"];
  * instead of switching on. Scroll-triggered rather than CSS-on-mount, because
  * this sits well below the fold and a mount animation would have finished long
  * before anyone reached it.
+ *
+ * Words are separated by real spaces rather than margins: a margin looks right
+ * but copies as nothing, so the heading pastes as one run-together string and
+ * reads that way to a screen reader.
  *
  * The highlighted phrase keeps a slow gradient running through it for as long
  * as it is on screen. Sangam is a confluence, so colour moving through the words
@@ -47,9 +52,11 @@ export function PlatformTitle() {
 
       <h2 className="display mt-5 text-[clamp(1.9rem,4.1vw,3.05rem)] leading-[1.04]">
         {LEAD.map((word) => (
-          <motion.span key={word} variants={rise} className="mr-[0.24em] inline-block">
-            {word}
-          </motion.span>
+          <Fragment key={word}>
+            <motion.span variants={rise} className="inline-block">
+              {word}
+            </motion.span>{" "}
+          </Fragment>
         ))}
         <motion.span variants={rise} className="flow-text inline-block">
           India can build on

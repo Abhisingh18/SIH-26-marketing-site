@@ -4,6 +4,7 @@ import { SovereigntyMonitor } from "@/components/mock/monitor";
 import { Panel, TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
+import { NeuralField } from "@/components/ui/neural-field";
 import { WordRise } from "@/components/ui/word-rise";
 
 /* ------------------------------------------------------------------ */
@@ -16,7 +17,7 @@ export function Statement() {
       <StatementBackdrop />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
-        <h2 className="display mx-auto max-w-[19ch] text-center text-[clamp(2rem,5vw,3.6rem)]">
+        <h2 className="display mx-auto max-w-[24ch] text-center text-[clamp(2.1rem,5.4vw,4rem)]">
           <WordRise
             segments={[
               // the setup recedes so the payoff lands — the sentence is about
@@ -28,7 +29,7 @@ export function Statement() {
         </h2>
 
         <Reveal delay={0.5}>
-          <p className="mx-auto mt-12 max-w-[52ch] text-balance text-center text-[16.5px] leading-[1.65] text-body">
+          <p className="mx-auto mt-12 max-w-[58ch] text-balance text-center text-[17px] leading-[1.65] text-body">
             Refineries, plants and engineering teams already hold the information AI is best
             at using. The problem was never capability — it was custody.
           </p>
@@ -51,12 +52,23 @@ function StatementBackdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(80%_75%_at_50%_50%,#000_35%,transparent_100%)]"
+      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(82%_78%_at_50%_50%,#000_32%,transparent_100%)]"
     >
-      <div className="grid-paper absolute inset-0 opacity-60" />
-      <div className="drift-a absolute left-[6%] top-[8%] h-[62%] w-[42%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,158,88,0.20),transparent_100%)] blur-[90px]" />
-      <div className="drift-b absolute right-[4%] top-[22%] h-[70%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(126,150,246,0.24),transparent_100%)] blur-[95px]" />
-      <div className="drift-c absolute left-[28%] bottom-[2%] h-[56%] w-[44%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(138,108,226,0.16),transparent_100%)] blur-[100px]" />
+      <div className="grid-paper absolute inset-0 opacity-50" />
+
+      {/* the network sits between the grid and the colour, so the wash lights
+          it from behind rather than covering it */}
+      <div className="absolute inset-0 opacity-[0.9]">
+        <NeuralField />
+      </div>
+
+      <div className="drift-a absolute left-[4%] top-[6%] h-[66%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,150,70,0.32),rgba(240,168,110,0.12)_58%,transparent_100%)] blur-[85px]" />
+      <div className="drift-b absolute right-[2%] top-[20%] h-[74%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,120,244,0.36),rgba(140,164,248,0.14)_56%,transparent_100%)] blur-[90px]" />
+      <div className="drift-c absolute left-[26%] bottom-[0%] h-[60%] w-[48%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(132,96,228,0.28),rgba(160,130,236,0.10)_58%,transparent_100%)] blur-[95px]" />
+
+      {/* paper scrim through the middle so the headline keeps full contrast
+          over all of it */}
+      <div className="absolute inset-x-[8%] top-[16%] h-[68%] bg-[radial-gradient(62%_58%_at_50%_50%,rgba(252,251,249,0.8),transparent_74%)]" />
     </div>
   );
 }
