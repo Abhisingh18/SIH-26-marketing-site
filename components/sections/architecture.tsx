@@ -181,7 +181,7 @@ function FlowSplit({
 
 export function Layers() {
   return (
-    <Section tone="surface">
+    <Section id="layers" tone="surface">
       <SectionHead
         label="System design"
         animateTitle="Open by design. Modular by architecture."
@@ -255,7 +255,7 @@ const PRINCIPLES = [
 
 export function Principles() {
   return (
-    <section className="relative overflow-hidden px-6 py-24 sm:px-8 md:py-32">
+    <section id="principles" className="relative overflow-hidden px-6 py-24 sm:px-8 md:py-32">
       <PrinciplesBackdrop />
 
       <div className="relative mx-auto w-full max-w-[1200px]">
@@ -366,7 +366,7 @@ const STACK = [
 
 export function Stack() {
   return (
-    <Section tone="veil">
+    <Section id="stack" tone="veil">
       <Reveal>
         <Label>Powered by open-source infrastructure</Label>
         <p className="measure mt-6 text-[16.5px] leading-[1.65] text-body">

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { MENUS, NavMenu, type MenuKey } from "./nav-menu";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -20,6 +21,35 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
+  // which panel is open, and the timer that guards it
+  const [open_, setOpen_] = useState<MenuKey | null>(null);
+  const intent = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // the mobile sheet has no room for a panel, so it expands in place instead
+  const [expanded, setExpanded] = useState<MenuKey | null>(null);
+
+  // A menu that opens the instant a cursor crosses a trigger fires constantly
+  // while someone is on their way somewhere else. Opening waits; closing waits
+  // longer, so the gap between trigger and panel is survivable.
+  const openLater = (key: MenuKey) => {
+    if (intent.current) clearTimeout(intent.current);
+    intent.current = setTimeout(() => setOpen_(key), open_ ? 40 : 130);
+  };
+  const closeLater = () => {
+    if (intent.current) clearTimeout(intent.current);
+    intent.current = setTimeout(() => setOpen_(null), 180);
+  };
+  const closeNow = () => {
+    if (intent.current) clearTimeout(intent.current);
+    setOpen_(null);
+  };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen_(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -34,6 +64,10 @@ export function Nav() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => () => {
+    if (intent.current) clearTimeout(intent.current);
+  }, []);
 
   const active = LINKS.find((l) => pathname.startsWith(l.href))?.href ?? null;
   // Hover wins over the current route, so the pill follows the cursor and
@@ -68,13 +102,22 @@ export function Nav() {
 
         <nav
           className="hidden items-center md:flex"
-          onMouseLeave={() => setHovered(null)}
+          onMouseLeave={() => {
+            setHovered(null);
+            closeLater();
+          }}
         >
           {LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              onMouseEnter={() => setHovered(l.href)}
+              aria-expanded={open_ === l.href}
+              onFocus={() => setOpen_(l.href as MenuKey)}
+              onClick={closeNow}
+              onMouseEnter={() => {
+                setHovered(l.href);
+                openLater(l.href as MenuKey);
+              }}
               className={cn(
                 "relative rounded-full px-4 py-2 text-[14px] transition-colors duration-300",
                 pillOn === l.href ? "text-ink" : "text-body",
@@ -120,6 +163,38 @@ export function Nav() {
         </div>
       </div>
 
+      {/* Desktop panel. It hangs from the same wrapper as the bar and sits
+          flush under it — a gap here closes the menu while the cursor is on its
+          way into it, which is the classic way this pattern breaks. */}
+      <AnimatePresence>
+        {open_ ? (
+          <motion.div
+            className="absolute inset-x-4 top-full hidden justify-center md:flex"
+            onMouseEnter={() => {
+              if (intent.current) clearTimeout(intent.current);
+            }}
+            onMouseLeave={closeLater}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.985 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="w-full max-w-[720px] overflow-hidden rounded-[20px] bg-paper/95 shadow-e3 ring-1 ring-line backdrop-blur-xl">
+              {/* keyed on the open menu so the contents cross-fade when moving
+                  between adjacent triggers, while the panel itself stays put */}
+              <motion.div
+                key={open_}
+                initial={reduce ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.18 }}
+              >
+                <NavMenu menuKey={open_} onNavigate={closeNow} />
+              </motion.div>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       {/* mobile sheet */}
       <div
         className={cn(
@@ -130,20 +205,71 @@ export function Nav() {
         )}
       >
         <nav className="flex flex-col p-3">
-          {LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "flex items-center justify-between rounded-[14px] px-4 py-3.5 text-[17px] tracking-[-0.015em] transition-colors",
-                pathname.startsWith(l.href) ? "bg-ink/[0.05] text-ink" : "text-body",
-              )}
-            >
-              {l.label}
-              <ArrowRight className="h-3.5 w-3.5 text-muted" strokeWidth={1.75} />
-            </Link>
-          ))}
+          {LINKS.map((l) => {
+            const key = l.href as MenuKey;
+            const isOpen = expanded === key;
+            return (
+              <div key={l.href}>
+                <div
+                  className={cn(
+                    "flex items-center rounded-[14px] transition-colors",
+                    pathname.startsWith(l.href) ? "bg-ink/[0.05]" : "",
+                  )}
+                >
+                  <Link
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "flex-1 px-4 py-3.5 text-[17px] tracking-[-0.015em]",
+                      pathname.startsWith(l.href) ? "text-ink" : "text-body",
+                    )}
+                  >
+                    {l.label}
+                  </Link>
+                  {/* separate control, so tapping the row still navigates —
+                      making the whole row a toggle strands anyone who wanted
+                      the page itself */}
+                  <button
+                    type="button"
+                    aria-label={`${isOpen ? "Hide" : "Show"} ${l.label} sections`}
+                    aria-expanded={isOpen}
+                    onClick={() => setExpanded(isOpen ? null : key)}
+                    className="flex h-11 w-11 items-center justify-center text-muted"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-300",
+                        isOpen && "rotate-180",
+                      )}
+                      strokeWidth={2}
+                    />
+                  </button>
+                </div>
+
+                <div
+                  className={cn(
+                    "overflow-hidden transition-[max-height,opacity] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                    isOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0",
+                  )}
+                >
+                  <ul className="space-y-0.5 pb-2 pl-4">
+                    {MENUS[key].items.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-between rounded-[11px] px-4 py-2.5 text-[14.5px] text-body"
+                        >
+                          {item.label}
+                          <ArrowRight className="h-3 w-3 text-line-2" strokeWidth={2} />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
           <Link
             href="/demo"
             onClick={() => setOpen(false)}

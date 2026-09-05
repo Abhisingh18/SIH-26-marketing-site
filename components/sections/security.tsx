@@ -19,7 +19,7 @@ const CHAIN = [
 
 export function Boundary() {
   return (
-    <Section tone="surface">
+    <Section id="boundary" tone="surface">
       <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
         <SectionHead
           label="The boundary"
@@ -56,7 +56,7 @@ export function Boundary() {
 
 export function Monitor() {
   return (
-    <Section className="relative overflow-hidden">
+    <Section id="monitor" className="relative overflow-hidden">
       <MonitorBackdrop />
 
       <SectionHead
@@ -172,7 +172,7 @@ const CONTROL_GROUPS = [
 
 export function Controls() {
   return (
-    <Section tone="veil">
+    <Section id="controls" tone="veil">
       <SectionHead
         label="Controls"
         title="The guarantees your security team will ask about."

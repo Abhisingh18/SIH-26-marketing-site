@@ -282,7 +282,7 @@ const INPUTS = [
 
 export function Multimodal() {
   return (
-    <Section tone="surface">
+    <Section id="multimodal" tone="surface">
       <SectionHead
         label="Multimodal"
         title="AI that understands the documents your plant actually uses."
@@ -404,7 +404,7 @@ const OUTPUTS = [
 
 export function Deliverables() {
   return (
-    <Section>
+    <Section id="deliverables">
       <SectionHead
         label="Deliverables"
         animateTitle="AI shouldn't just answer. It should deliver."

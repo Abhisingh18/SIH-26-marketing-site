@@ -48,7 +48,7 @@ const PROBLEMS = [
 
 export function Problem() {
   return (
-    <Section tone="surface">
+    <Section id="problem" tone="surface">
       <SectionHead
         label="The problem"
         animateTitle="Sensitive work wasn't built for the cloud."
@@ -169,7 +169,7 @@ const USE_CASES = [
 
 export function UseCases() {
   return (
-    <Section className="relative overflow-hidden">
+    <Section id="use-cases" className="relative overflow-hidden">
       <UseCaseBackdrop />
 
       <div className="relative">
@@ -303,7 +303,7 @@ const SECTORS = [
 
 export function Sectors() {
   return (
-    <Section tone="veil">
+    <Section id="sectors" tone="veil">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-16">
         <SectionHead
           label="Who it is for"
