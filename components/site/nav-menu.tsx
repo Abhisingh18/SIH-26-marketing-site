@@ -21,6 +21,7 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { Orb, type OrbShape } from "@/components/ui/orb";
 import { cn } from "@/lib/utils";
 
 /**
@@ -44,13 +45,26 @@ type Item = {
 
 export type MenuKey = "/platform" | "/solutions" | "/security" | "/architecture";
 
+/**
+ * Each menu carries one of the orbs from the solutions wave, blown up and
+ * bleeding out of the blurb card's corner. Same shapes and the same gradient
+ * language, so the menu belongs to the site rather than being a panel bolted
+ * onto it — and a different shape per menu means the panel is recognisable
+ * before its text has been read.
+ */
 export const MENUS: Record<
   MenuKey,
-  { blurb: string; cta: string; items: Item[] }
+  {
+    blurb: string;
+    cta: string;
+    orb: { shape: OrbShape; from: string; to: string; turn: string; duration: number };
+    items: Item[];
+  }
 > = {
   "/platform": {
     blurb: "One workbench: it plans the task, reads the documents, picks the model and hands back a file.",
     cta: "Explore the platform",
+    orb: { shape: "flower", from: "#6b73e8", to: "#3f49d8", turn: "24deg", duration: 20 },
     items: [
       { label: "Agentic execution", desc: "Plans, retrieves, runs tools, checks its own output", href: "/platform#agentic", icon: Bot, tone: "doc" },
       { label: "Model routing", desc: "Each step goes to the local model that fits it", href: "/platform#models", icon: Workflow, tone: "eng" },
@@ -62,6 +76,7 @@ export const MENUS: Record<
   "/solutions": {
     blurb: "Six industrial workflows where the bottleneck is access, not intelligence.",
     cta: "See all use cases",
+    orb: { shape: "burst", from: "#f2cf8a", to: "#e39a4e", turn: "-20deg", duration: 24 },
     items: [
       { label: "The problem", desc: "Why public AI is closed to this work", href: "/solutions#problem", icon: FileSearch, tone: "field" },
       { label: "Use cases", desc: "Operations, engineering, maintenance, compliance", href: "/solutions#use-cases", icon: Boxes, tone: "doc" },
@@ -71,6 +86,7 @@ export const MENUS: Record<
   "/security": {
     blurb: "Sovereignty as an observable property, not a promise on a slide.",
     cta: "See the security model",
+    orb: { shape: "star", from: "#7fd0a6", to: "#3aa878", turn: "22deg", duration: 21 },
     items: [
       { label: "The boundary", desc: "Private by architecture, not by policy", href: "/security#boundary", icon: KeyRound, tone: "doc" },
       { label: "Sovereignty monitor", desc: "Every outbound attempt, counted and held at zero", href: "/security#monitor", icon: Radar, tone: "fin" },
@@ -80,6 +96,7 @@ export const MENUS: Record<
   "/architecture": {
     blurb: "A layered stack you can audit and replace a piece at a time.",
     cta: "See the architecture",
+    orb: { shape: "cog", from: "#b79bea", to: "#7d5fd4", turn: "-18deg", duration: 26 },
     items: [
       { label: "System design", desc: "Client, harness, orchestrator, models, storage", href: "/architecture#layers", icon: Layers, tone: "doc" },
       { label: "Principles", desc: "Model agnostic, isolated, verifiable, offline first", href: "/architecture#principles", icon: ScrollText, tone: "eng" },
@@ -102,12 +119,19 @@ export function NavMenu({
     <div className="grid gap-5 p-4 sm:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] sm:p-5">
       {/* the left column repeats the page's own claim, so the menu says what
           the destination is for and not only what is on it */}
-      <div className="flex flex-col justify-between rounded-[14px] bg-veil/70 p-5">
-        <p className="text-[14.5px] leading-[1.55] text-body">{menu.blurb}</p>
+      <div className="relative flex flex-col justify-between overflow-hidden rounded-[14px] bg-veil/70 p-5">
+        {/* clipped by the card, so it reads as something passing behind the
+            panel rather than a sticker dropped on it */}
+        <Orb
+          {...menu.orb}
+          className="pointer-events-none absolute -right-9 -top-10 h-[128px] w-[128px] opacity-90"
+        />
+
+        <p className="relative text-[14.5px] leading-[1.55] text-body">{menu.blurb}</p>
         <Link
           href={menuKey}
           onClick={onNavigate}
-          className="group/cta mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-ink transition-colors hover:text-accent"
+          className="group/cta relative mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-ink transition-colors hover:text-accent"
         >
           {menu.cta}
           <ArrowRight

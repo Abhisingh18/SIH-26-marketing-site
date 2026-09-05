@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion, useTime, useTransform } from "motion/react";
+import { BURST, FLOWER, STAR } from "@/components/ui/orb";
 
 /**
  * Two crossing waves carrying a handful of soft orbs, under the solutions hero.
@@ -132,24 +133,6 @@ const ORBS: Orb[] = [
     delay: 0.3,
   },
 ];
-
-/** a four-petal bloom, drawn once at unit scale and reused */
-const FLOWER =
-  "M0 -1 C .34 -.72 .72 -.34 1 0 C .72 .34 .34 .72 0 1 C -.34 .72 -.72 .34 -1 0 C -.72 -.34 -.34 -.72 0 -1 Z";
-
-function burstPath(points = 12) {
-  let d = "";
-  for (let i = 0; i < points * 2; i++) {
-    const r = i % 2 === 0 ? 1 : 0.84;
-    const a = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
-    d += `${i === 0 ? "M" : "L"} ${(Math.cos(a) * r).toFixed(3)} ${(Math.sin(a) * r).toFixed(3)} `;
-  }
-  return `${d}Z`;
-}
-
-const BURST = burstPath();
-const STAR =
-  "M0 -1 C .18 -.32 .32 -.18 1 0 C .32 .18 .18 .32 0 1 C -.18 .32 -.32 .18 -1 0 C -.32 -.18 -.18 -.32 0 -1 Z";
 
 export function SolutionsWave() {
   return (

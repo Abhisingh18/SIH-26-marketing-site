@@ -184,6 +184,24 @@ body {
 
 
 /*
+ * A standalone orb, rocking and breathing rather than spinning. A full rotation
+ * on a four-fold shape lands back on itself four times a turn, which reads as a
+ * stutter; rocking through a partial angle never resolves and so never snags.
+ */
+@keyframes orb-turn {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(var(--turn, 26deg)) scale(1.055); }
+}
+
+.orb-turn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: orb-turn;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
  * The orbs riding the solutions wave. Bob and rotation share one keyframe; the
  * per-orb rotation comes in as a custom property so a single rule can turn some
  * of them one way and some the other.
@@ -361,6 +379,7 @@ body {
   .net-pulse,
   .net-node,
   .net-node,
-  .orb-bob { animation: none; }
+  .orb-bob,
+  .orb-turn { animation: none; }
   .card-hover { transition: none; }
 }
