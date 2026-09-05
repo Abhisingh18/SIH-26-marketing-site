@@ -105,7 +105,23 @@ export function Hero() {
           </Reveal>
         </div>
 
-        <Reveal delay={0.2} y={30} className="mt-14 md:mt-16">
+        <Reveal delay={0.1} className="mt-24 flex flex-col items-center text-center md:mt-28">
+          <p className="label">The platform</p>
+          <h2 className="display mt-5 text-[clamp(1.9rem,4.1vw,3.05rem)] leading-[1.04]">
+            The AI platform{" "}
+            {/* saffron running to indigo: the confluence, in the headline */}
+            <span className="bg-gradient-to-r from-[#dd7a15] via-[#9a68cf] to-[#2f43d6] bg-clip-text text-transparent">
+              India can build on
+            </span>
+            .
+          </h2>
+          <p className="mt-6 max-w-[50ch] text-balance text-[16.5px] leading-[1.6] text-body">
+            Open-weight models, private knowledge and sandboxed tools — assembled into one
+            desktop application that never phones home.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.2} y={30} className="mt-12 md:mt-14">
           <WorkbenchStage>
             <Workbench />
           </WorkbenchStage>
