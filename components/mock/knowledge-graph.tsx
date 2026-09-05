@@ -1,394 +1,431 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
 
-const VB = { w: 600, h: 340 };
+/* ------------------------------------------------------------------ */
+/* The index                                                           */
+/* ------------------------------------------------------------------ */
 
-const TONE = {
-  hub: { dot: "#111113", soft: "#eeebe5", label: "Equipment" },
-  eng: { dot: "#b0670f", soft: "#fdf3e6", label: "Engineering" },
-  doc: { dot: "#2338cc", soft: "#eef1fe", label: "Procedure" },
-  field: { dot: "#5551c4", soft: "#efeffb", label: "Field record" },
-  fin: { dot: "#0f8b55", soft: "#e9f6ef", label: "Commercial" },
-} as const;
-
-type ToneKey = keyof typeof TONE;
-
-type GraphNode = {
+type Cluster = {
   id: string;
   label: string;
-  tone: ToneKey;
-  x: number;
-  y: number;
-  r: number;
+  colour: string;
+  count: number;
   kind: string;
   stats: [string, string][];
   note: string;
 };
 
-const NODES: GraphNode[] = [
+const CLUSTERS: Cluster[] = [
   {
-    id: "tk402",
-    label: "TK-402",
-    tone: "hub",
-    x: 300,
-    y: 168,
-    r: 15,
-    kind: "Crude storage tank",
+    id: "inspection",
+    label: "Inspection",
+    colour: "#5551c4",
+    count: 46,
+    kind: "Field records",
     stats: [
-      ["Linked documents", "7"],
-      ["Last inspection", "Mar 2026"],
-      ["Shell course", "8 rings"],
+      ["Documents", "412"],
+      ["Chunks", "38,900"],
+      ["Cited this run", "6"],
     ],
-    note: "Everything the workbench knows about this asset, indexed from documents already on your network.",
+    note: "Scanned reports going back nine turnarounds. OCR and layout parsing ran locally before any of it was indexed.",
   },
   {
-    id: "pid",
-    label: "P&ID TK-402",
-    tone: "eng",
-    x: 300,
-    y: 48,
-    r: 10,
-    kind: "Engineering drawing",
+    id: "drawings",
+    label: "Drawings",
+    colour: "#b0670f",
+    count: 38,
+    kind: "Engineering",
     stats: [
-      ["Revision", "Rev-C"],
-      ["Regions parsed", "34"],
-      ["Tags extracted", "112"],
+      ["Drawings", "1,860"],
+      ["Tags extracted", "24,100"],
+      ["Latest revision", "Rev-C"],
     ],
-    note: "Read by the vision model — line numbers and instrument tags are searchable, not just the image.",
+    note: "P&IDs and isometrics read by the vision model, so line numbers and instrument tags are searchable rather than pictures.",
   },
   {
-    id: "insp",
-    label: "inspection_report.pdf",
-    tone: "field",
-    x: 128,
-    y: 92,
-    r: 11,
-    kind: "Inspection report",
+    id: "procedures",
+    label: "Procedures",
+    colour: "#2338cc",
+    count: 42,
+    kind: "SOPs",
     stats: [
-      ["Pages", "24"],
-      ["Chunks indexed", "312"],
-      ["Figures analysed", "7"],
+      ["Procedures", "630"],
+      ["Sections", "9,240"],
+      ["Cited this run", "3"],
     ],
-    note: "A scan, not a text PDF. OCR and layout parsing ran locally before any of it was indexed.",
+    note: "Retrieved on the findings themselves, not because someone tagged them — SOP-114 and SOP-232 surfaced this way.",
+  },
+  {
+    id: "standards",
+    label: "Standards",
+    colour: "#8a6ce2",
+    count: 30,
+    kind: "Reference",
+    stats: [
+      ["Standards", "78"],
+      ["Clauses indexed", "31,500"],
+      ["Cited this run", "4"],
+    ],
+    note: "API, ASME and internal codes. The reasoning layer cites the clause it used, so a reviewer can check the source.",
   },
   {
     id: "photos",
-    label: "Field photographs",
-    tone: "field",
-    x: 88,
-    y: 224,
-    r: 9.5,
-    kind: "Image set",
+    label: "Photographs",
+    colour: "#7e96f6",
+    count: 34,
+    kind: "Image sets",
     stats: [
-      ["Images", "18"],
-      ["Captioned", "18"],
-      ["Corrosion flags", "3"],
+      ["Images", "12,700"],
+      ["Captioned", "12,700"],
+      ["Corrosion flags", "214"],
     ],
-    note: "Shot on the floor, described by the vision model, then linked back to the shell course they show.",
+    note: "Shot on the floor, described by the vision model, then linked back to the equipment they show.",
   },
   {
-    id: "thick",
-    label: "thickness_log.xlsx",
-    tone: "eng",
-    x: 200,
-    y: 300,
-    r: 9.5,
-    kind: "Measurement log",
+    id: "maintenance",
+    label: "Maintenance",
+    colour: "#0f8b55",
+    count: 32,
+    kind: "Work history",
     stats: [
-      ["Readings", "1,240"],
-      ["Below limit", "2"],
-      ["Sheet", "TML grid"],
+      ["Work orders", "8,400"],
+      ["Linked assets", "1,120"],
+      ["Open", "37"],
     ],
-    note: "Numbers the reasoning model checks against the standard, rather than summarising in prose.",
+    note: "Every repair, replacement and deferral against the asset, so history is one hop from the current finding.",
   },
   {
-    id: "api570",
-    label: "API 570",
-    tone: "doc",
-    x: 372,
-    y: 296,
-    r: 10,
-    kind: "Standard",
+    id: "commercial",
+    label: "Commercial",
+    colour: "#c2557a",
+    count: 22,
+    kind: "Procurement",
     stats: [
-      ["Clauses indexed", "486"],
-      ["Cited this run", "4"],
-      ["Edition", "2016"],
+      ["Orders", "3,260"],
+      ["Vendors", "180"],
+      ["Linked to work", "62%"],
     ],
-    note: "The retrieval layer cites the clause it used, so a reviewer can check the reasoning against the source.",
-  },
-  {
-    id: "sop114",
-    label: "SOP-114",
-    tone: "doc",
-    x: 486,
-    y: 232,
-    r: 10,
-    kind: "Procedure",
-    stats: [
-      ["Sections", "22"],
-      ["Cited this run", "3"],
-      ["Owner", "Inspection"],
-    ],
-    note: "Retrieved because the findings matched its trigger conditions, not because anyone tagged it.",
-  },
-  {
-    id: "sop232",
-    label: "SOP-232",
-    tone: "doc",
-    x: 500,
-    y: 100,
-    r: 9.5,
-    kind: "Procedure",
-    stats: [
-      ["Sections", "16"],
-      ["Cited this run", "1"],
-      ["Owner", "Maintenance"],
-    ],
-    note: "Approval routing for shell repairs — the note drafted at the end follows this sign-off chain.",
-  },
-  {
-    id: "po",
-    label: "PO-2291",
-    tone: "fin",
-    x: 448,
-    y: 40,
-    r: 8.5,
-    kind: "Purchase order",
-    stats: [
-      ["Vendor", "Redacted"],
-      ["Scope", "Shell plate"],
-      ["Status", "Open"],
-    ],
-    note: "Commercial records sit in the same index, so cost context is one hop from the technical findings.",
+    note: "Purchase orders and invoices in the same index, so cost context sits beside the technical answer.",
   },
 ];
 
-const EDGES: [string, string][] = [
-  ["tk402", "pid"],
-  ["tk402", "insp"],
-  ["tk402", "photos"],
-  ["tk402", "thick"],
-  ["tk402", "api570"],
-  ["tk402", "sop114"],
-  ["tk402", "sop232"],
-  ["insp", "photos"],
-  ["insp", "thick"],
-  ["sop114", "api570"],
-  ["sop232", "sop114"],
-  ["sop232", "po"],
-  // a few cross-links so the graph reads as a network rather than a star
-  ["insp", "pid"],
-  ["photos", "thick"],
-  ["thick", "api570"],
-  ["tk402", "po"],
-];
+/* ------------------------------------------------------------------ */
+/* Geometry                                                            */
+/* ------------------------------------------------------------------ */
 
-const byId = new Map(NODES.map((n) => [n.id, n]));
+type Node3 = {
+  x: number;
+  y: number;
+  z: number;
+  r: number;
+  cluster: number;
+  hub: boolean;
+};
 
-function neighbours(id: string) {
-  const set = new Set<string>([id]);
-  for (const [a, b] of EDGES) {
-    if (a === id) set.add(b);
-    if (b === id) set.add(a);
-  }
-  return set;
-}
-
-/** deterministic float, so nodes drift without ever syncing up */
+/** deterministic, so the server and the client build the same graph */
 function noise(seed: number) {
   const v = Math.sin(seed * 12.9898) * 43758.5453;
   return v - Math.floor(v);
 }
 
-/** the walk the graph takes on its own, following the agent's retrieval */
-const TOUR = ["tk402", "insp", "sop114", "sop232", "api570"];
-const TOUR_MS = 1250;
+function build() {
+  const nodes: Node3[] = [];
+  const edges: [number, number][] = [];
+  const hubs: number[] = [];
+
+  CLUSTERS.forEach((cluster, ci) => {
+    // hubs spread over a sphere by golden angle, so no two sit on top of each
+    // other from any viewing angle
+    const t = (ci + 0.5) / CLUSTERS.length;
+    const phi = Math.acos(1 - 2 * t);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * ci;
+    const R = 118;
+
+    const hub = nodes.length;
+    hubs.push(hub);
+    nodes.push({
+      x: R * Math.sin(phi) * Math.cos(theta),
+      y: R * Math.sin(phi) * Math.sin(theta) * 0.66,
+      z: R * Math.cos(phi),
+      r: 6,
+      cluster: ci,
+      hub: true,
+    });
+
+    const centre = nodes[hub];
+
+    for (let i = 0; i < cluster.count; i++) {
+      const s = ci * 977 + i * 31;
+      const u = noise(s) * 2 - 1;
+      const a = noise(s + 1) * Math.PI * 2;
+      const rad = 24 + noise(s + 2) * 62;
+      const k = Math.sqrt(1 - u * u);
+
+      const index = nodes.length;
+      nodes.push({
+        x: centre.x + rad * k * Math.cos(a),
+        y: centre.y + rad * k * Math.sin(a) * 0.72,
+        z: centre.z + rad * u,
+        r: 1.5 + noise(s + 3) * 2.1,
+        cluster: ci,
+        hub: false,
+      });
+      edges.push([hub, index]);
+
+      // a few sibling links, which is what turns a star into a mesh
+      if (noise(s + 4) > 0.62 && index > hub + 2) {
+        edges.push([index, hub + 1 + Math.floor(noise(s + 5) * (index - hub - 1))]);
+      }
+    }
+  });
+
+  // bridges between clusters — the reason it reads as one index and not seven
+  hubs.forEach((h, i) => {
+    edges.push([h, hubs[(i + 1) % hubs.length]]);
+    edges.push([h, hubs[(i + 3) % hubs.length]]);
+  });
+
+  return { nodes, edges };
+}
+
+const { nodes: NODES, edges: EDGES } = build();
+
+const TOUR_MS = 1900;
+const FOCAL = 620;
+const SPIN = 0.00016; // radians per ms — a little under a minute per turn
+
+/* ------------------------------------------------------------------ */
+/* Component                                                           */
+/* ------------------------------------------------------------------ */
 
 /**
- * The indexed knowledge behind one asset, as a graph you can interrogate.
+ * The whole index as one rotating graph.
  *
- * Selection drives everything: picking a node lifts it and its neighbours and
- * drops everything else to a quarter opacity, so a click answers "what is this
- * connected to" before you have read a word of the panel. Edges are drawn from
- * the same selection state, so a highlighted path is never out of step with the
- * dimming.
+ * Canvas rather than SVG: this is ~250 nodes and ~350 edges redrawn every
+ * frame, and that many DOM elements carrying their own transforms drops frames
+ * on a laptop. The perspective is done by hand — points live in 3D, spin around
+ * Y, and project through a focal length — which is a few lines of maths against
+ * the several hundred kilobytes a 3D library would add for one panel.
+ *
+ * Selection dims every cluster but one, so a click answers "how much of the
+ * index is that" before the panel underneath has been read.
  */
 export function KnowledgeGraph({
   tour = false,
   onInteract,
 }: {
-  /** walk the graph on its own until someone takes over */
   tour?: boolean;
   onInteract?: () => void;
 }) {
-  const [selected, setSelected] = useState(TOUR[0]);
-  const [step, setStep] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState(0);
   const [taken, setTaken] = useState(false);
   const reduce = useReducedMotion();
 
-  // The graph selects its own way round until a click, at which point it hands
-  // over for good — nothing is more irritating than a panel that keeps moving
-  // while you are reading it.
+  // The draw loop reads the selection every frame but must not restart when it
+  // changes, so it goes through a ref — synced in an effect rather than during
+  // render, which would be a write in the render pass.
+  const selectedRef = useRef(selected);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
+
+  // the graph walks itself until someone clicks, then hands over for good
   useEffect(() => {
     if (!tour || taken || reduce) return;
-    const timer = setTimeout(() => {
-      const next = (step + 1) % TOUR.length;
-      setStep(next);
-      setSelected(TOUR[next]);
-    }, TOUR_MS);
+    const timer = setTimeout(
+      () => setSelected((s) => (s + 1) % CLUSTERS.length),
+      TOUR_MS,
+    );
     return () => clearTimeout(timer);
-  }, [tour, taken, step, reduce]);
+  }, [tour, taken, selected, reduce]);
 
-  const pick = (id: string) => {
-    setTaken(true);
-    setSelected(id);
-    onInteract?.();
-  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const active = byId.get(selected)!;
-  const near = neighbours(selected);
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let angle = 0;
+    let last = performance.now();
+    let running = false;
+
+    const projected = NODES.map(() => ({ x: 0, y: 0, s: 0, z: 0 }));
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = wrap.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const project = () => {
+      const cx = width / 2;
+      const cy = height / 2;
+      const fit = Math.min(width / 620, height / 400);
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+
+      for (let i = 0; i < NODES.length; i++) {
+        const n = NODES[i];
+        const x = n.x * cos - n.z * sin;
+        const z = n.x * sin + n.z * cos;
+        const s = (FOCAL / (FOCAL + z)) * fit;
+        const p = projected[i];
+        p.x = cx + x * s;
+        p.y = cy + n.y * s;
+        p.s = s;
+        p.z = z;
+      }
+    };
+
+    const draw = (now: number) => {
+      if (!running) return;
+      const dt = now - last;
+      last = now;
+      if (!reduce) angle += dt * SPIN;
+
+      project();
+      ctx.clearRect(0, 0, width, height);
+
+      const active = selectedRef.current;
+
+      // edges first, faint, and faded by depth so the far side recedes
+      ctx.lineWidth = 0.6;
+      for (const [a, b] of EDGES) {
+        const pa = projected[a];
+        const pb = projected[b];
+        const ca = NODES[a].cluster;
+        const cb = NODES[b].cluster;
+        const lit = ca === active || cb === active;
+        const depth = (pa.s + pb.s) / 2;
+        ctx.globalAlpha = (lit ? 0.3 : 0.07) * Math.min(1, depth * 1.4);
+        ctx.strokeStyle = lit ? CLUSTERS[ca].colour : "#111113";
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y);
+        ctx.lineTo(pb.x, pb.y);
+        ctx.stroke();
+      }
+
+      // nodes back to front, so near ones overlap far ones correctly
+      const order = projected
+        .map((p, i) => [p.z, i] as const)
+        .sort((m, n) => n[0] - m[0]);
+
+      for (const [, i] of order) {
+        const n = NODES[i];
+        const p = projected[i];
+        const lit = n.cluster === active;
+        ctx.globalAlpha = (lit ? 0.95 : 0.22) * Math.min(1, p.s * 1.6);
+        ctx.fillStyle = lit ? CLUSTERS[n.cluster].colour : "#8a8a92";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.6, n.r * p.s), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // hub labels last, with a paper halo so they stay readable over the mesh
+      ctx.font = "500 11px Inter, ui-sans-serif, system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i < NODES.length; i++) {
+        const n = NODES[i];
+        if (!n.hub) continue;
+        const p = projected[i];
+        const lit = n.cluster === active;
+        ctx.globalAlpha = lit ? 1 : 0.4;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#fcfbf9";
+        ctx.strokeText(CLUSTERS[n.cluster].label, p.x, p.y - 14 * p.s);
+        ctx.fillStyle = lit ? "#111113" : "#56565c";
+        ctx.fillText(CLUSTERS[n.cluster].label, p.x, p.y - 14 * p.s);
+      }
+
+      ctx.globalAlpha = 1;
+      frame = requestAnimationFrame(draw);
+    };
+
+    const sizes = new ResizeObserver(resize);
+    sizes.observe(wrap);
+    resize();
+
+    // pause off screen — no reason to spin a graph nobody is looking at
+    const visible = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting === running) return;
+        running = entry.isIntersecting;
+        if (running) {
+          last = performance.now();
+          frame = requestAnimationFrame(draw);
+        } else {
+          cancelAnimationFrame(frame);
+        }
+      },
+      { threshold: 0.05 },
+    );
+    visible.observe(wrap);
+
+    const onClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = event.clientX - rect.left;
+      const my = event.clientY - rect.top;
+      let best = -1;
+      let bestDist = 26;
+      for (let i = 0; i < NODES.length; i++) {
+        const p = projected[i];
+        // hubs win ties, so clicking near a label picks its cluster
+        const d = Math.hypot(p.x - mx, p.y - my) - (NODES[i].hub ? 12 : 0);
+        if (d < bestDist) {
+          bestDist = d;
+          best = i;
+        }
+      }
+      if (best >= 0) {
+        setTaken(true);
+        setSelected(NODES[best].cluster);
+        onInteract?.();
+      }
+    };
+    canvas.addEventListener("click", onClick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(frame);
+      sizes.disconnect();
+      visible.disconnect();
+      canvas.removeEventListener("click", onClick);
+    };
+  }, [reduce, onInteract]);
+
+  const active = CLUSTERS[selected];
 
   return (
     <div className="space-y-3">
-      <div className="relative overflow-hidden rounded-[13px] bg-veil/70">
-        <div className="grid-paper absolute inset-0 opacity-50" />
-
-        <svg
-          viewBox={`0 0 ${VB.w} ${VB.h}`}
-          className="relative block w-full"
-          role="group"
-          aria-label="Knowledge graph for TK-402"
-        >
-          {/* signals firing along the edges — the graph is alive whether or not
-              anything is selected */}
-          <g stroke="#5551c4" strokeWidth="1.6" strokeLinecap="round" opacity="0.55">
-            {EDGES.map(([a, b], i) => {
-              const from = byId.get(a)!;
-              const to = byId.get(b)!;
-              return (
-                <line
-                  key={`f-${a}-${b}`}
-                  x1={from.x}
-                  y1={from.y}
-                  x2={to.x}
-                  y2={to.y}
-                  className={reduce ? undefined : "net-pulse"}
-                  style={
-                    reduce
-                      ? undefined
-                      : {
-                          animationDelay: `${noise(i * 13) * 7}s`,
-                          animationDuration: `${3.2 + noise(i * 5) * 3}s`,
-                        }
-                  }
-                />
-              );
-            })}
-          </g>
-
-          <g>
-            {EDGES.map(([a, b], i) => {
-              const from = byId.get(a)!;
-              const to = byId.get(b)!;
-              const lit = near.has(a) && near.has(b);
-              return (
-                <motion.line
-                  key={`${a}-${b}`}
-                  x1={from.x}
-                  y1={from.y}
-                  x2={to.x}
-                  y2={to.y}
-                  stroke={lit ? TONE[to.tone].dot : "#111113"}
-                  strokeWidth={lit ? 1.4 : 1}
-                  animate={{ opacity: lit ? 0.42 : 0.08 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  style={
-                    reduce
-                      ? undefined
-                      : {
-                          animationDelay: `${noise(i * 7) * 5}s`,
-                          animationDuration: `${4 + noise(i * 3) * 3}s`,
-                        }
-                  }
-                />
-              );
-            })}
-          </g>
-
-          {NODES.map((n, i) => {
-            const lit = near.has(n.id);
-            const isActive = n.id === selected;
-            const tone = TONE[n.tone];
-
-            return (
-              <motion.g
-                key={n.id}
-                className={cn("cursor-pointer", !reduce && "node-float")}
-                style={
-                  reduce
-                    ? undefined
-                    : ({
-                        ["--fx" as string]: `${(noise(i * 5) - 0.5) * 9}px`,
-                        ["--fy" as string]: `${(noise(i * 11) - 0.5) * 9}px`,
-                        animationDuration: `${7 + noise(i) * 5}s`,
-                        animationDelay: `${noise(i * 2) * 4}s`,
-                      } as React.CSSProperties)
-                }
-                onClick={() => pick(n.id)}
-                animate={{ opacity: lit ? 1 : 0.22 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <title>{n.label}</title>
-
-                {/* halo marks the current selection */}
-                <motion.circle
-                  cx={n.x}
-                  cy={n.y}
-                  r={n.r + 6}
-                  fill={tone.dot}
-                  animate={{ opacity: isActive ? 0.12 : 0 }}
-                  transition={{ duration: 0.35 }}
-                />
-                <motion.circle
-                  cx={n.x}
-                  cy={n.y}
-                  r={n.r}
-                  fill={tone.soft}
-                  stroke={tone.dot}
-                  strokeWidth={isActive ? 1.8 : 1}
-                  animate={{ scale: isActive ? 1.08 : 1 }}
-                  style={{ transformOrigin: `${n.x}px ${n.y}px` }}
-                  transition={
-                    reduce
-                      ? { duration: 0 }
-                      : { type: "spring", stiffness: 380, damping: 22 }
-                  }
-                />
-                <circle cx={n.x} cy={n.y} r={3} fill={tone.dot} />
-                <text
-                  x={n.x}
-                  y={n.y + n.r + 12}
-                  textAnchor="middle"
-                  className="pointer-events-none"
-                  fill="#56565c"
-                  fontSize="9.5"
-                >
-                  {n.label}
-                </text>
-              </motion.g>
-            );
-          })}
-        </svg>
-
-        <p className="label absolute right-3 top-3 text-[9px]">
-          {taken ? "Selected" : "Select a node"}
+      <div
+        ref={wrapRef}
+        className="relative h-[250px] overflow-hidden rounded-[13px] bg-veil/60 sm:h-[290px]"
+      >
+        <div className="grid-paper absolute inset-0 opacity-45" />
+        <canvas
+          ref={canvasRef}
+          className="relative block h-full w-full cursor-pointer"
+          role="img"
+          aria-label="Rotating graph of the indexed knowledge base"
+        />
+        <p className="label pointer-events-none absolute right-3 top-3 text-[9px]">
+          {taken ? active.label : "Click a cluster"}
         </p>
       </div>
 
-      {/* detail for the selected node */}
       <motion.div
         key={active.id}
         initial={reduce ? false : { opacity: 0, y: 6 }}
@@ -399,12 +436,12 @@ export function KnowledgeGraph({
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
           <span
             className="h-2 w-2 shrink-0 rounded-full"
-            style={{ background: TONE[active.tone].dot }}
+            style={{ background: active.colour }}
           />
           <p className="text-[13.5px] text-ink">{active.label}</p>
           <span
             className="rounded-full px-1.5 py-px font-mono text-[9.5px] tracking-[0.04em]"
-            style={{ background: TONE[active.tone].soft, color: TONE[active.tone].dot }}
+            style={{ background: `${active.colour}1a`, color: active.colour }}
           >
             {active.kind}
           </span>

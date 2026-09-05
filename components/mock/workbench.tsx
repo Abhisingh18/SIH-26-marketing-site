@@ -93,7 +93,7 @@ const HOLD_MS = 3200;
  * flash past before anyone registered what it was.
  */
 const RETRIEVAL_STEP = 2;
-const RETRIEVAL_MS = 6200;
+const RETRIEVAL_MS = 8400;
 
 export function Workbench({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);

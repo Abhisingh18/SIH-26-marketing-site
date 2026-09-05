@@ -182,37 +182,6 @@ body {
   to { transform: translateX(0); }
 }
 
-/*
- * A node firing: a ring expanding out of it and fading. Scale rather than an
- * animated `r`, since transform on SVG is the safer of the two across browsers.
- */
-.node-fire {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation-name: node-fire;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  animation-iteration-count: infinite;
-}
-
-@keyframes node-fire {
-  0% { transform: scale(1); opacity: 0.55; }
-  70%, 100% { transform: scale(2.8); opacity: 0; }
-}
-
-/*
- * Knowledge-graph nodes drifting in place. The offsets come in as custom
- * properties so every node gets its own direction from one keyframe.
- */
-@keyframes node-float {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(var(--fx, 0), var(--fy, 0)); }
-}
-
-.node-float {
-  animation-name: node-float;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
 
 /*
  * Signals running along the neural field's edges. A short dash travelling a
@@ -373,7 +342,6 @@ body {
   .drift-c,
   .net-pulse,
   .net-node,
-  .node-float,
-  .node-fire { animation: none; }
+  .net-node { animation: none; }
   .card-hover { transition: none; }
 }
