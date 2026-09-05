@@ -183,6 +183,40 @@ body {
 }
 
 /*
+ * Colour flowing through the phrase, saffron to indigo and back.
+ *
+ * The gradient carries two full cycles across an image twice the width of the
+ * text, so shifting by one text-width is exactly one period and the loop has no
+ * seam — a single cycle would snap back visibly every pass. Slow on purpose:
+ * this is a river meeting another one, not a highlighter.
+ */
+.flow-text {
+  background-image: linear-gradient(
+    100deg,
+    #dd7a15 0%,
+    #b96a9a 12%,
+    #2f43d6 25%,
+    #b96a9a 37%,
+    #dd7a15 50%,
+    #b96a9a 62%,
+    #2f43d6 75%,
+    #b96a9a 87%,
+    #dd7a15 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: flow-text 11s linear infinite;
+}
+
+@keyframes flow-text {
+  from { background-position: 0% center; }
+  to { background-position: 100% center; }
+}
+
+/*
  * Headline lines rise in sequence. Kept in CSS rather than the motion wrapper
  * so the hero stays a server component and the first thing on the page is not
  * waiting on hydration to become visible.
@@ -244,6 +278,7 @@ body {
   .rule-sweep::after { animation: none; }
   .rise > * { opacity: 1; animation: none; }
   .marquee-track,
-  .shimmer-bar { animation: none; }
+  .shimmer-bar,
+  .flow-text { animation: none; }
   .card-hover { transition: none; }
 }
