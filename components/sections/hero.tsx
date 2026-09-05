@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 import {
   BadgeCheck,
   Box,
@@ -17,7 +16,7 @@ import {
   Workflow,
   Wrench,
 } from "lucide-react";
-import flourish from "@/components/photos/flourish-alpha.png";
+import { Flourish } from "@/components/ui/flourish";
 import { Workbench } from "@/components/mock/workbench";
 import { PlatformTitle } from "@/components/sections/platform-title";
 import { Button } from "@/components/ui/primitives";
@@ -63,7 +62,7 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <div className="flex flex-col items-center text-center">
           <Reveal>
-            <Flourish />
+            <Flourish className="w-[140px] sm:w-[154px]" />
           </Reveal>
 
           <Reveal delay={0.05}>
@@ -202,28 +201,6 @@ function Bloom() {
       <div className="absolute inset-x-0 top-[244px] h-[560px] bg-[radial-gradient(58%_62%_at_50%_58%,rgba(252,251,249,0.92),rgba(252,251,249,0)_72%)]" />
       <div className="absolute inset-x-0 bottom-0 h-[300px] bg-gradient-to-b from-transparent to-paper" />
     </div>
-  );
-}
-
-/**
- * Hero flourish.
- *
- * The supplied artwork had its checkerboard painted into the pixels — no alpha
- * channel at all — so inverting it in CSS turned the whole square white. The
- * file is pre-processed instead (see the note in the README): alpha derived
- * from luminance, then cropped to the artwork's bounding box. It stays dark on
- * transparent here and is inverted to white in CSS, so the same asset still
- * works on a light background if it is ever needed there.
- */
-function Flourish() {
-  return (
-    <Image
-      src={flourish}
-      alt=""
-      priority
-      aria-hidden
-      className="w-[140px] opacity-85 [filter:brightness(0)_invert(1)] sm:w-[154px]"
-    />
   );
 }
 

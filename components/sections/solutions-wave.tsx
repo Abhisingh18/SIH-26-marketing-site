@@ -196,13 +196,13 @@ export function SolutionsWave() {
       <path
         d={wavePath(false)}
         stroke="url(#sw-rail)"
-        strokeWidth="14"
+        strokeWidth="9"
         strokeLinecap="round"
       />
       <path
         d={wavePath(true)}
         stroke="url(#sw-rail)"
-        strokeWidth="14"
+        strokeWidth="9"
         strokeLinecap="round"
       />
 
@@ -229,14 +229,14 @@ export function SolutionsWash() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(88%_82%_at_50%_42%,#000_30%,transparent_100%)]"
+      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(94%_88%_at_50%_44%,#000_26%,transparent_100%)]"
     >
-      <div className="drift-a absolute left-[2%] top-[-6%] h-[74%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,150,70,0.26),rgba(240,170,110,0.10)_58%,transparent_100%)] blur-[90px]" />
-      <div className="drift-b absolute right-[0%] top-[6%] h-[80%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,120,244,0.30),rgba(140,164,248,0.12)_56%,transparent_100%)] blur-[95px]" />
-      <div className="drift-c absolute bottom-[-8%] left-[24%] h-[68%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(74,186,134,0.26),rgba(126,206,166,0.10)_58%,transparent_100%)] blur-[100px]" />
+      <div className="drift-a absolute left-[2%] top-[-6%] h-[82%] w-[52%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,146,62,0.36),rgba(242,176,116,0.15)_56%,transparent_100%)] blur-[90px]" />
+      <div className="drift-b absolute right-[0%] top-[6%] h-[88%] w-[56%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(88,114,246,0.40),rgba(142,166,250,0.16)_54%,transparent_100%)] blur-[95px]" />
+      <div className="drift-c absolute bottom-[-8%] left-[24%] h-[76%] w-[54%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(60,184,128,0.36),rgba(122,208,164,0.14)_56%,transparent_100%)] blur-[100px]" />
 
       {/* keeps the type band near-white so the headline holds full contrast */}
-      <div className="absolute inset-x-[6%] top-[8%] h-[62%] bg-[radial-gradient(60%_62%_at_50%_46%,rgba(252,251,249,0.86),transparent_74%)]" />
+      <div className="absolute inset-x-[6%] top-[8%] h-[62%] bg-[radial-gradient(60%_62%_at_50%_46%,rgba(252,251,249,0.8),transparent_72%)]" />
     </div>
   );
 }

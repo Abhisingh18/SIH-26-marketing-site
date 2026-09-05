@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/section";
 import { SolutionsWash, SolutionsWave } from "@/components/sections/solutions-wave";
+import { Flourish } from "@/components/ui/flourish";
 import { Problem, Sectors, UseCases } from "@/components/sections/solutions";
 import { CTA } from "@/components/sections/cta";
 
@@ -17,6 +18,7 @@ export default function SolutionsPage() {
         label="Solutions"
         animateTitle="Real workflows, not demos."
         align="center"
+        ornament={<Flourish variant="ink" className="w-[130px] sm:w-[148px]" />}
         body="Six industrial workflows where the bottleneck is not intelligence but access — documents too sensitive to upload, and too slow to process by hand."
         meta={["Operations", "Engineering", "Maintenance", "Compliance"]}
         backdrop={<SolutionsWash />}

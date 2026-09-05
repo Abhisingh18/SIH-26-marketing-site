@@ -100,6 +100,7 @@ export function PageHero({
   body,
   meta,
   align = "left",
+  ornament,
   backdrop,
   art,
 }: {
@@ -110,6 +111,8 @@ export function PageHero({
   body: string;
   meta?: string[];
   align?: "left" | "center";
+  /** decorative mark above the kicker */
+  ornament?: ReactNode;
   /** an animated wash behind the copy — opt-in, so a page can stay quiet */
   backdrop?: ReactNode;
   /** full-bleed artwork closing the band, under the copy */
@@ -127,10 +130,13 @@ export function PageHero({
           centred && "flex flex-col items-center text-center",
         )}
       >
-        <Reveal>
+        {ornament ? (
+          <Reveal className={cn(centred && "flex justify-center")}>{ornament}</Reveal>
+        ) : null}
+        <Reveal delay={ornament ? 0.04 : 0}>
           <p className="label">{label}</p>
         </Reveal>
-        <Reveal delay={0.06}>
+        <Reveal delay={ornament ? 0.1 : 0.06}>
           <h1
             className={cn(
               "display mt-7 max-w-[16ch] text-[clamp(2.4rem,5.6vw,4.2rem)]",
