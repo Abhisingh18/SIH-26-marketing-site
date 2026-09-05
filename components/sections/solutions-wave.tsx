@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion, useTime, useTransform } from "motion/react";
+
 /**
  * Two crossing waves carrying a handful of soft orbs, under the solutions hero.
  *
@@ -6,8 +10,10 @@
  * first exactly at every midpoint. Drawing these by eye is how you end up with
  * two curves that nearly touch.
  *
- * Pure SVG and CSS: it is decorative, it sits above the fold on a page that
- * should paint immediately, and none of it needs to wait on hydration.
+ * The orbs travel the curve rather than sitting on it. Position is computed
+ * from the sine the path approximates, not from CSS `offset-path`: the formula
+ * is three lines, it gives exact control over speed and spacing per orb, and it
+ * does not depend on a layout feature Safari only shipped in 16.
  */
 
 const MID = 190;
@@ -29,9 +35,20 @@ function wavePath(invert: boolean) {
   return d;
 }
 
+/** the analytic curve the cubic path approximates, so orbs sit on the drawn line */
+const SPAN = NODES * HALF;
+
+function waveY(x: number, invert: boolean) {
+  const c = Math.cos((Math.PI * (x - START)) / HALF);
+  return invert ? MID + AMP * c : MID - AMP * c;
+}
+
 type Orb = {
-  x: number;
-  y: number;
+  /** where on the run it starts, 0-1 — spread so they never bunch */
+  phase: number;
+  /** seconds for one full crossing */
+  travel: number;
+  invert: boolean;
   size: number;
   shape: "flower" | "burst" | "star" | "orb";
   from: string;
@@ -42,12 +59,78 @@ type Orb = {
 };
 
 const ORBS: Orb[] = [
-  { x: 250, y: 250, size: 46, shape: "burst", from: "#f2d79a", to: "#e8f0c8", spin: "-10deg", dur: 9, delay: 0 },
-  { x: 545, y: 148, size: 52, shape: "flower", from: "#5b63e0", to: "#3f49d8", spin: "12deg", dur: 11, delay: 1.4 },
-  { x: 800, y: 158, size: 44, shape: "flower", from: "#8fa8f5", to: "#f0e2a8", spin: "-14deg", dur: 10, delay: 0.6 },
-  { x: 1085, y: 238, size: 48, shape: "burst", from: "#e9d488", to: "#8fbf6a", spin: "9deg", dur: 12, delay: 2.1 },
-  { x: 1355, y: 268, size: 44, shape: "star", from: "#f0855c", to: "#e0563f", spin: "-11deg", dur: 10.5, delay: 1 },
-  { x: 1560, y: 212, size: 40, shape: "orb", from: "#dfe4fb", to: "#c3cbf5", spin: "8deg", dur: 13, delay: 0.3 },
+  {
+    phase: 0.04,
+    travel: 27,
+    invert: false,
+    size: 46,
+    shape: "burst",
+    from: "#f2d79a",
+    to: "#e8f0c8",
+    spin: "-10deg",
+    dur: 9,
+    delay: 0,
+  },
+  {
+    phase: 0.21,
+    travel: 31,
+    invert: true,
+    size: 52,
+    shape: "flower",
+    from: "#5b63e0",
+    to: "#3f49d8",
+    spin: "12deg",
+    dur: 11,
+    delay: 1.4,
+  },
+  {
+    phase: 0.38,
+    travel: 25,
+    invert: false,
+    size: 44,
+    shape: "flower",
+    from: "#8fa8f5",
+    to: "#f0e2a8",
+    spin: "-14deg",
+    dur: 10,
+    delay: 0.6,
+  },
+  {
+    phase: 0.55,
+    travel: 34,
+    invert: true,
+    size: 48,
+    shape: "burst",
+    from: "#e9d488",
+    to: "#6fb772",
+    spin: "9deg",
+    dur: 12,
+    delay: 2.1,
+  },
+  {
+    phase: 0.72,
+    travel: 29,
+    invert: false,
+    size: 44,
+    shape: "star",
+    from: "#f0855c",
+    to: "#e0563f",
+    spin: "-11deg",
+    dur: 10.5,
+    delay: 1,
+  },
+  {
+    phase: 0.88,
+    travel: 23,
+    invert: true,
+    size: 40,
+    shape: "orb",
+    from: "#a8d8bd",
+    to: "#7fc9a2",
+    spin: "8deg",
+    dur: 13,
+    delay: 0.3,
+  },
 ];
 
 /** a four-petal bloom, drawn once at unit scale and reused */
@@ -78,46 +161,53 @@ export function SolutionsWave() {
       fill="none"
     >
       <defs>
-        <linearGradient id="sw-rail" x1="0" y1="0" x2="1" y2="0">
+        {/* User space, not the path's bounding box: the rails run from -70 to
+            2026 so the viewer only ever sees their middle, and an object-box
+            gradient would put the fade off screen on one side and nowhere on
+            the other. */}
+        <linearGradient
+          id="sw-rail"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="1600"
+          y2="0"
+        >
           <stop offset="0%" stopColor="#dfe3fa" stopOpacity="0" />
           <stop offset="18%" stopColor="#dfe3fa" stopOpacity="1" />
           <stop offset="82%" stopColor="#e6e2f6" stopOpacity="1" />
           <stop offset="100%" stopColor="#e6e2f6" stopOpacity="0" />
         </linearGradient>
         {ORBS.map((o, i) => (
-          <linearGradient key={i} id={`sw-o${i}`} x1="0.15" y1="0" x2="0.85" y2="1">
+          <linearGradient
+            key={i}
+            id={`sw-o${i}`}
+            x1="0.15"
+            y1="0"
+            x2="0.85"
+            y2="1"
+          >
             <stop offset="0%" stopColor={o.from} />
             <stop offset="100%" stopColor={o.to} />
           </linearGradient>
         ))}
       </defs>
 
-      <path d={wavePath(false)} stroke="url(#sw-rail)" strokeWidth="14" strokeLinecap="round" />
-      <path d={wavePath(true)} stroke="url(#sw-rail)" strokeWidth="14" strokeLinecap="round" />
+      <path
+        d={wavePath(false)}
+        stroke="url(#sw-rail)"
+        strokeWidth="14"
+        strokeLinecap="round"
+      />
+      <path
+        d={wavePath(true)}
+        stroke="url(#sw-rail)"
+        strokeWidth="14"
+        strokeLinecap="round"
+      />
 
       {ORBS.map((o, i) => (
-        <g
-          key={i}
-          className="orb-bob"
-          style={
-            {
-              ["--spin" as string]: o.spin,
-              animationDuration: `${o.dur}s`,
-              animationDelay: `${o.delay}s`,
-            } as React.CSSProperties
-          }
-        >
-          <g transform={`translate(${o.x} ${o.y}) scale(${o.size / 2})`}>
-            {o.shape === "orb" ? (
-              <circle r="1" fill={`url(#sw-o${i})`} />
-            ) : (
-              <path
-                d={o.shape === "flower" ? FLOWER : o.shape === "burst" ? BURST : STAR}
-                fill={`url(#sw-o${i})`}
-              />
-            )}
-          </g>
-        </g>
+        <TravellingOrb key={i} orb={o} gradient={`url(#sw-o${i})`} />
       ))}
     </svg>
   );
@@ -148,5 +238,50 @@ export function SolutionsWash() {
       {/* keeps the type band near-white so the headline holds full contrast */}
       <div className="absolute inset-x-[6%] top-[8%] h-[62%] bg-[radial-gradient(60%_62%_at_50%_46%,rgba(252,251,249,0.86),transparent_74%)]" />
     </div>
+  );
+}
+
+function TravellingOrb({ orb, gradient }: { orb: Orb; gradient: string }) {
+  const reduce = useReducedMotion();
+  const time = useTime();
+
+  // one crossing per `travel` seconds, wrapping at the ends — both of which sit
+  // outside the viewBox, so the reset is never visible
+  const x = useTransform(time, (t) => {
+    const p = reduce ? orb.phase : (t / (orb.travel * 1000) + orb.phase) % 1;
+    return START + p * SPAN;
+  });
+  const y = useTransform(x, (v) => waveY(v, orb.invert));
+
+  return (
+    <motion.g style={{ x, y }}>
+      <g
+        className="orb-bob"
+        style={
+          {
+            ["--spin" as string]: orb.spin,
+            animationDuration: `${orb.dur}s`,
+            animationDelay: `${orb.delay}s`,
+          } as React.CSSProperties
+        }
+      >
+        <g transform={`scale(${orb.size / 2})`}>
+          {orb.shape === "orb" ? (
+            <circle r="1" fill={gradient} />
+          ) : (
+            <path
+              d={
+                orb.shape === "flower"
+                  ? FLOWER
+                  : orb.shape === "burst"
+                    ? BURST
+                    : STAR
+              }
+              fill={gradient}
+            />
+          )}
+        </g>
+      </g>
+    </motion.g>
   );
 }
