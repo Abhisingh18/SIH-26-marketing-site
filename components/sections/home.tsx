@@ -4,6 +4,7 @@ import { SovereigntyMonitor } from "@/components/mock/monitor";
 import { Panel, TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
+import { WordRise } from "@/components/ui/word-rise";
 
 /* ------------------------------------------------------------------ */
 /* Editorial statement                                                 */
@@ -11,20 +12,52 @@ import { Section, SectionHead } from "@/components/ui/section";
 
 export function Statement() {
   return (
-    <Section size="lg">
-      <Reveal>
+    <section className="relative overflow-hidden px-6 py-28 sm:px-8 md:py-40">
+      <StatementBackdrop />
+
+      <div className="relative mx-auto w-full max-w-[1200px]">
         <h2 className="display mx-auto max-w-[19ch] text-center text-[clamp(2rem,5vw,3.6rem)]">
-          The most valuable AI is the one you can{" "}
-          <span className="text-muted">trust with your most valuable data.</span>
+          <WordRise
+            segments={[
+              // the setup recedes so the payoff lands — the sentence is about
+              // trust, and that half was the one greyed out before
+              { text: "The most valuable AI is the one you can", className: "text-muted" },
+              { text: "trust with your most valuable data.", className: "text-ink" },
+            ]}
+          />
         </h2>
-      </Reveal>
-      <Reveal delay={0.1}>
-        <p className="mx-auto mt-10 max-w-[52ch] text-center text-[16.5px] leading-[1.65] text-body">
-          Refineries, plants and engineering teams already hold the information AI is best at
-          using. The problem was never capability — it was custody.
-        </p>
-      </Reveal>
-    </Section>
+
+        <Reveal delay={0.5}>
+          <p className="mx-auto mt-12 max-w-[52ch] text-balance text-center text-[16.5px] leading-[1.65] text-body">
+            Refineries, plants and engineering teams already hold the information AI is best
+            at using. The problem was never capability — it was custody.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Drifting fields behind the statement, in the palette the page already uses:
+ * saffron from the fold, periwinkle from the product wash, violet where they
+ * meet. Kept at very low alpha and heavily blurred — the text sits directly on
+ * this, so it can be felt but must never be read.
+ *
+ * The three drift on unrelated cycles, so they never line up and the loop never
+ * announces itself.
+ */
+function StatementBackdrop() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(80%_75%_at_50%_50%,#000_35%,transparent_100%)]"
+    >
+      <div className="grid-paper absolute inset-0 opacity-60" />
+      <div className="drift-a absolute left-[6%] top-[8%] h-[62%] w-[42%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,158,88,0.20),transparent_100%)] blur-[90px]" />
+      <div className="drift-b absolute right-[4%] top-[22%] h-[70%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(126,150,246,0.24),transparent_100%)] blur-[95px]" />
+      <div className="drift-c absolute left-[28%] bottom-[2%] h-[56%] w-[44%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(138,108,226,0.16),transparent_100%)] blur-[100px]" />
+    </div>
   );
 }
 
@@ -64,7 +97,7 @@ export function Pillars() {
     <Section tone="surface">
       <SectionHead
         label="Why it is different"
-        title="Not another chatbot. An AI operating layer for industrial work."
+        animateTitle="Not another chatbot. An AI operating layer for industrial work."
         body="Three things separate a sovereign workbench from a browser tab with a text box."
       />
 

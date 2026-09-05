@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./reveal";
+import { WordRise } from "./word-rise";
 
 export function Section({
   id,
@@ -48,14 +49,20 @@ export function SectionHead({
   invert = false,
   className,
   children,
+  /**
+   * Pass the heading here instead of `title` for a word-by-word entry rather
+   * than the block fade — for headings worth the extra beat.
+   */
+  animateTitle,
 }: {
   label?: string;
-  title: ReactNode;
+  title?: ReactNode;
   body?: ReactNode;
   align?: "left" | "center";
   invert?: boolean;
   className?: string;
   children?: ReactNode;
+  animateTitle?: string;
 }) {
   return (
     <Reveal className={cn(align === "center" && "flex flex-col items-center text-center", className)}>
@@ -68,7 +75,7 @@ export function SectionHead({
           invert && "text-paper",
         )}
       >
-        {title}
+        {animateTitle ? <WordRise segments={[{ text: animateTitle }]} /> : title}
       </h2>
       {body ? (
         <p

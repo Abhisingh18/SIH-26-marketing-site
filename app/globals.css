@@ -183,6 +183,31 @@ body {
 }
 
 /*
+ * Slow-drifting fields for section backdrops.
+ *
+ * Three separate durations that share no common factor, so the blobs never line
+ * up and the loop never announces itself. Long enough (25-40s) that the motion
+ * is felt rather than watched — anything faster and a background starts
+ * competing with the text sitting on it.
+ */
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(7%, -5%, 0) scale(1.14); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.08); }
+  50% { transform: translate3d(-8%, 6%, 0) scale(0.96); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5%, 8%, 0) scale(1.1); }
+}
+
+.drift-a { animation: drift-a 27s ease-in-out infinite; }
+.drift-b { animation: drift-b 34s ease-in-out infinite; }
+.drift-c { animation: drift-c 41s ease-in-out infinite; }
+
+/*
  * Colour flowing through the phrase, saffron to indigo and back.
  *
  * The gradient carries two full cycles across an image twice the width of the
@@ -279,6 +304,9 @@ body {
   .rise > * { opacity: 1; animation: none; }
   .marquee-track,
   .shimmer-bar,
-  .flow-text { animation: none; }
+  .flow-text,
+  .drift-a,
+  .drift-b,
+  .drift-c { animation: none; }
   .card-hover { transition: none; }
 }
