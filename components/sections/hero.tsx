@@ -75,11 +75,17 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <h1 className="display rise mt-9 text-[clamp(2.6rem,5.8vw,4.5rem)] leading-[0.96] tracking-[-0.02em]">
-            <span className="block">Your AI.</span>
-            <span className="block">Your infrastructure.</span>
-            <span className="block">Your data.</span>
-          </h1>
+          {/* Brand-forward lockup: the name carries the fold and the line under
+              it says who it is for. It only works because the subheading below
+              says what the thing actually is — a name alone explains nothing. */}
+          <div className="rise mt-8">
+            <h1 className="display text-[clamp(3.4rem,9vw,6.6rem)] leading-[0.9] tracking-[-0.03em]">
+              Sangam
+            </h1>
+            <p className="display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted">
+              for India&rsquo;s hardest work
+            </p>
+          </div>
 
           <Reveal delay={0.34}>
             <p className="mt-7 max-w-[56ch] text-balance text-[17px] leading-[1.6] text-body sm:text-[18.5px]">
