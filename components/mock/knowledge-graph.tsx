@@ -182,15 +182,16 @@ function build() {
   });
 
   // bridges between clusters — the reason it reads as one index and not seven
+  const bridgeFrom = edges.length;
   hubs.forEach((h, i) => {
     edges.push([h, hubs[(i + 1) % hubs.length]]);
     edges.push([h, hubs[(i + 3) % hubs.length]]);
   });
 
-  return { nodes, edges };
+  return { nodes, edges, bridgeFrom };
 }
 
-const { nodes: NODES, edges: EDGES } = build();
+const { nodes: NODES, edges: EDGES, bridgeFrom: BRIDGE_FROM } = build();
 
 const TOUR_MS = 1900;
 const FOCAL = 700;
@@ -332,15 +333,34 @@ export function KnowledgeGraph({
 
       // edges first, faint, and faded by depth so the far side recedes
       ctx.lineWidth = 0.6;
-      for (const [a, b] of EDGES) {
+      for (let e = 0; e < EDGES.length; e++) {
+        const [a, b] = EDGES[e];
         const pa = projected[a];
         const pb = projected[b];
         const ca = NODES[a].cluster;
         const cb = NODES[b].cluster;
         const focus = Math.max(lit[ca], lit[cb]);
         const depth = (pa.s + pb.s) / 2;
-        ctx.globalAlpha = (0.045 + focus * 0.26) * Math.min(1, depth * 1.4);
-        ctx.strokeStyle = focus > 0.5 ? CLUSTERS[ca].colour : "#111113";
+        // Every cluster keeps its own hue at rest. Draining the unfocused ones
+        // to grey was what made the graph look washed out — the reference has
+        // all its communities coloured at once, and focus should raise one, not
+        // desaturate the other six.
+        ctx.globalAlpha = (0.13 + focus * 0.34) * Math.min(1, depth * 1.4);
+
+        if (e >= BRIDGE_FROM) {
+          // Only the cluster-to-cluster bridges get a real gradient: there are
+          // fourteen of them, so the per-frame cost is nothing, and they are the
+          // only edges where two different hues actually meet.
+          const g = ctx.createLinearGradient(pa.x, pa.y, pb.x, pb.y);
+          g.addColorStop(0, CLUSTERS[ca].colour);
+          g.addColorStop(1, CLUSTERS[cb].colour);
+          ctx.strokeStyle = g;
+          ctx.lineWidth = 1;
+        } else {
+          ctx.strokeStyle = CLUSTERS[ca].colour;
+          ctx.lineWidth = 0.6;
+        }
+
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
@@ -359,14 +379,14 @@ export function KnowledgeGraph({
         const focus = lit[n.cluster];
         const cluster = CLUSTERS[n.cluster];
 
-        ctx.globalAlpha = (0.18 + focus * 0.78) * Math.min(1, p.s * 1.6);
-        ctx.fillStyle = focus > 0.35 ? cluster.colour : "#8a8a92";
+        ctx.globalAlpha = (0.52 + focus * 0.46) * Math.min(1, p.s * 1.6);
+        ctx.fillStyle = cluster.colour;
 
         // hubs get a halo, which is what stops them reading as slightly larger
         // dots once the cloud is this dense
-        if (n.hub && focus > 0.02) {
+        if (n.hub) {
           const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 34 * p.s);
-          glow.addColorStop(0, `${cluster.colour}${Math.round(focus * 54).toString(16).padStart(2, "0")}`);
+          glow.addColorStop(0, `${cluster.colour}${Math.round(26 + focus * 62).toString(16).padStart(2, "0")}`);
           glow.addColorStop(1, `${cluster.colour}00`);
           ctx.save();
           ctx.globalAlpha = 1;
@@ -392,8 +412,8 @@ export function KnowledgeGraph({
         if (!n.hub) continue;
         const p = projected[i];
         const focus = lit[n.cluster];
-        ctx.globalAlpha = 0.36 + focus * 0.64;
-        ctx.lineWidth = 3;
+        ctx.globalAlpha = 0.55 + focus * 0.45;
+        ctx.lineWidth = 3.5;
         ctx.strokeStyle = "#fcfbf9";
         ctx.strokeText(CLUSTERS[n.cluster].label, p.x, p.y - 14 * p.s);
         ctx.fillStyle = focus > 0.5 ? "#111113" : "#56565c";
@@ -483,7 +503,20 @@ export function KnowledgeGraph({
         ref={wrapRef}
         className="relative h-[330px] overflow-hidden rounded-[13px] bg-veil/60 sm:h-[430px]"
       >
-        <div className="grid-paper absolute inset-0 opacity-45" />
+        <div className="grid-paper absolute inset-0 opacity-40" />
+
+        {/* A wash under the cloud in the page's own three colours, so the graph
+            sits in light rather than on flat grey. Kept well below the node
+            alphas — the moment the backdrop competes with the data it stops
+            being a backdrop. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(74%_74%_at_50%_50%,#000_28%,transparent_100%)]"
+        >
+          <div className="drift-a absolute left-[2%] top-[4%] h-[70%] w-[46%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,150,70,0.22),transparent_100%)] blur-[54px]" />
+          <div className="drift-b absolute right-[0%] top-[16%] h-[76%] w-[50%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(96,120,244,0.26),transparent_100%)] blur-[58px]" />
+          <div className="drift-c absolute bottom-[0%] left-[24%] h-[62%] w-[48%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(132,96,228,0.20),transparent_100%)] blur-[62px]" />
+        </div>
         <canvas
           ref={canvasRef}
           className="relative block h-full w-full"
