@@ -1,19 +1,19 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import {
   BookMarked,
   Boxes,
   Database,
   FileCode2,
+  FileSpreadsheet,
+  FileText,
   FolderTree,
   HardDrive,
   Plug,
-  Settings2,
-  FileSpreadsheet,
-  FileText,
   Plus,
+  Settings2,
   Shield,
   Sparkles,
 } from "lucide-react";
@@ -37,7 +37,14 @@ const NAV = [
  * through an upload.
  */
 const WORKSPACE = [
-  { icon: FolderTree, label: "Document root", meta: "\\plant-fs\inspection", tone: "parse" },
+  {
+    icon: FolderTree,
+    // a UNC path, so every backslash needs escaping — unescaped, "\i" is not an
+    // escape sequence and JS quietly drops the slash
+    meta: "\\\\plant-fs\\inspection",
+    label: "Document root",
+    tone: "parse",
+  },
   { icon: FileCode2, label: "AGENTS.md", meta: "12 rules · project instructions", tone: "reasoning" },
   { icon: Settings2, label: "Configuration", meta: "models, routing, retention", tone: "reasoning" },
   { icon: Plug, label: "MCP servers", meta: "3 connected · all on-prem", tone: "retrieval" },
@@ -522,15 +529,35 @@ export function Workbench({ className }: { className?: string }) {
 }
 
 /**
- * What the runtime works on. Presented as locations on a network the customer
- * already owns rather than as a list of uploads — the distinction is the entire
- * product, so the paths are doing argumentative work, not decorative.
+ * What the runtime is pointed at. Presented as locations on a network the
+ * customer already owns rather than as a list of uploads — the distinction is
+ * the entire product, so the paths are doing argumentative work.
+ *
+ * The footer claims the watcher is running, so the watcher is shown running:
+ * one row is scanned each beat and a full pass takes ten seconds. Same
+ * mechanism as the sovereignty monitor's service probe, deliberately — two
+ * panels in one product should not invent two idioms for "this is live".
  */
+const SCAN_MS = 1650;
+
 function WorkspaceView() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "-10% 0px" });
   const reduce = useReducedMotion();
+  const [beat, setBeat] = useState(0);
+
+  useEffect(() => {
+    if (!inView || reduce) return;
+    const id = setInterval(() => setBeat((b) => b + 1), SCAN_MS);
+    return () => clearInterval(id);
+  }, [inView, reduce]);
+
+  // -1 parks the scan entirely under reduced motion, so no row is singled out
+  const scanning = reduce ? -1 : beat % WORKSPACE.length;
+  const passes = reduce ? 0 : Math.floor(beat / WORKSPACE.length);
 
   return (
-    <>
+    <div ref={ref} className="space-y-5">
       <div>
         <p className="label">Workspace</p>
         <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
@@ -539,42 +566,91 @@ function WorkspaceView() {
       </div>
 
       <ul className="space-y-2">
-        {WORKSPACE.map((w, i) => (
-          <motion.li
-            key={w.label}
-            className="group flex items-center gap-3 rounded-[11px] bg-veil/60 px-3 py-2.5 transition-colors duration-300 hover:bg-veil"
-            initial={reduce ? false : { opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.05 + i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span
+        {WORKSPACE.map((w, i) => {
+          const active = scanning === i;
+          return (
+            <motion.li
+              key={w.label}
               className={cn(
-                "flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]",
-                TONES[w.tone],
+                "relative flex items-center gap-3 overflow-hidden rounded-[11px] px-3 py-2.5 transition-colors duration-500",
+                active ? "bg-veil" : "bg-veil/50",
               )}
+              initial={reduce ? false : { opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.05 + i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <w.icon className="h-3.5 w-3.5" strokeWidth={1.8} />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[13px] text-ink">{w.label}</span>
-              <span className="block truncate font-mono text-[10.5px] text-muted">
-                {w.meta}
+              {/* the read itself, travelling through the row being scanned */}
+              {active && !reduce ? (
+                <motion.span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+                  initial={{ x: "-130%" }}
+                  animate={{ x: "430%" }}
+                  transition={{ duration: 1.15, ease: "easeInOut" }}
+                />
+              ) : null}
+
+              <motion.span
+                className={cn(
+                  "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]",
+                  TONES[w.tone],
+                )}
+                animate={{ scale: active ? 1.08 : 1 }}
+                transition={
+                  reduce ? { duration: 0 } : { type: "spring", stiffness: 340, damping: 20 }
+                }
+              >
+                <w.icon className="h-3.5 w-3.5" strokeWidth={1.8} />
+              </motion.span>
+
+              <span className="relative min-w-0">
+                <span className="block text-[13px] text-ink">{w.label}</span>
+                <span className="block truncate font-mono text-[10.5px] text-muted">
+                  {w.meta}
+                </span>
               </span>
-            </span>
-            <span className="ml-auto shrink-0 font-mono text-[9.5px] uppercase tracking-[0.12em] text-muted">
-              local
-            </span>
-          </motion.li>
-        ))}
+
+              {/* the tag carries the state too, so the scan stays legible
+                  without depending on catching the sweep */}
+              <span className="relative ml-auto shrink-0">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={active ? "scan" : "idle"}
+                    className={cn(
+                      "flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.12em]",
+                      active ? "text-signal" : "text-muted",
+                    )}
+                    initial={reduce ? false : { opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduce ? undefined : { opacity: 0, y: -4 }}
+                    transition={{ duration: 0.22 }}
+                  >
+                    {active ? (
+                      <>
+                        <span className="dot-live h-1 w-1 rounded-full bg-signal" />
+                        indexing
+                      </>
+                    ) : (
+                      "local"
+                    )}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            </motion.li>
+          );
+        })}
       </ul>
 
-      <div className="flex items-center gap-2.5 rounded-[12px] bg-veil/70 px-3.5 py-3">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-[12px] bg-veil/70 px-3.5 py-3">
         <span className="dot-live h-1.5 w-1.5 shrink-0 rounded-full bg-signal" />
         <p className="text-[12px] text-body">
           Watching for changes. Nothing is copied out to index it.
         </p>
+        <p className="ml-auto font-mono text-[9.5px] uppercase tracking-[0.12em] tabular-nums text-muted">
+          {passes} {passes === 1 ? "pass" : "passes"}
+        </p>
       </div>
-    </>
+    </div>
   );
 }
 
