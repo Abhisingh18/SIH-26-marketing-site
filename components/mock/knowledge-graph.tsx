@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ const NODES: GraphNode[] = [
     tone: "hub",
     x: 300,
     y: 168,
-    r: 27,
+    r: 15,
     kind: "Crude storage tank",
     stats: [
       ["Linked documents", "7"],
@@ -50,7 +50,7 @@ const NODES: GraphNode[] = [
     tone: "eng",
     x: 300,
     y: 48,
-    r: 17,
+    r: 10,
     kind: "Engineering drawing",
     stats: [
       ["Revision", "Rev-C"],
@@ -65,7 +65,7 @@ const NODES: GraphNode[] = [
     tone: "field",
     x: 128,
     y: 92,
-    r: 19,
+    r: 11,
     kind: "Inspection report",
     stats: [
       ["Pages", "24"],
@@ -80,7 +80,7 @@ const NODES: GraphNode[] = [
     tone: "field",
     x: 88,
     y: 224,
-    r: 16,
+    r: 9.5,
     kind: "Image set",
     stats: [
       ["Images", "18"],
@@ -95,7 +95,7 @@ const NODES: GraphNode[] = [
     tone: "eng",
     x: 200,
     y: 300,
-    r: 16,
+    r: 9.5,
     kind: "Measurement log",
     stats: [
       ["Readings", "1,240"],
@@ -110,7 +110,7 @@ const NODES: GraphNode[] = [
     tone: "doc",
     x: 372,
     y: 296,
-    r: 17,
+    r: 10,
     kind: "Standard",
     stats: [
       ["Clauses indexed", "486"],
@@ -125,7 +125,7 @@ const NODES: GraphNode[] = [
     tone: "doc",
     x: 486,
     y: 232,
-    r: 17,
+    r: 10,
     kind: "Procedure",
     stats: [
       ["Sections", "22"],
@@ -140,7 +140,7 @@ const NODES: GraphNode[] = [
     tone: "doc",
     x: 500,
     y: 100,
-    r: 16,
+    r: 9.5,
     kind: "Procedure",
     stats: [
       ["Sections", "16"],
@@ -155,7 +155,7 @@ const NODES: GraphNode[] = [
     tone: "fin",
     x: 448,
     y: 40,
-    r: 14,
+    r: 8.5,
     kind: "Purchase order",
     stats: [
       ["Vendor", "Redacted"],
@@ -179,6 +179,11 @@ const EDGES: [string, string][] = [
   ["sop114", "api570"],
   ["sop232", "sop114"],
   ["sop232", "po"],
+  // a few cross-links so the graph reads as a network rather than a star
+  ["insp", "pid"],
+  ["photos", "thick"],
+  ["thick", "api570"],
+  ["tk402", "po"],
 ];
 
 const byId = new Map(NODES.map((n) => [n.id, n]));
@@ -198,6 +203,10 @@ function noise(seed: number) {
   return v - Math.floor(v);
 }
 
+/** the walk the graph takes on its own, following the agent's retrieval */
+const TOUR = ["tk402", "insp", "sop114", "sop232", "api570"];
+const TOUR_MS = 1250;
+
 /**
  * The indexed knowledge behind one asset, as a graph you can interrogate.
  *
@@ -207,9 +216,37 @@ function noise(seed: number) {
  * the same selection state, so a highlighted path is never out of step with the
  * dimming.
  */
-export function KnowledgeGraph() {
-  const [selected, setSelected] = useState("tk402");
+export function KnowledgeGraph({
+  tour = false,
+  onInteract,
+}: {
+  /** walk the graph on its own until someone takes over */
+  tour?: boolean;
+  onInteract?: () => void;
+}) {
+  const [selected, setSelected] = useState(TOUR[0]);
+  const [step, setStep] = useState(0);
+  const [taken, setTaken] = useState(false);
   const reduce = useReducedMotion();
+
+  // The graph selects its own way round until a click, at which point it hands
+  // over for good — nothing is more irritating than a panel that keeps moving
+  // while you are reading it.
+  useEffect(() => {
+    if (!tour || taken || reduce) return;
+    const timer = setTimeout(() => {
+      const next = (step + 1) % TOUR.length;
+      setStep(next);
+      setSelected(TOUR[next]);
+    }, TOUR_MS);
+    return () => clearTimeout(timer);
+  }, [tour, taken, step, reduce]);
+
+  const pick = (id: string) => {
+    setTaken(true);
+    setSelected(id);
+    onInteract?.();
+  };
 
   const active = byId.get(selected)!;
   const near = neighbours(selected);
@@ -225,6 +262,33 @@ export function KnowledgeGraph() {
           role="group"
           aria-label="Knowledge graph for TK-402"
         >
+          {/* signals firing along the edges — the graph is alive whether or not
+              anything is selected */}
+          <g stroke="#5551c4" strokeWidth="1.6" strokeLinecap="round" opacity="0.55">
+            {EDGES.map(([a, b], i) => {
+              const from = byId.get(a)!;
+              const to = byId.get(b)!;
+              return (
+                <line
+                  key={`f-${a}-${b}`}
+                  x1={from.x}
+                  y1={from.y}
+                  x2={to.x}
+                  y2={to.y}
+                  className={reduce ? undefined : "net-pulse"}
+                  style={
+                    reduce
+                      ? undefined
+                      : {
+                          animationDelay: `${noise(i * 13) * 7}s`,
+                          animationDuration: `${3.2 + noise(i * 5) * 3}s`,
+                        }
+                  }
+                />
+              );
+            })}
+          </g>
+
           <g>
             {EDGES.map(([a, b], i) => {
               const from = byId.get(a)!;
@@ -273,7 +337,7 @@ export function KnowledgeGraph() {
                         animationDelay: `${noise(i * 2) * 4}s`,
                       } as React.CSSProperties)
                 }
-                onClick={() => setSelected(n.id)}
+                onClick={() => pick(n.id)}
                 animate={{ opacity: lit ? 1 : 0.22 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -283,7 +347,7 @@ export function KnowledgeGraph() {
                 <motion.circle
                   cx={n.x}
                   cy={n.y}
-                  r={n.r + 7}
+                  r={n.r + 6}
                   fill={tone.dot}
                   animate={{ opacity: isActive ? 0.12 : 0 }}
                   transition={{ duration: 0.35 }}
@@ -306,11 +370,11 @@ export function KnowledgeGraph() {
                 <circle cx={n.x} cy={n.y} r={3} fill={tone.dot} />
                 <text
                   x={n.x}
-                  y={n.y + n.r + 14}
+                  y={n.y + n.r + 12}
                   textAnchor="middle"
                   className="pointer-events-none"
                   fill="#56565c"
-                  fontSize="10.5"
+                  fontSize="9.5"
                 >
                   {n.label}
                 </text>
@@ -319,7 +383,9 @@ export function KnowledgeGraph() {
           })}
         </svg>
 
-        <p className="label absolute right-3 top-3 text-[9px]">Select a node</p>
+        <p className="label absolute right-3 top-3 text-[9px]">
+          {taken ? "Selected" : "Select a node"}
+        </p>
       </div>
 
       {/* detail for the selected node */}

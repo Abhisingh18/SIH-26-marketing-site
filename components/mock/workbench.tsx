@@ -86,13 +86,23 @@ const STEPS = [
 const STEP_MS = 1500;
 const HOLD_MS = 3200;
 
+/**
+ * Retrieval is the step that actually uses the knowledge base, so the workbench
+ * switches to the graph while it runs and switches back after. It gets a longer
+ * beat than the others because a graph needs time to be read — at 1.5s it would
+ * flash past before anyone registered what it was.
+ */
+const RETRIEVAL_STEP = 2;
+const RETRIEVAL_MS = 6200;
+
 export function Workbench({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   // not `once` — the run pauses when the mock scrolls out of view
   const inView = useInView(ref, { margin: "-12% 0px" });
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
-  const [view, setView] = useState<View>("task");
+  // null while the demo drives itself; set once a viewer takes over
+  const [pinned, setPinned] = useState<View | null>(null);
 
   // The agent walks the log a step at a time, holds on the finished run, then
   // starts over — so the mock behaves like a short loop of the product working
@@ -100,10 +110,12 @@ export function Workbench({ className }: { className?: string }) {
   useEffect(() => {
     if (!inView || reduce) return;
     const finished = active >= STEPS.length;
-    const timer = setTimeout(
-      () => setActive(finished ? 0 : active + 1),
-      finished ? HOLD_MS : STEP_MS,
-    );
+    const wait = finished
+      ? HOLD_MS
+      : active === RETRIEVAL_STEP
+        ? RETRIEVAL_MS
+        : STEP_MS;
+    const timer = setTimeout(() => setActive(finished ? 0 : active + 1), wait);
     return () => clearTimeout(timer);
   }, [active, inView, reduce]);
 
@@ -111,6 +123,10 @@ export function Workbench({ className }: { className?: string }) {
   const at = reduce ? STEPS.length : active;
   const complete = at >= STEPS.length;
   const doneCount = Math.min(at, STEPS.length);
+
+  const following: View = at === RETRIEVAL_STEP ? "knowledge" : "task";
+  const view = pinned ?? following;
+  const touring = pinned === null && following === "knowledge";
 
   return (
     <div
@@ -150,7 +166,7 @@ export function Workbench({ className }: { className?: string }) {
                   key={label}
                   type="button"
                   disabled={target === undefined}
-                  onClick={() => target && setView(target)}
+                  onClick={() => target && setPinned(target)}
                   className={cn(
                     "flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-left text-[13px] transition-colors duration-300",
                     on ? "bg-ink text-paper shadow-e1" : "text-body",
@@ -188,7 +204,7 @@ export function Workbench({ className }: { className?: string }) {
               <button
                 key={v}
                 type="button"
-                onClick={() => setView(v)}
+                onClick={() => setPinned(v)}
                 className={cn(
                   "flex-1 rounded-full px-3 py-1.5 text-[12.5px] capitalize transition-colors duration-300",
                   view === v ? "bg-surface text-ink shadow-e1" : "text-body",
@@ -204,10 +220,12 @@ export function Workbench({ className }: { className?: string }) {
               <div>
                 <p className="label">Knowledge</p>
                 <p className="mt-2 text-[18px] tracking-[-0.015em] text-ink sm:text-[20px]">
-                  What the workbench knows about TK-402.
+                  {touring
+                    ? "Searching what it knows about TK-402…"
+                    : "What the workbench knows about TK-402."}
                 </p>
               </div>
-              <KnowledgeGraph />
+              <KnowledgeGraph tour={touring} onInteract={() => setPinned("knowledge")} />
             </>
           ) : (
             <>
