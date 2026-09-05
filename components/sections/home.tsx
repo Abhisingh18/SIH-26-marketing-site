@@ -80,10 +80,12 @@ function StatementBackdrop() {
 export function Pillars() {
   return (
     <Section tone="surface">
+      {/* The three cards below already make the argument the old subheading was
+          making, so it went. What is left is the claim itself, centred. */}
       <SectionHead
         label="Why it is different"
-        animateTitle="Not another chatbot. An AI operating layer for industrial work."
-        body="Three things separate a sovereign workbench from a browser tab with a text box."
+        animateTitle="Not a chatbot. An operating layer."
+        align="center"
       />
       <PillarCards />
     </Section>
