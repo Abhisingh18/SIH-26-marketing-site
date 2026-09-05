@@ -183,6 +183,21 @@ body {
 }
 
 /*
+ * Knowledge-graph nodes drifting in place. The offsets come in as custom
+ * properties so every node gets its own direction from one keyframe.
+ */
+@keyframes node-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(var(--fx, 0), var(--fy, 0)); }
+}
+
+.node-float {
+  animation-name: node-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
  * Signals running along the neural field's edges. A short dash travelling a
  * long dasharray reads as one packet moving forward; animating the whole line's
  * opacity instead would just make the graph blink.
@@ -340,6 +355,7 @@ body {
   .drift-b,
   .drift-c,
   .net-pulse,
-  .net-node { animation: none; }
+  .net-node,
+  .node-float { animation: none; }
   .card-hover { transition: none; }
 }
