@@ -184,6 +184,40 @@ body {
 
 
 /*
+ * The wordmark, letter by letter.
+ *
+ * Two elements per character rather than one: entry and the standing wave are
+ * both transforms, and a single element cannot run two of them. The outer span
+ * rises once; the inner one never stops.
+ */
+.letter-in {
+  display: inline-block;
+  opacity: 0;
+  animation-name: rise;
+  animation-duration: 0.95s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: forwards;
+}
+
+/*
+ * Sangam is a confluence, so the word moves like water: each letter on the same
+ * slow cycle, offset a beat from its neighbour, which travels a swell through
+ * the word instead of bouncing the whole thing.
+ */
+@keyframes letter-wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.055em); }
+}
+
+.letter-wave {
+  display: inline-block;
+  animation-name: letter-wave;
+  animation-duration: 4.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/*
  * A standalone orb, rocking and breathing rather than spinning. A full rotation
  * on a four-fold shape lands back on itself four times a turn, which reads as a
  * stutter; rocking through a partial angle never resolves and so never snags.
@@ -380,6 +414,8 @@ body {
   .net-node,
   .net-node,
   .orb-bob,
-  .orb-turn { animation: none; }
+  .orb-turn,
+  .letter-wave { animation: none; }
+  .letter-in { opacity: 1; animation: none; }
   .card-hover { transition: none; }
 }

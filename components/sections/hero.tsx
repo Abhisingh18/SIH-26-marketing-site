@@ -54,6 +54,49 @@ const DOCS = [
   { label: "Vendor invoices", icon: IndianRupee, tone: "fin" },
 ] satisfies { label: string; icon: typeof Workflow; tone: keyof typeof TONES }[];
 
+/**
+ * The wordmark, one colour per letter.
+ *
+ * The palette is the site's own — saffron through rose, violet, indigo and blue
+ * to green — rather than the primary red/yellow/green the reference uses.
+ * Primaries would read as a consumer toy on a page selling infrastructure to
+ * refineries; the site's own spectrum reads as a confluence, which is what the
+ * name means.
+ */
+const LETTERS = [
+  { char: "S", colour: "#dd7a15" },
+  { char: "a", colour: "#c2557a" },
+  { char: "n", colour: "#8a6ce2" },
+  { char: "g", colour: "#5551c4" },
+  { char: "a", colour: "#2338cc" },
+  { char: "m", colour: "#0f8b55" },
+];
+
+function Wordmark() {
+  return (
+    <h1
+      className="display text-[clamp(3.4rem,9vw,6.6rem)] leading-[0.9] tracking-[-0.03em]"
+      aria-label="Sangam"
+    >
+      {LETTERS.map((l, i) => (
+        <span
+          key={i}
+          aria-hidden
+          className="letter-in"
+          style={{ animationDelay: `${0.06 + i * 0.075}s` }}
+        >
+          <span
+            className="letter-wave"
+            style={{ color: l.colour, animationDelay: `${i * 0.16}s` }}
+          >
+            {l.char}
+          </span>
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 export function Hero() {
   return (
     <section className="relative overflow-hidden px-6 pb-20 pt-[76px] sm:px-8 sm:pt-[88px] md:pb-24">
@@ -78,11 +121,12 @@ export function Hero() {
           {/* Brand-forward lockup: the name carries the fold and the line under
               it says who it is for. It only works because the subheading below
               says what the thing actually is — a name alone explains nothing. */}
-          <div className="rise mt-8">
-            <h1 className="display text-[clamp(3.4rem,9vw,6.6rem)] leading-[0.9] tracking-[-0.03em]">
-              Sangam
-            </h1>
-            <p className="display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted">
+          <div className="mt-8">
+            <Wordmark />
+            <p
+              className="letter-in display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted"
+              style={{ animationDelay: `${0.06 + LETTERS.length * 0.075}s` }}
+            >
               for all from India
             </p>
           </div>
