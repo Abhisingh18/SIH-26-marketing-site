@@ -55,27 +55,27 @@ const DOCS = [
 ] satisfies { label: string; icon: typeof Workflow; tone: keyof typeof TONES }[];
 
 /**
- * The wordmark, one colour per letter.
+ * Three colours across six letters, two letters each — saffron, blue, green.
  *
- * The palette is the site's own — saffron through rose, violet, indigo and blue
- * to green — rather than the primary red/yellow/green the reference uses.
- * Primaries would read as a consumer toy on a page selling infrastructure to
- * refineries; the site's own spectrum reads as a confluence, which is what the
- * name means.
+ * Six separate hues was a rainbow, and a rainbow on a page selling
+ * infrastructure to refineries reads as a consumer toy. Three fields read as a
+ * flag, which the audience for this page will notice, and all three are already
+ * in the site's palette, so the mark does not introduce a colour the rest of the
+ * page never uses.
  */
 const LETTERS = [
   { char: "S", colour: "#dd7a15" },
-  { char: "a", colour: "#c2557a" },
-  { char: "n", colour: "#8a6ce2" },
-  { char: "g", colour: "#5551c4" },
-  { char: "a", colour: "#2338cc" },
+  { char: "a", colour: "#dd7a15" },
+  { char: "n", colour: "#2338cc" },
+  { char: "g", colour: "#2338cc" },
+  { char: "a", colour: "#0f8b55" },
   { char: "m", colour: "#0f8b55" },
 ];
 
 function Wordmark() {
   return (
     <h1
-      className="display text-[clamp(3.4rem,9vw,6.6rem)] leading-[0.9] tracking-[-0.03em]"
+      className="wordmark text-[clamp(3.4rem,9.4vw,7rem)]"
       aria-label="Sangam"
     >
       {LETTERS.map((l, i) => (
