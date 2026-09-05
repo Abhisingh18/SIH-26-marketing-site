@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowUpRight, Bot, Layers, ShieldCheck } from "lucide-react";
 import { SovereigntyMonitor } from "@/components/mock/monitor";
-import { Panel, TextLink } from "@/components/ui/primitives";
+import { PillarCards } from "@/components/sections/pillar-cards";
+import { TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
 import { Section, SectionHead } from "@/components/ui/section";
 import { NeuralField } from "@/components/ui/neural-field";
@@ -77,33 +77,6 @@ function StatementBackdrop() {
 /* Three pillars — each links to its own page                          */
 /* ------------------------------------------------------------------ */
 
-const PILLARS = [
-  {
-    icon: Bot,
-    label: "Platform",
-    title: "It does the work, not just the talking",
-    body: "Plans a task, reads your documents, routes each step to the right local model, runs the tools and hands back a finished file.",
-    href: "/platform",
-    cta: "See the platform",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Security",
-    title: "Sovereignty you can verify",
-    body: "Every crossing of the boundary is counted, every agent action is logged, and the whole system runs with no outbound route.",
-    href: "/security",
-    cta: "See the security model",
-  },
-  {
-    icon: Layers,
-    label: "Architecture",
-    title: "Open weights, modular layers",
-    body: "Swap the model, the vector store or the serving runtime without rewriting the workbench sitting on top of them.",
-    href: "/architecture",
-    cta: "See the architecture",
-  },
-];
-
 export function Pillars() {
   return (
     <Section tone="surface">
@@ -112,30 +85,7 @@ export function Pillars() {
         animateTitle="Not another chatbot. An AI operating layer for industrial work."
         body="Three things separate a sovereign workbench from a browser tab with a text box."
       />
-
-      <RevealGroup className="mt-16 grid gap-4 lg:grid-cols-3">
-        {PILLARS.map(({ icon: Icon, label, title, body, href, cta }) => (
-          <RevealItem key={label}>
-            <Link href={href} className="group block h-full">
-              <Panel hover className="flex h-full flex-col p-8">
-                <div className="flex items-center justify-between">
-                  <Icon className="h-5 w-5 text-accent" strokeWidth={1.6} />
-                  <ArrowUpRight
-                    className="h-4 w-4 text-muted transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-                    strokeWidth={1.75}
-                  />
-                </div>
-                <p className="label mt-12">{label}</p>
-                <h3 className="display-sm mt-3 text-[21px]">{title}</h3>
-                <p className="mt-4 text-[14.5px] leading-[1.6] text-body">{body}</p>
-                <span className="mt-8 text-[13.5px] font-medium text-ink transition-colors group-hover:text-accent">
-                  {cta}
-                </span>
-              </Panel>
-            </Link>
-          </RevealItem>
-        ))}
-      </RevealGroup>
+      <PillarCards />
     </Section>
   );
 }
