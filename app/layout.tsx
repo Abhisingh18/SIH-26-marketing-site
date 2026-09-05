@@ -24,8 +24,25 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+/**
+ * Where this deployment lives, for canonical and social-card URLs.
+ *
+ * NEXT_PUBLIC_SITE_URL wins, so a custom domain is a one-line project setting
+ * rather than a code change. Failing that, Vercel's own variables: the stable
+ * production domain first, then the per-deployment preview URL. Localhost in
+ * development. Getting this wrong is invisible on the page and only shows up as
+ * broken link previews, which is why it is not a hardcoded string.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sangam.example"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Sangam — Sovereign AI for Confidential Industrial Work",
     template: "%s · Sangam",
