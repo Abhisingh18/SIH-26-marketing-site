@@ -88,7 +88,7 @@ export function Wordmark() {
             {/* The standing wave lives on its own element: converging and
                 swelling are both transforms, and one element cannot run two. */}
             <span
-              className="letter-wave text-[#b0670f]"
+              className="letter-wave text-[#e0407a]"
               style={{ animationDelay: `${1.3 + l.wave * 0.11}s` }}
             >
               {l.char}
