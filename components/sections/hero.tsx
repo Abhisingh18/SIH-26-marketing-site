@@ -76,23 +76,17 @@ export function Hero() {
             </div>
           </Reveal>
 
-          {/* Brand-forward lockup: the name carries the fold and the line under
-              it says who it is for. It only works because the subheading below
-              says what the thing actually is — a name alone explains nothing. */}
+          {/* The greeting carries the fold; the line under it and the
+              subheading below say what this actually is. The brand name lives
+              in the nav, so the hero can open with a welcome instead. */}
           <div className="mt-8">
             <Wordmark />
-            {/* lands after the six letters have converged and coloured */}
+            {/* lands after the letters have converged and coloured */}
             <p
-              className="letter-in mt-3 flex items-center justify-center gap-2.5"
-              style={{ animationDelay: "1.05s" }}
+              className="letter-in display mt-3 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted"
+              style={{ animationDelay: "1.55s" }}
             >
-              <span className="greet-breathe relative flex h-1.5 w-1.5">
-                <span className="dot-live absolute inline-flex h-full w-full rounded-full bg-signal" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
-              </span>
-              <span className="flow-text display text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1]">
-                Namaste, India
-              </span>
+              for all from India
             </p>
           </div>
 
