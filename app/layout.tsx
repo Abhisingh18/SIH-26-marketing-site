@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  Sora,
+  Poppins,
   Inter,
   Instrument_Serif,
   JetBrains_Mono,
@@ -24,8 +24,8 @@ const instrument = Instrument_Serif({
 });
 
 /** one word on the whole site wears this, so it is loaded for the wordmark alone */
-const sora = Sora({
-  variable: "--font-sora",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["700"],
   display: "swap",
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrument.variable} ${sora.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${instrument.variable} ${poppins.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full">
         <SmoothScroll />

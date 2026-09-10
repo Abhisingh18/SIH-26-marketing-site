@@ -10,11 +10,11 @@ import { motion, useReducedMotion } from "motion/react";
 const PHRASE = "Namaste India";
 
 /**
- * A vivid ramp — orange, pink, violet, blue, emerald — routed the long way
- * round the wheel. Straight across, orange into green passes through grey, and
- * a wordmark that goes muddy in the middle is worse than a flat one.
+ * A jewel ramp — magenta, violet, blue, teal — routed round the wheel so it
+ * never passes through grey. A wordmark that goes muddy in the middle is worse
+ * than a flat one.
  */
-const STOPS = ["#f97316", "#ec4899", "#8b5cf6", "#4f7cf6", "#10b981"];
+const STOPS = ["#e6338a", "#a23dd6", "#5b5be6", "#2f8fd6", "#12a594"];
 
 function lerp(a: string, b: string, t: number) {
   const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
