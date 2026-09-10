@@ -81,12 +81,18 @@ export function Hero() {
               says what the thing actually is — a name alone explains nothing. */}
           <div className="mt-8">
             <Wordmark />
+            {/* lands after the six letters have converged and coloured */}
             <p
-              className="letter-in display mt-2 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted"
-              // lands after the six letters have converged and coloured
+              className="letter-in mt-3 flex items-center justify-center gap-2.5"
               style={{ animationDelay: "1.05s" }}
             >
-              for all from India
+              <span className="greet-breathe relative flex h-1.5 w-1.5">
+                <span className="dot-live absolute inline-flex h-full w-full rounded-full bg-signal" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+              </span>
+              <span className="flow-text display text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1]">
+                Namaste, India
+              </span>
             </p>
           </div>
 

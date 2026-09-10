@@ -350,6 +350,20 @@ body {
  * seam — a single cycle would snap back visibly every pass. Slow on purpose:
  * this is a river meeting another one, not a highlighter.
  */
+/*
+ * The greeting breathes rather than blinks. A hard on/off opacity flip reads as
+ * a broken element or a warning light; easing between full and three-quarters
+ * says "alive" without the strobe.
+ */
+@keyframes greet-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.greet-breathe {
+  animation: greet-breathe 2.8s ease-in-out infinite;
+}
+
 .flow-text {
   background-image: linear-gradient(
     100deg,
@@ -451,5 +465,6 @@ body {
   .ring-pulse,
   .letter-wave { animation: none; }
   .letter-in { opacity: 1; animation: none; }
+  .greet-breathe { animation: none; }
   .card-hover { transition: none; }
 }
