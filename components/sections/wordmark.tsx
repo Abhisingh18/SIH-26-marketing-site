@@ -85,11 +85,17 @@ export function Wordmark() {
             whileHover={reduce ? undefined : { y: -10, scale: 1.08 }}
             transition={{ type: "spring", stiffness: 380, damping: 18 }}
           >
-            {/* The standing wave lives on its own element: converging and
-                swelling are both transforms, and one element cannot run two. */}
+            {/* Green into a pale mint, per letter. The light end stops at a
+                visible mint rather than white — pure white would vanish against
+                the off-white paper. The standing wave lives on its own element:
+                converging and swelling are both transforms, and one element
+                cannot run two. */}
             <span
-              className="letter-wave text-[#2f9fe0]"
-              style={{ animationDelay: `${1.3 + l.wave * 0.11}s` }}
+              className="letter-wave bg-clip-text text-transparent"
+              style={{
+                backgroundImage: "linear-gradient(160deg, #0f8b55 0%, #12a56a 42%, #86e3b6 100%)",
+                animationDelay: `${1.3 + l.wave * 0.11}s`,
+              }}
             >
               {l.char}
             </span>
