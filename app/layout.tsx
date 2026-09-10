@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  Poppins,
+  Fraunces,
   Inter,
   Instrument_Serif,
   JetBrains_Mono,
@@ -24,10 +24,11 @@ const instrument = Instrument_Serif({
 });
 
 /** one word on the whole site wears this, so it is loaded for the wordmark alone */
-const poppins = Poppins({
-  variable: "--font-poppins",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["600"],
+  style: ["italic", "normal"],
   display: "swap",
 });
 
@@ -90,7 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrument.variable} ${poppins.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${instrument.variable} ${fraunces.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full">
         <SmoothScroll />
