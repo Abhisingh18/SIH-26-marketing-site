@@ -3,18 +3,18 @@
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * The greeting, set as the mark. Two words stacked, every letter converging
- * into place and taking its slice of one ramp that runs across the whole
- * lockup — so the colour reads as a single sweep, not twelve tinted letters.
+ * The greeting, set as the mark on one line. Every letter converges into place
+ * and takes its slice of one ramp that runs across the whole phrase, so the
+ * colour reads as a single sweep rather than a set of tinted letters.
  */
-const WORDS = ["Namaste", "India"];
+const PHRASE = "Namaste India";
 
 /**
- * The ramp, orange to green the long way round the wheel — rose, orchid,
- * violet, blue, teal. Straight across, saffron into green passes through grey,
- * and a wordmark that goes muddy in the middle is worse than a flat one.
+ * A vivid ramp — orange, pink, violet, blue, emerald — routed the long way
+ * round the wheel. Straight across, orange into green passes through grey, and
+ * a wordmark that goes muddy in the middle is worse than a flat one.
  */
-const STOPS = ["#dd7a15", "#d2557e", "#a455c6", "#6a57d8", "#2f5bd0", "#1b8fa8", "#0f8b55"];
+const STOPS = ["#f97316", "#ec4899", "#8b5cf6", "#4f7cf6", "#10b981"];
 
 function lerp(a: string, b: string, t: number) {
   const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
@@ -36,98 +36,99 @@ function noise(n: number) {
   return x - Math.floor(x);
 }
 
-const TOTAL = WORDS.join("").length;
-let cursor = 0;
+const COLOURED = [...PHRASE].filter((c) => c !== " ").length;
 
 /**
- * Precomputed per-letter data: its slice of the ramp and where it starts before
- * converging. The scatter is uneven on purpose — a symmetrical explosion reads
- * as a template.
+ * Per-letter data. The space is kept as a non-animated gap; only the letters
+ * take a ramp slice and a scatter offset, so the gradient does not spend a stop
+ * on whitespace. The scatter is uneven on purpose — a symmetrical explosion
+ * reads as a template.
  */
-const LINES = WORDS.map((word) =>
-  [...word].map((char) => {
-    const g = cursor++;
-    return {
-      char,
-      from: {
-        x: (noise(g + 1) * 2 - 1) * 96,
-        y: (noise(g + 5) * 2 - 1) * 56,
-        r: (noise(g + 3) * 2 - 1) * 16,
-      },
-      grad: `linear-gradient(100deg, ${rampAt(g / TOTAL)}, ${rampAt((g + 1) / TOTAL)})`,
-      wave: g,
-    };
-  }),
-);
+let g = 0;
+const LETTERS = [...PHRASE].map((char) => {
+  if (char === " ") return { char, space: true as const };
+  const i = g++;
+  return {
+    char,
+    space: false as const,
+    from: {
+      x: (noise(i + 1) * 2 - 1) * 92,
+      y: (noise(i + 5) * 2 - 1) * 54,
+      r: (noise(i + 3) * 2 - 1) * 16,
+    },
+    grad: `linear-gradient(100deg, ${rampAt(i / COLOURED)}, ${rampAt((i + 1) / COLOURED)})`,
+    wave: i,
+  };
+});
 
 export function Wordmark() {
   const reduce = useReducedMotion();
 
   return (
     <motion.h1
-      className="wordmark text-[clamp(2.7rem,8.4vw,6rem)]"
-      aria-label={WORDS.join(" ")}
+      className="wordmark whitespace-nowrap text-[clamp(2.1rem,7vw,4.6rem)]"
+      aria-label={PHRASE}
       initial="hidden"
       animate="show"
       variants={{
         hidden: {},
-        show: { transition: { staggerChildren: reduce ? 0 : 0.06 } },
+        show: { transition: { staggerChildren: reduce ? 0 : 0.055 } },
       }}
     >
-      {LINES.map((line, li) => (
-        <span key={li} className="block">
-          {line.map((l) => (
-            <motion.span
-              key={l.wave}
-              aria-hidden
-              className="inline-block will-change-transform"
-              variants={{
-                hidden: reduce
-                  ? {}
-                  : {
-                      opacity: 0,
-                      x: l.from.x,
-                      y: l.from.y,
-                      rotate: l.from.r,
-                      scale: 0.86,
-                      filter: "blur(16px) grayscale(1)",
-                    },
-                show: {
-                  opacity: 1,
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                  scale: 1,
-                  filter: "blur(0px) grayscale(0)",
-                  transition: {
-                    default: { type: "spring", stiffness: 118, damping: 15, mass: 0.9 },
-                    filter: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
-                    opacity: { duration: 0.45 },
+      {LETTERS.map((l, i) =>
+        l.space ? (
+          <span key={i} aria-hidden className="inline-block w-[0.28em]" />
+        ) : (
+          <motion.span
+            key={i}
+            aria-hidden
+            className="inline-block will-change-transform"
+            variants={{
+              hidden: reduce
+                ? {}
+                : {
+                    opacity: 0,
+                    x: l.from.x,
+                    y: l.from.y,
+                    rotate: l.from.r,
+                    scale: 0.86,
+                    filter: "blur(16px) grayscale(1)",
                   },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                rotate: 0,
+                scale: 1,
+                filter: "blur(0px) grayscale(0)",
+                transition: {
+                  default: { type: "spring", stiffness: 120, damping: 15, mass: 0.9 },
+                  filter: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
+                  opacity: { duration: 0.45 },
                 },
+              },
+            }}
+            whileHover={reduce ? undefined : { y: -10, scale: 1.08 }}
+            transition={{ type: "spring", stiffness: 380, damping: 18 }}
+          >
+            {/* Each letter carries its own slice of the ramp. `background-clip:
+                text` on a parent whose children are transformed paints
+                unreliably, and every letter here moves, so the gradient is cut
+                into continuous pieces instead — identical to look at, and it
+                cannot break. This span also runs the standing wave: converging
+                and swelling are both transforms and one element cannot run two. */}
+            <span
+              className="letter-wave bg-clip-text text-transparent"
+              style={{
+                backgroundImage: l.grad,
+                animationDelay: `${1.3 + l.wave * 0.11}s`,
               }}
-              whileHover={reduce ? undefined : { y: -10, scale: 1.07 }}
-              transition={{ type: "spring", stiffness: 380, damping: 18 }}
             >
-              {/* Each letter carries its own slice of the ramp. `background-clip:
-                  text` on a parent whose children are transformed paints
-                  unreliably, and every letter here moves, so the gradient is cut
-                  into continuous pieces instead — identical to look at, and it
-                  cannot break. This span also runs the standing wave: converging
-                  and swelling are both transforms and one element cannot run two. */}
-              <span
-                className="letter-wave bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: l.grad,
-                  animationDelay: `${1.4 + l.wave * 0.12}s`,
-                }}
-              >
-                {l.char}
-              </span>
-            </motion.span>
-          ))}
-        </span>
-      ))}
+              {l.char}
+            </span>
+          </motion.span>
+        ),
+      )}
     </motion.h1>
   );
 }
