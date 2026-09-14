@@ -238,6 +238,21 @@ body {
  * travel the perimeter. Slow on purpose — a fast orbit reads as a spinner, a
  * slow one reads as a system idling.
  */
+/*
+ * A signal running along a connector wire. `pathLength=100` normalises every
+ * path, so one dash length and one keyframe carry a dot the full length of any
+ * wire whatever its real geometry — the fan-out and the converge then flow at
+ * the same visual speed.
+ */
+.wire-flow {
+  stroke-dasharray: 5 95;
+  stroke-dashoffset: 100;
+  animation: wire-flow 3.2s linear infinite;
+}
+@keyframes wire-flow {
+  to { stroke-dashoffset: 0; }
+}
+
 @keyframes orbit-spin {
   to { transform: rotate(360deg); }
 }
@@ -482,6 +497,7 @@ body {
   .orb-turn,
   .orbit-spin,
   .orbit-spin-rev,
+  .wire-flow,
   .ring-pulse,
   .letter-wave { animation: none; }
   .letter-in { opacity: 1; animation: none; }
