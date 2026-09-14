@@ -129,6 +129,15 @@ const WASH = {
   fin: "#0f8b55",
 } as const;
 
+/** a soft tint the whole card sits on, easing back to paper toward the foot so
+ *  the copy stays on near-white while the panel still reads as its colour */
+const CARD_BG = {
+  doc: "linear-gradient(157deg, #eef1fe 0%, #f7f8fe 46%, var(--color-surface) 100%)",
+  eng: "linear-gradient(157deg, #fdf4e8 0%, #fbf7f0 46%, var(--color-surface) 100%)",
+  field: "linear-gradient(157deg, #f0f0fc 0%, #f7f7fd 46%, var(--color-surface) 100%)",
+  fin: "linear-gradient(157deg, #e9f6ef 0%, #f3f9f5 46%, var(--color-surface) 100%)",
+} as const;
+
 type Tone = keyof typeof TONES;
 
 function Card({
@@ -147,13 +156,16 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <Panel hover className="relative flex h-full flex-col overflow-hidden p-6 sm:p-7">
-      {/* a soft wash of the card's own tone, so the bento reads as colour rather
-          than a wall of white panels */}
+    <Panel
+      hover
+      className="relative flex h-full flex-col overflow-hidden p-6 sm:p-7"
+      style={{ background: CARD_BG[tone] }}
+    >
+      {/* a brighter pool of the card's own tone in the corner, over the tint */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-60 blur-2xl"
-        style={{ background: `radial-gradient(closest-side, ${WASH[tone]}1f, transparent)` }}
+        className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-70 blur-2xl"
+        style={{ background: `radial-gradient(closest-side, ${WASH[tone]}26, transparent)` }}
       />
       {/* the mock takes the top of the card and fills the width */}
       <div className="relative mb-7 min-h-[168px] flex-1">{children}</div>

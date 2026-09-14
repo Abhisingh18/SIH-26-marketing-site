@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ReactNode, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -110,14 +110,17 @@ export function Panel({
   className,
   hover = false,
   as: As = "div",
+  style,
 }: {
   children: ReactNode;
   className?: string;
   hover?: boolean;
   as?: "div" | "article" | "li";
+  style?: CSSProperties;
 }) {
   return (
     <As
+      style={style}
       className={cn(
         "rounded-[18px] bg-surface shadow-e2 ring-1 ring-line/70",
         hover && "card-hover",
