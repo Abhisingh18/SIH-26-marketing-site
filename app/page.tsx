@@ -1,6 +1,5 @@
 import { Hero } from "@/components/sections/hero";
 import {
-  Pillars,
   ProductMoment,
   SolutionsTeaser,
   SovereigntyTeaser,
@@ -13,7 +12,6 @@ export default function Home() {
     <>
       <Hero />
       <Statement />
-      <Pillars />
       <ProductMoment />
       <SovereigntyTeaser />
       <SolutionsTeaser />

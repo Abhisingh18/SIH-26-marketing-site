@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SovereigntyMonitor } from "@/components/mock/monitor";
-import { PillarCards } from "@/components/sections/pillar-cards";
 import { ProductFacts } from "@/components/sections/product-facts";
 import { TextLink } from "@/components/ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/reveal";
@@ -71,25 +70,6 @@ function StatementBackdrop() {
           over all of it */}
       <div className="absolute inset-x-[8%] top-[16%] h-[68%] bg-[radial-gradient(62%_58%_at_50%_50%,rgba(252,251,249,0.8),transparent_74%)]" />
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Three pillars — each links to its own page                          */
-/* ------------------------------------------------------------------ */
-
-export function Pillars() {
-  return (
-    <Section tone="surface">
-      {/* The three cards below already make the argument the old subheading was
-          making, so it went. What is left is the claim itself, centred. */}
-      <SectionHead
-        label="Why it is different"
-        animateTitle="Not a chatbot. An operating layer."
-        align="center"
-      />
-      <PillarCards />
-    </Section>
   );
 }
 
