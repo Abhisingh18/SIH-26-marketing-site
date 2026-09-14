@@ -6,7 +6,7 @@ import { Section } from "@/components/ui/section";
 import { WordRise } from "@/components/ui/word-rise";
 import { cn } from "@/lib/utils";
 
-const REPO = "https://github.com/vermarjun/sih26";
+const REPO = "https://github.com/Abhisingh18/SIH-26-marketing-site";
 
 export function Download() {
   return (
@@ -134,8 +134,8 @@ export function Download() {
               Requires Bun 1.4.2. Builds for your current platform.
             </p>
             <div className="mt-4 rounded-[12px] bg-obsidian p-4 font-mono text-[11.5px] shadow-e1">
-              <p className="text-white/80">git clone {REPO.replace("https://", "https://").replace("sih26", "SIH26")}</p>
-              <p className="mt-1 text-white/80">cd SIH26/cli &amp;&amp; ./install</p>
+              <p className="text-white/80">git clone {REPO}</p>
+              <p className="mt-1 text-white/80">cd pragyan/cli &amp;&amp; ./install</p>
             </div>
           </Panel>
         </Reveal>

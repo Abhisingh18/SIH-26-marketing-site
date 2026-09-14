@@ -12,7 +12,7 @@ function GitHubMark({ className }: { className?: string }) {
   );
 }
 
-const REPO = "https://github.com/vermarjun/sih26";
+const REPO = "https://github.com/Abhisingh18/SIH-26-marketing-site";
 
 export function CTA({
   title = "Run Pragyan on your network",

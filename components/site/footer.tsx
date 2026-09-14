@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logomark } from "./nav";
 
-const REPO = "https://github.com/vermarjun/sih26";
+const REPO = "https://github.com/Abhisingh18/SIH-26-marketing-site";
 
 const COLUMNS = [
   {
@@ -82,7 +82,7 @@ export function Footer() {
             href={REPO}
             className="label transition-colors duration-300 hover:text-ink"
           >
-            github.com/vermarjun/sih26
+            github.com/Abhisingh18/SIH-26-marketing-site
           </a>
         </div>
       </div>
