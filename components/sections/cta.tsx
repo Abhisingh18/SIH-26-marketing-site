@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
+import { PixelRover } from "@/components/ui/pixel-rover";
 
 /** lucide dropped its brand glyphs, so the GitHub mark is inlined */
 function GitHubMark({ className }: { className?: string }) {
@@ -39,7 +40,7 @@ export function CTA({
 
       <div className="relative mx-auto flex max-w-[820px] flex-col items-center text-center">
         <Reveal>
-          <PixelBot />
+          <PixelRover unit={6} />
         </Reveal>
         <Reveal delay={0.06}>
           <h2 className="mt-7 max-w-[14ch] text-[clamp(2.1rem,5.4vw,3.6rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-ink">
@@ -74,44 +75,5 @@ export function CTA({
         </Reveal>
       </div>
     </section>
-  );
-}
-
-/**
- * A small pixel mascot, drawn on an 11-column grid: a blue body with white
- * eyes, a gold bar and antenna on top, grey feet. Blocks rather than an icon,
- * to carry the playful sign-off the reference has.
- */
-function PixelBot() {
-  const U = 9; // one pixel
-  const px = (n: number) => n * U;
-  const cells: [number, number, number, number, string][] = [
-    // gold top bar + grey antenna
-    [1, 0, 4, 1, "#e2a83c"],
-    [6, 0, 1, 2, "#8a8a92"],
-    // body
-    [1, 2, 8, 3, "#3f49d8"],
-    [0, 3, 1, 1, "#3f49d8"],
-    [9, 3, 1, 1, "#3f49d8"],
-    // eyes
-    [2, 3, 1, 1, "#ffffff"],
-    [6, 3, 1, 1, "#ffffff"],
-    // feet
-    [2, 5, 1, 1, "#8a8a92"],
-    [4, 5, 1, 1, "#8a8a92"],
-    [6, 5, 1, 1, "#8a8a92"],
-  ];
-  return (
-    <svg
-      width={px(10)}
-      height={px(6)}
-      viewBox={`0 0 ${px(10)} ${px(6)}`}
-      aria-hidden
-      shapeRendering="crispEdges"
-    >
-      {cells.map(([x, y, w, h, fill], i) => (
-        <rect key={i} x={px(x)} y={px(y)} width={px(w)} height={px(h)} fill={fill} />
-      ))}
-    </svg>
   );
 }

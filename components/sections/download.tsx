@@ -1,4 +1,5 @@
 import { ArrowUpRight, Copy, Download as DownloadIcon } from "lucide-react";
+import { PixelRover } from "@/components/ui/pixel-rover";
 import { Panel } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
@@ -298,23 +299,8 @@ function DesktopMock() {
           <div key={i} className="h-2.5 rounded-full bg-veil" style={{ width: `${w}%` }} />
         ))}
       </div>
-      {/* the pixel mascot, tucked in the corner */}
-      <svg width="54" height="30" viewBox="0 0 90 50" className="absolute bottom-3 right-3" shapeRendering="crispEdges" aria-hidden>
-        {([
-          [10, 0, 40, 10, "#e2a83c"],
-          [60, 0, 10, 20, "#8a8a92"],
-          [10, 20, 70, 20, "#3f49d8"],
-          [0, 25, 10, 10, "#3f49d8"],
-          [80, 25, 10, 10, "#3f49d8"],
-          [20, 25, 10, 10, "#ffffff"],
-          [55, 25, 10, 10, "#ffffff"],
-          [20, 40, 10, 10, "#8a8a92"],
-          [40, 40, 10, 10, "#8a8a92"],
-          [60, 40, 10, 10, "#8a8a92"],
-        ] as const).map(([x, y, w, h, f], i) => (
-          <rect key={i} x={x} y={y} width={w} height={h} fill={f} />
-        ))}
-      </svg>
+      {/* the rover, tucked in the corner */}
+      <PixelRover unit={4} className="absolute bottom-3 right-3" />
     </div>
   );
 }
