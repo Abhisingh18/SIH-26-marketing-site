@@ -44,7 +44,7 @@ export function DemoForm() {
 
   if (status === "sent") {
     return (
-      <Panel className="p-10 text-center sm:p-12">
+      <Panel className="p-8 text-center sm:p-10">
         <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-signal/12 text-signal">
           <Check className="h-5 w-5" strokeWidth={2.5} />
         </span>
@@ -58,9 +58,9 @@ export function DemoForm() {
   }
 
   return (
-    <Panel className="p-7 sm:p-9">
-      <form onSubmit={onSubmit} className="space-y-8">
-        <div className="grid gap-5 sm:grid-cols-2">
+    <Panel className="p-6 sm:p-7">
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Full name" name="name" placeholder="Your name" required />
           <Field label="Work email" name="email" type="email" placeholder="you@org.in" required />
           <Field label="Organization" name="org" placeholder="Company or department" required />
@@ -89,9 +89,9 @@ export function DemoForm() {
           <textarea
             id="notes"
             name="notes"
-            rows={4}
+            rows={3}
             placeholder="e.g. turn scanned inspection reports into approval notes"
-            className={cn(FIELD, "mt-3 resize-none py-3.5 leading-[1.55]")}
+            className={cn(FIELD, "mt-2 resize-none py-3 leading-[1.5]")}
           />
         </div>
 
@@ -108,7 +108,7 @@ export function DemoForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="group inline-flex h-12 items-center gap-2 rounded-full bg-ink px-6 text-[15px] font-medium text-paper shadow-e1 outline-none transition-all duration-300 hover:bg-accent hover:shadow-e2 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-60"
+          className="group inline-flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14.5px] font-medium text-paper shadow-e1 outline-none transition-all duration-300 hover:bg-accent hover:shadow-e2 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-60"
         >
           {status === "sending" ? (
             <>
@@ -154,7 +154,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className={cn(FIELD, "mt-3 h-12")}
+        className={cn(FIELD, "mt-2 h-11")}
       />
     </div>
   );

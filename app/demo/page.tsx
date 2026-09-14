@@ -11,35 +11,23 @@ export const metadata: Metadata = {
 };
 
 const STEPS = [
-  {
-    n: "01",
-    title: "A 30-minute walkthrough",
-    body: "We show the workbench running a real industrial workflow end to end, with the sovereignty monitor visible the whole time.",
-  },
-  {
-    n: "02",
-    title: "A scoping conversation",
-    body: "Your team picks one workflow. We map it to the models, documents and hardware it would need.",
-  },
-  {
-    n: "03",
-    title: "A pilot on your infrastructure",
-    body: "The application is installed on a machine you control, indexed against a document set you choose.",
-  },
+  { n: "01", title: "30-minute walkthrough", body: "The workbench running a real workflow, sovereignty monitor open." },
+  { n: "02", title: "Scoping conversation", body: "You pick one workflow; we map it to the models and hardware it needs." },
+  { n: "03", title: "Pilot on your infrastructure", body: "Installed on a machine you control, indexed against your documents." },
 ];
 
 export default function DemoPage() {
   return (
-    <section className="relative overflow-hidden px-6 pb-24 pt-36 sm:px-8 md:pb-32 md:pt-44">
+    <section className="relative overflow-hidden px-6 pb-20 pt-28 sm:px-8 md:pb-24 md:pt-32">
       <DemoBackdrop />
 
-      <div className="relative mx-auto grid w-full max-w-[1200px] gap-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-20">
+      <div className="relative mx-auto grid w-full max-w-[1200px] gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-16">
         <div>
           <Reveal>
             <Label>Request a demo</Label>
           </Reveal>
           <Reveal delay={0.06}>
-            <h1 className="display mt-7 max-w-[14ch] text-[clamp(2.3rem,5vw,3.6rem)]">
+            <h1 className="display mt-5 max-w-[14ch] text-[clamp(2.1rem,4.6vw,3.2rem)]">
               <WordRise
                 segments={[
                   // the verb is the ask, the perimeter is the promise — greying
@@ -52,26 +40,24 @@ export default function DemoPage() {
             </h1>
           </Reveal>
           <Reveal delay={0.12}>
-            <p className="measure mt-8 text-[17px] leading-[1.65] text-body">
+            <p className="measure mt-6 text-[16px] leading-[1.6] text-body">
               Tell us which workflow costs your team the most hours today. We will show the
               workbench running it — on hardware you control, with nothing leaving the room.
             </p>
           </Reveal>
 
           <Reveal delay={0.18}>
-            <ol className="mt-16 border-t border-line">
+            <ol className="mt-10 border-t border-line">
               {STEPS.map((s) => (
-                <li key={s.n} className="border-b border-line py-7">
-                  <div className="flex gap-6">
-                    <span className="font-mono text-[11px] tracking-[0.14em] text-muted">
-                      {s.n}
-                    </span>
-                    <div>
-                      <p className="text-[16px] font-medium tracking-[-0.01em] text-ink">
-                        {s.title}
-                      </p>
-                      <p className="mt-2 text-[14px] leading-[1.6] text-body">{s.body}</p>
-                    </div>
+                <li key={s.n} className="flex gap-5 border-b border-line py-4">
+                  <span className="font-mono text-[11px] tracking-[0.14em] text-muted">
+                    {s.n}
+                  </span>
+                  <div>
+                    <p className="text-[14.5px] font-medium tracking-[-0.01em] text-ink">
+                      {s.title}
+                    </p>
+                    <p className="mt-1 text-[13px] leading-[1.55] text-muted">{s.body}</p>
                   </div>
                 </li>
               ))}
@@ -100,7 +86,7 @@ function DemoBackdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 top-0 h-[820px] [mask-image:radial-gradient(112%_74%_at_50%_2%,#000_16%,transparent_78%)]"
+      className="pointer-events-none absolute inset-x-0 top-0 h-[680px] [mask-image:radial-gradient(112%_74%_at_50%_2%,#000_16%,transparent_78%)]"
     >
       <div className="grid-paper absolute inset-0 opacity-60" />
 
