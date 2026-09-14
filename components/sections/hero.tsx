@@ -75,28 +75,30 @@ export function Hero() {
             </div>
           </Reveal>
 
-          {/* No brand mark in the fold — the name lives in the nav. The kicker
-              and this subheading carry the opening. */}
+          {/* The claim carries the fold — a heavy sans, two lines, the turn in
+              accent. The brand name lives in the nav. */}
           <Reveal delay={0.1}>
-            <p className="mt-9 max-w-[24ch] text-balance text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.08] tracking-[-0.02em] text-ink">
-              An on-premise agentic AI workbench for confidential industrial work.
-            </p>
+            <h1 className="mt-9 max-w-[15ch] text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-[0.98] tracking-[-0.03em] text-ink">
+              Bring AI to the work.
+              <br />
+              <span className="text-accent">Never the work to AI.</span>
+            </h1>
           </Reveal>
 
           <Reveal delay={0.28}>
-            <p className="mt-6 max-w-[52ch] text-balance text-[16.5px] leading-[1.6] text-body sm:text-[17.5px]">
-              <span className="text-ink">Nothing leaves your infrastructure.</span> No cloud,
-              no external APIs, no data leaving your perimeter.
+            <p className="mt-8 max-w-[52ch] text-balance text-[17px] leading-[1.6] text-body sm:text-[18px]">
+              An air-gapped agentic workbench that turns sensitive documents, drawings and
+              code into finished work, entirely on your own GPUs.
             </p>
           </Reveal>
 
           <Reveal delay={0.22}>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <Button href="/demo" size="lg">
-                Request demo
+              <Button href="/demo" size="lg" arrow>
+                Download Pragyan
               </Button>
-              <Button href="/platform" variant="secondary" size="lg">
-                Explore platform
+              <Button href="/platform" variant="secondary" size="lg" arrow>
+                Open the web app
               </Button>
             </div>
           </Reveal>

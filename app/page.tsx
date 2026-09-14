@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/hero";
+import { Features } from "@/components/sections/features";
 import {
   ProductMoment,
   SolutionsTeaser,
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <Statement />
+      <Features />
       <ProductMoment />
       <SovereigntyTeaser />
       <SolutionsTeaser />

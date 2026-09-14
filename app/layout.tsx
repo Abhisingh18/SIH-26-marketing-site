@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   Fraunces,
+  Pixelify_Sans,
   Inter,
   Instrument_Serif,
   JetBrains_Mono,
@@ -29,6 +30,13 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["600"],
   style: ["italic", "normal"],
+  display: "swap",
+});
+
+const pixel = Pixelify_Sans({
+  variable: "--font-pixel",
+  subsets: ["latin"],
+  weight: ["700"],
   display: "swap",
 });
 
@@ -91,7 +99,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${instrument.variable} ${fraunces.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${instrument.variable} ${fraunces.variable} ${pixel.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full">
         <SmoothScroll />
