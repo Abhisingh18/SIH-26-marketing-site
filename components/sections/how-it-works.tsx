@@ -1,27 +1,16 @@
-import {
-  Check,
-  Code2,
-  Cpu,
-  Database,
-  Globe,
-  Monitor,
-  Smartphone,
-  Split,
-  Terminal,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { Check, Cpu, Database, Split, Users } from "lucide-react";
+import { PixelRover } from "@/components/ui/pixel-rover";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
 import { WordRise } from "@/components/ui/word-rise";
 import { cn } from "@/lib/utils";
 
 const CLIENTS = [
-  { label: "Web", icon: Globe },
-  { label: "Desktop", icon: Monitor },
-  { label: "IDE", icon: Code2 },
-  { label: "CLI", icon: Terminal },
-  { label: "Mobile", icon: Smartphone },
+  { label: "Web", kind: "window" as const },
+  { label: "Desktop", kind: "window" as const },
+  { label: "IDE", kind: "ide" as const },
+  { label: "CLI", kind: "cli" as const },
+  { label: "Mobile", kind: "phone" as const },
 ];
 
 const STAGES = [
@@ -111,16 +100,16 @@ export function HowItWorks() {
 /* ------------------------------------------------------------------ */
 
 const VB = { w: 1200, h: 470 };
-const CLIENT_X = 8;
-const CLIENT_W = 108;
-const CLIENT_CY = [46, 138, 230, 322, 414];
-const CARD_W = 214;
+const CLIENT_X = 4;
+const CLIENT_W = 150;
+const CLIENT_CY = [50, 143, 236, 329, 422];
+const CARD_W = 200;
 const CARD_H = 196;
 const CARD_TOP = 137;
 const CARD_CY = CARD_TOP + CARD_H / 2;
-const CARD_X = [252, 498, 744];
-const MODEL_X = 992;
-const MODEL_W = 200;
+const CARD_X = [214, 454, 694];
+const MODEL_X = 934;
+const MODEL_W = 250;
 const MODEL_H = 66;
 const MODEL_CY = [112, 196, 280, 364];
 
@@ -189,9 +178,9 @@ function WiredDiagram() {
         <div
           key={c.label}
           className="absolute"
-          style={{ left: pct(CLIENT_X, "x"), top: pct(CLIENT_CY[i] - 17, "y"), width: pct(CLIENT_W, "x") }}
+          style={{ left: pct(CLIENT_X, "x"), top: pct(CLIENT_CY[i] - 34, "y"), width: pct(CLIENT_W, "x") }}
         >
-          <ClientPill label={c.label} icon={c.icon} />
+          <ClientDevice kind={c.kind} label={c.label} />
         </div>
       ))}
 
@@ -239,10 +228,10 @@ function WiredDiagram() {
 function StackedDiagram() {
   return (
     <div className="mt-12 space-y-3 lg:hidden">
-      <ul className="flex flex-wrap justify-center gap-2">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {CLIENTS.map((c) => (
           <li key={c.label}>
-            <ClientPill label={c.label} icon={c.icon} row />
+            <ClientDevice kind={c.kind} label={c.label} />
           </li>
         ))}
       </ul>
@@ -278,16 +267,75 @@ function Down() {
 /* Pieces                                                              */
 /* ------------------------------------------------------------------ */
 
-function ClientPill({ label, icon: Icon, row = false }: { label: string; icon: LucideIcon; row?: boolean }) {
+/**
+ * A small device thumbnail per client — a light app window, a dark editor, a
+ * terminal wearing the rover badge, a phone — so the rail reads as the surfaces
+ * the product runs on rather than a column of identical icons.
+ */
+function ClientDevice({ kind, label }: { kind: "window" | "ide" | "cli" | "phone"; label: string }) {
   return (
-    <div
-      className={cn(
-        "flex items-center gap-2 rounded-[10px] bg-surface shadow-e1 ring-1 ring-line",
-        row ? "px-2.5 py-1.5" : "flex-col gap-1.5 px-2 py-2.5",
-      )}
-    >
-      <Icon className="h-4 w-4 text-body" strokeWidth={1.6} />
-      <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-muted">{label}</span>
+    <div>
+      <div className="overflow-hidden rounded-[10px] shadow-e1 ring-1 ring-line">
+        {kind === "window" ? (
+          <div className="bg-surface">
+            <div className="flex items-center gap-1 bg-veil/70 px-2 py-1">
+              <span className="h-1 w-1 rounded-full bg-line-2" />
+              <span className="h-1 w-1 rounded-full bg-line-2" />
+              <span className="h-1 w-1 rounded-full bg-line-2" />
+            </div>
+            <div className="flex gap-1.5 p-2">
+              <div className="w-1/3 space-y-1">
+                {[100, 70, 85].map((w, i) => (
+                  <div key={i} className="h-1 rounded-full bg-veil" style={{ width: `${w}%` }} />
+                ))}
+              </div>
+              <div className="flex-1 space-y-1 border-l border-line pl-1.5">
+                {[90, 60].map((w, i) => (
+                  <div key={i} className="h-1 rounded-full bg-veil" style={{ width: `${w}%` }} />
+                ))}
+                <div className="pt-1 text-right font-mono text-[6px] text-muted">Happy late</div>
+              </div>
+            </div>
+          </div>
+        ) : kind === "ide" ? (
+          <div className="bg-obsidian p-2">
+            <div className="flex gap-1.5">
+              <div className="w-1/4 space-y-1">
+                {[80, 60, 70].map((w, i) => (
+                  <div key={i} className="h-1 rounded-full bg-white/15" style={{ width: `${w}%` }} />
+                ))}
+              </div>
+              <div className="flex-1 space-y-1">
+                <div className="h-1 w-[70%] rounded-full bg-[#7fe0ab]/60" />
+                <div className="h-1 w-[90%] rounded-full bg-white/15" />
+                <div className="h-1 w-[55%] rounded-full bg-[#9db4ff]/60" />
+                <div className="h-1 w-[80%] rounded-full bg-white/15" />
+              </div>
+            </div>
+          </div>
+        ) : kind === "cli" ? (
+          <div className="flex items-center justify-between gap-2 bg-obsidian px-2.5 py-3">
+            <PixelRover unit={2} />
+            <span className="font-mono text-[8px] text-white/70">
+              Pragyan <span className="text-white/35">dev</span>
+            </span>
+          </div>
+        ) : (
+          <div className="mx-auto w-[58%] rounded-t-[8px] bg-obsidian p-1.5 pb-0">
+            <div className="relative mb-1 flex justify-center">
+              <span className="h-1 w-5 rounded-full bg-white/20" />
+            </div>
+            <div className="space-y-1 px-0.5">
+              {[90, 70, 80, 55].map((w, i) => (
+                <div key={i} className="h-1 rounded-full bg-white/12" style={{ width: `${w}%` }} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <p className="mt-2 text-center font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
+        {label}
+      </p>
     </div>
   );
 }
