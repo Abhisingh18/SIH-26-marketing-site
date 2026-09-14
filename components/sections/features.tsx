@@ -213,30 +213,49 @@ function CodeMock() {
 }
 
 function OrbitalMock() {
-  // four models orbiting an "auto" core; positions are fixed, the ring is drawn
+  // four models spaced round a ring of radius R (px, from the box centre). The
+  // ring layer rotates; each node counter-rotates so the label stays upright.
+  const R = 84;
   const nodes = [
-    { label: "OSS", x: "50%", y: "8%" },
-    { label: "OCR", x: "88%", y: "50%" },
-    { label: "QW", x: "50%", y: "92%" },
-    { label: "GLM", x: "12%", y: "50%" },
-  ];
+    { label: "OSS", angle: -90, tone: "fin" },
+    { label: "OCR", angle: 0, tone: "field" },
+    { label: "QW", angle: 90, tone: "eng" },
+    { label: "GLM", angle: 180, tone: "doc" },
+  ] as const;
+  const dot = { doc: "bg-accent", eng: "bg-[#b0670f]", field: "bg-[#5551c4]", fin: "bg-signal" };
+
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[220px]">
-      <div className="absolute inset-[12%] rounded-full ring-1 ring-line" />
+      <div className="absolute inset-[10%] rounded-full ring-1 ring-line" />
       <div className="absolute inset-[30%] rounded-full ring-1 ring-line/60" />
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[9px] bg-accent-tint px-3 py-1.5 font-mono text-[11px] text-accent ring-1 ring-accent/15">
+
+      {/* centre, held still while the ring turns around it */}
+      <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-[9px] bg-accent-tint px-3 py-1.5 font-mono text-[11px] text-accent ring-1 ring-accent/15">
         auto
       </span>
-      {nodes.map((n) => (
-        <span
-          key={n.label}
-          className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface px-2.5 py-1 font-mono text-[10.5px] text-body shadow-e1 ring-1 ring-line"
-          style={{ left: n.x, top: n.y }}
-        >
-          {n.label}
-        </span>
-      ))}
-      <span className="dot-live absolute left-[50%] top-[8%] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-signal" />
+
+      {/* the rotating ring layer */}
+      <div className="orbit-spin absolute inset-0">
+        {nodes.map((n) => {
+          const x = Math.round(R * Math.cos((n.angle * Math.PI) / 180));
+          const y = Math.round(R * Math.sin((n.angle * Math.PI) / 180));
+          return (
+            <div
+              key={n.label}
+              className="absolute left-1/2 top-1/2"
+              style={{ transform: `translate(${x}px, ${y}px)` }}
+            >
+              {/* counter-spin about this point keeps the chip level */}
+              <div className="orbit-spin-rev">
+                <span className="flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 rounded-full bg-surface px-2.5 py-1 font-mono text-[10.5px] text-body shadow-e1 ring-1 ring-line">
+                  <span className={cn("h-1.5 w-1.5 rounded-full", dot[n.tone])} />
+                  {n.label}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

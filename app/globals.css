@@ -233,6 +233,23 @@ body {
 }
 
 /*
+ * Nodes orbiting a centre. The ring layer spins; each node counter-spins about
+ * its own centre on the same clock, so the labels stay upright while they
+ * travel the perimeter. Slow on purpose — a fast orbit reads as a spinner, a
+ * slow one reads as a system idling.
+ */
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+.orbit-spin {
+  animation: orbit-spin 30s linear infinite;
+}
+.orbit-spin-rev {
+  animation: orbit-spin 30s linear infinite reverse;
+}
+
+/*
  * A standalone orb, rocking and breathing rather than spinning. A full rotation
  * on a four-fold shape lands back on itself four times a turn, which reads as a
  * stutter; rocking through a partial angle never resolves and so never snags.
@@ -463,6 +480,8 @@ body {
   .net-node,
   .orb-bob,
   .orb-turn,
+  .orbit-spin,
+  .orbit-spin-rev,
   .ring-pulse,
   .letter-wave { animation: none; }
   .letter-in { opacity: 1; animation: none; }
