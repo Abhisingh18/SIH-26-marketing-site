@@ -58,8 +58,8 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Sangam — Sovereign AI for Confidential Industrial Work",
-    template: "%s · Sangam",
+    default: "Pragyan — Sovereign AI for Confidential Industrial Work",
+    template: "%s · Pragyan",
   },
   description:
     "A sovereign, on-premise agentic AI workbench for confidential industrial workflows — powered by open-weight models and designed to run entirely inside your organization.",
@@ -74,14 +74,14 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    title: "Sangam — Sovereign AI for Confidential Industrial Work",
+    title: "Pragyan — Sovereign AI for Confidential Industrial Work",
     description:
       "Run powerful open-weight AI locally. No cloud. No external APIs. No data leaving your infrastructure.",
-    siteName: "Sangam",
+    siteName: "Pragyan",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sangam — Sovereign AI for Confidential Industrial Work",
+    title: "Pragyan — Sovereign AI for Confidential Industrial Work",
     description:
       "An on-premise agentic AI workbench for confidential industrial work.",
   },

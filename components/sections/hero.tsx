@@ -81,13 +81,6 @@ export function Hero() {
               in the nav, so the hero can open with a welcome instead. */}
           <div className="mt-8">
             <Wordmark />
-            {/* lands after the letters have converged and coloured */}
-            <p
-              className="letter-in display mt-3 text-[clamp(1.15rem,2.8vw,2rem)] leading-[1.1] text-muted"
-              style={{ animationDelay: "1.55s" }}
-            >
-              for all from India
-            </p>
           </div>
 
           <Reveal delay={0.34}>
@@ -185,7 +178,7 @@ function WorkbenchStage({ children }: { children: ReactNode }) {
 
 /**
  * Three colours meeting: saffron above, periwinkle through the middle, paper
- * below. Sangam is a confluence, and at a real one the rivers stay visibly
+ * below. Pragyan means wisdom — the rivers of the wash stay visibly
  * different colours where they meet.
  *
  * Built the way the reference is: a saturated dome with a heavily blurred edge,

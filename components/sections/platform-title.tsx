@@ -19,7 +19,7 @@ const LEAD = ["The", "AI", "platform"];
  * reads that way to a screen reader.
  *
  * The highlighted phrase keeps a slow gradient running through it for as long
- * as it is on screen. Sangam is a confluence, so colour moving through the words
+ * as it is on screen. Colour moving through the words
  * is the brand idea rather than an effect.
  */
 export function PlatformTitle() {

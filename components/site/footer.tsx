@@ -44,10 +44,10 @@ export function Footer() {
       <div className="relative mx-auto w-full max-w-[1200px]">
         <div className="grid gap-14 md:grid-cols-[1.5fr_repeat(3,1fr)]">
           <div>
-            <Link href="/" className="group flex w-fit items-center gap-2.5" aria-label="Sangam home">
+            <Link href="/" className="group flex w-fit items-center gap-2.5" aria-label="Pragyan home">
               <Logomark className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-px" />
               <span className="text-[15.5px] font-medium tracking-[-0.015em] text-ink">
-                Sangam
+                Pragyan
               </span>
             </Link>
             <p className="mt-6 max-w-[270px] text-[14px] leading-[1.6] text-body">
@@ -78,15 +78,15 @@ export function Footer() {
         {/* The name is the argument, so the page closes on it in the display
             serif rather than trailing off in a column of links. */}
         <p className="display mt-24 max-w-[30ch] text-[clamp(1.3rem,2.6vw,1.85rem)]">
-          Sangam{" "}
+          Pragyan{" "}
           <span className="text-muted">
-            — a confluence. Models, knowledge and tools meeting in one place, inside your
+            — Sanskrit for wisdom. Intelligence that stays where your work is, inside your
             perimeter.
           </span>
         </p>
 
         <div className="mt-16 flex flex-col gap-3 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label">© 2026 Sangam</p>
+          <p className="label">© 2026 Pragyan</p>
           <p className="label">Designed for confidential industrial environments</p>
         </div>
       </div>

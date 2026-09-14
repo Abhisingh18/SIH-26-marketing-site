@@ -1,4 +1,4 @@
-"""Generates app/opengraph-image.png — the social card for Sangam.
+"""Generates app/opengraph-image.png — the social card for Pragyan.
 
 Mirrors the hero: saffron above, periwinkle below, the confluence mark, then the
 headline in a serif. Georgia stands in for Instrument Serif, which is a webfont
@@ -113,11 +113,11 @@ def centre(text, font, y, fill):
 # ---- wordmark ----
 mark_size, gap = 46, 14
 name_font = sans(31)
-name_w = d.textlength("Sangam", font=name_font)
+name_w = d.textlength("Pragyan", font=name_font)
 block = mark_size * 0.72 + gap + name_w
 mx = (W - block) / 2
 logomark(d, mx + mark_size * 0.36, 70, mark_size, INK)
-d.text((mx + mark_size * 0.72 + gap, 76), "Sangam", font=name_font, fill=INK)
+d.text((mx + mark_size * 0.72 + gap, 76), "Pragyan", font=name_font, fill=INK)
 
 # ---- kicker, rules either side ----
 kick = sans(21)

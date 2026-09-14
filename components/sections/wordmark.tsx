@@ -7,7 +7,7 @@ import { motion, useReducedMotion } from "motion/react";
  * and takes its slice of one ramp that runs across the whole phrase, so the
  * colour reads as a single sweep rather than a set of tinted letters.
  */
-const PHRASE = "Namaste India";
+const PHRASE = "Pragyan";
 
 /** deterministic float, so the server and client scatter the letters the same */
 function noise(n: number) {

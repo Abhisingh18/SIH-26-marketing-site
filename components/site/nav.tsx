@@ -92,11 +92,11 @@ export function Nav() {
         <Link
           href="/"
           className="group flex w-fit items-center gap-2.5"
-          aria-label="Sangam home"
+          aria-label="Pragyan home"
         >
           <Logomark className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-px" />
           <span className="text-[16px] font-medium tracking-[-0.015em] text-ink">
-            Sangam
+            Pragyan
           </span>
         </Link>
 
@@ -285,7 +285,7 @@ export function Nav() {
 }
 
 /**
- * Sangam — a confluence. Three streams (reasoning, vision, knowledge) meet and
+ * Pragyan — wisdom. Three streams (reasoning, vision, knowledge) meet and
  * continue as one, which is also what the orchestrator does with a task.
  */
 export function Logomark({ className }: { className?: string }) {

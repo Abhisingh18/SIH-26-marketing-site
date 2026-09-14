@@ -1,11 +1,11 @@
-# Sangam — Marketing Site
+# Pragyan — Marketing Site
 
-Public marketing website for **Sangam**, an on-premise agentic AI workbench for
+Public marketing website for **Pragyan**, an on-premise agentic AI workbench for
 confidential industrial workflows.
 
-*Sangam* means confluence — models, knowledge and tools meeting in one place.
+*Pragyan* is Sanskrit for wisdom — intelligence kept where the work is.
 The logomark is three streams merging into one, which is also what the model
-orchestrator does with a task. Note the split in the copy: **Sangam** is the
+orchestrator does with a task. Note the split in the copy: **Pragyan** is the
 brand, *sovereignty* is the property it claims — keep using both.
 
 > This repo is the **website only**. It explains the product, builds trust and
@@ -188,4 +188,4 @@ and only shows up as broken link previews, which is why it is not hardcoded.
 - Branding stays generic on purpose; no customer name appears as the product brand.
 - The word "sovereign"/"sovereignty" is used as a descriptor throughout (Sovereignty
   Monitor, "sovereignty you can verify"). That is deliberate — don't rename those
-  to Sangam.
+  to Pragyan.
