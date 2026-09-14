@@ -121,6 +121,14 @@ const TONES = {
   fin: "bg-[#e9f6ef] text-[#0f8b55]",
 } as const;
 
+/** the ink each tone washes the card corner with */
+const WASH = {
+  doc: "#2338cc",
+  eng: "#b0670f",
+  field: "#5551c4",
+  fin: "#0f8b55",
+} as const;
+
 type Tone = keyof typeof TONES;
 
 function Card({
@@ -139,17 +147,24 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <Panel hover className="flex h-full flex-col p-6 sm:p-7">
+    <Panel hover className="relative flex h-full flex-col overflow-hidden p-6 sm:p-7">
+      {/* a soft wash of the card's own tone, so the bento reads as colour rather
+          than a wall of white panels */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-60 blur-2xl"
+        style={{ background: `radial-gradient(closest-side, ${WASH[tone]}1f, transparent)` }}
+      />
       {/* the mock takes the top of the card and fills the width */}
-      <div className="mb-7 min-h-[168px] flex-1">{children}</div>
+      <div className="relative mb-7 min-h-[168px] flex-1">{children}</div>
 
-      <span className={cn("flex h-9 w-9 items-center justify-center rounded-[10px]", TONES[tone])}>
+      <span className={cn("relative flex h-9 w-9 items-center justify-center rounded-[10px]", TONES[tone])}>
         <Icon className="h-4.5 w-4.5" strokeWidth={1.7} />
       </span>
-      <h3 className="mt-4 text-[17px] font-medium tracking-[-0.015em] text-ink">{title}</h3>
-      <p className="mt-2 text-[14px] leading-[1.6] text-body">{body}</p>
+      <h3 className="relative mt-4 text-[17px] font-medium tracking-[-0.015em] text-ink">{title}</h3>
+      <p className="relative mt-2 text-[14px] leading-[1.6] text-body">{body}</p>
       {link ? (
-        <span className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-accent">
+        <span className="relative mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-accent">
           {link}
           <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
         </span>
@@ -205,7 +220,10 @@ function CodeMock() {
           <p className="text-white/70">
             <span className="mr-3 text-white/30">14</span>handler)
           </p>
-          <p className="pt-1.5 text-white/40">$ approve edit? (y/n)</p>
+          <p className="pt-1.5 text-white/40">
+            $ approve edit? (y/n)
+            <span className="caret ml-0.5 inline-block h-3 w-[6px] translate-y-[2px] bg-white/60" />
+          </p>
         </div>
       </div>
     </div>

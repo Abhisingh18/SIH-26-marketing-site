@@ -238,6 +238,27 @@ body {
  * travel the perimeter. Slow on purpose — a fast orbit reads as a spinner, a
  * slow one reads as a system idling.
  */
+/* a blinking terminal/text caret */
+.caret { animation: caret-blink 1.1s steps(1) infinite; }
+@keyframes caret-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+/* a dot travelling left to right along a track, fading at both ends */
+.flow-x { animation: flow-x 2.8s ease-in-out infinite; }
+@keyframes flow-x {
+  0% { transform: translateX(-6%); opacity: 0; }
+  16% { opacity: 1; }
+  84% { opacity: 1; }
+  100% { transform: translateX(106%); opacity: 0; }
+}
+
+/* the phone chat list idling upward, so the screen looks in use */
+.phone-scroll { animation: phone-scroll 12s ease-in-out infinite; }
+@keyframes phone-scroll {
+  0%, 8% { transform: translateY(0); }
+  50%, 58% { transform: translateY(-42%); }
+  100% { transform: translateY(0); }
+}
+
 /*
  * A signal running along a connector wire. `pathLength=100` normalises every
  * path, so one dash length and one keyframe carry a dot the full length of any
@@ -498,6 +519,9 @@ body {
   .orbit-spin,
   .orbit-spin-rev,
   .wire-flow,
+  .caret,
+  .flow-x,
+  .phone-scroll,
   .ring-pulse,
   .letter-wave { animation: none; }
   .letter-in { opacity: 1; animation: none; }

@@ -58,6 +58,7 @@ export function Download() {
               </p>
               <p className="text-white/80">
                 <span className="mr-3 text-white/25">2</span>.\pragyan.exe auth login
+                <span className="caret ml-0.5 inline-block h-3 w-[6px] translate-y-[2px] bg-[#7fe0ab]" />
               </p>
             </div>
 
@@ -181,22 +182,65 @@ function PhoneMock() {
     ["Mayor Marmalade of Periwinkle", "Apr 14"],
     ["Word Repetition Test", "Apr 13"],
     ["Compound Interest", "Apr 12"],
+    ["Dinner Decision Flowchart", "Apr 12"],
+    ["Drive Car to Car Wash", "Apr 11"],
   ];
   return (
-    <div className="mt-auto pt-6">
-      <div className="mx-auto max-w-[240px] overflow-hidden rounded-t-[22px] bg-obsidian p-3 shadow-e2 ring-1 ring-white/[0.06]">
-        <div className="mb-2 flex items-center justify-between px-1 font-mono text-[9px] text-white/50">
-          <span>7:29</span>
-          <span>on-prem</span>
+    <div className="mt-auto flex justify-center pt-7">
+      {/* a real phone frame, screen running: status bar, an idling chat list,
+          then a live "generating" line and the input dock */}
+      <div className="w-full max-w-[248px] rounded-t-[30px] bg-obsidian p-2.5 pb-0 shadow-e3 ring-1 ring-white/[0.08]">
+        <div className="overflow-hidden rounded-t-[22px] bg-[#0c1024]">
+          {/* status bar with a notch */}
+          <div className="relative flex items-center justify-between px-4 py-2 font-mono text-[9px] text-white/55">
+            <span>7:29</span>
+            <span className="absolute left-1/2 top-1.5 h-3.5 w-16 -translate-x-1/2 rounded-full bg-black/60" />
+            <span className="flex items-center gap-1">
+              <span className="dot-live h-1 w-1 rounded-full bg-signal" />
+              on-prem
+            </span>
+          </div>
+
+          {/* the scrolling history */}
+          <div className="h-[168px] overflow-hidden px-2">
+            <ul className="phone-scroll space-y-0.5">
+              {rows.map(([t, d], i) => (
+                <li
+                  key={t}
+                  className={cn(
+                    "flex items-center justify-between rounded-[8px] px-2 py-2 text-[11px]",
+                    i === 0 ? "bg-white/[0.06] text-white" : "text-white/75",
+                  )}
+                >
+                  <span className="truncate">{t}</span>
+                  <span className="ml-2 shrink-0 font-mono text-[9px] text-white/35">{d}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* a reply being written */}
+          <div className="border-t border-white/[0.06] px-3 py-2.5">
+            <div className="flex items-center gap-1.5">
+              <span className="dot-live h-1.5 w-1.5 rounded-full bg-[#9db4ff]" />
+              <span className="font-mono text-[9px] text-white/45">Pragyan is writing</span>
+            </div>
+            <div className="mt-2 space-y-1.5">
+              <span className="shimmer-bar block h-1.5 w-[88%] rounded-full" />
+              <span className="shimmer-bar block h-1.5 w-[64%] rounded-full [animation-delay:0.3s]" />
+            </div>
+          </div>
+
+          {/* input dock */}
+          <div className="flex items-center gap-2 px-3 pb-3 pt-1">
+            <span className="h-7 flex-1 rounded-full bg-white/[0.06]" />
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent">
+              <svg width="12" height="12" viewBox="0 0 12 12" className="fill-none stroke-paper" strokeWidth="1.6">
+                <path d="M6 9.5V2.5M3 5.5 6 2.5l3 3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </div>
         </div>
-        <ul className="space-y-1">
-          {rows.map(([t, d]) => (
-            <li key={t} className="flex items-center justify-between rounded-[8px] px-2 py-1.5 text-[11px] text-white/80">
-              <span className="truncate">{t}</span>
-              <span className="ml-2 shrink-0 font-mono text-[9px] text-white/35">{d}</span>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
@@ -232,7 +276,7 @@ function BrowserMock() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-veil px-2.5 py-1 font-mono text-[10px] text-body ring-1 ring-line">
             reasoning · 30B
           </span>
-          <p className="mt-4 text-[15px] tracking-[-0.01em] text-ink">Good evening. What are we working on?</p>
+          <p className="mt-4 text-[15px] tracking-[-0.01em] text-ink">Good evening. What are we working on?<span className="caret ml-0.5 inline-block h-4 w-[2px] translate-y-[3px] bg-accent" /></p>
           <div className="mt-4 h-9 rounded-[10px] bg-veil/70 ring-1 ring-line" />
         </div>
       </div>
