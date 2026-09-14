@@ -62,77 +62,101 @@ const ATTACHMENTS = [
 
 export function Agentic() {
   return (
-    <Section id="agentic" tone="surface">
-      <SectionHead
-        label="Agentic execution"
-        animateTitle="It doesn't just answer. It gets the work done."
-        body="A chatbot returns text. An agent decomposes the task, pulls in the documents it needs, runs the tools, checks its own output and hands back a finished file."
-      />
+    <Section id="agentic" tone="surface" className="relative overflow-hidden">
+      {/* a cool bluish-white wash so the section reads as its own moment,
+          lighter than the flat surface around it */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(90%_80%_at_50%_30%,#000_20%,transparent_100%)]"
+      >
+        <div className="drift-b absolute left-[6%] top-[-4%] h-[70%] w-[48%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(88,114,246,0.16),transparent_70%)] blur-[90px]" />
+        <div className="drift-a absolute right-[4%] top-[10%] h-[64%] w-[44%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(120,150,246,0.12),transparent_70%)] blur-[95px]" />
+      </div>
 
-      <RevealGroup className="mt-14 flex flex-wrap gap-2" stagger={0.04}>
-        {LOOP.map((s, i) => (
-          <RevealItem key={s}>
-            <span className="flex items-center gap-2.5 rounded-full bg-surface py-2 pl-2 pr-4 shadow-e1 ring-1 ring-line/70">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink font-mono text-[10px] text-paper">
-                {i + 1}
-              </span>
-              <span className="text-[13.5px] text-ink">{s}</span>
-            </span>
-          </RevealItem>
-        ))}
-      </RevealGroup>
+      <div className="relative">
+        <SectionHead
+          label="Agentic execution"
+          animateTitle="It doesn't just answer. It gets the work done."
+          body="A chatbot returns text. An agent decomposes the task, pulls in the documents it needs, runs the tools, checks its own output and hands back a finished file."
+        />
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
-        <Reveal>
-          <Panel hover className="flex h-full flex-col p-8">
-            <Label>User request</Label>
-            <p className="mt-7 text-[20px] leading-[1.35] tracking-[-0.02em] text-ink sm:text-[22px]">
-              &ldquo;Analyse this inspection report and prepare an approval note.&rdquo;
-            </p>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {ATTACHMENTS.map((f) => (
-                <span
-                  key={f.name}
-                  className={cn(
-                    "rounded-[9px] px-2.5 py-1.5 font-mono text-[10.5px]",
-                    TONES[f.tone].well,
-                  )}
-                >
-                  {f.name}
+        <RevealGroup className="mt-14 flex flex-wrap gap-2" stagger={0.04}>
+          {LOOP.map((s, i) => (
+            <RevealItem key={s}>
+              <span className="flex items-center gap-2.5 rounded-full bg-gradient-to-b from-white to-[#f2f5ff] py-2 pl-2 pr-4 shadow-e1 ring-1 ring-[#d8e0fb]">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-b from-accent to-[#1b2ea8] font-mono text-[10px] text-paper shadow-[0_2px_6px_-2px_rgba(35,56,204,0.6)]">
+                  {i + 1}
                 </span>
-              ))}
-            </div>
-            <p className="mt-auto pt-12 text-[13px] leading-relaxed text-muted">
-              One instruction. Seven tool calls. Zero external requests.
-            </p>
-          </Panel>
-        </Reveal>
-
-        <Reveal delay={0.08}>
-          <div className="h-full rounded-[18px] bg-obsidian p-8 shadow-e3">
-            <Label invert>Agent execution</Label>
-            <ol className="mt-7 space-y-3.5">
-              {EXECUTION.map((e, i) => (
-                <li key={e} className="flex items-center gap-3">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-signal/15 text-signal">
-                    <Check className="h-3 w-3" strokeWidth={3} />
-                  </span>
-                  <span className="text-[14.5px] text-paper/90">{e}</span>
-                  <span className="ml-auto font-mono text-[10px] text-white/25">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <div className="mt-8 flex items-center gap-3 rounded-[13px] bg-white/[0.05] px-4 py-3.5">
-              <FileText className="h-4 w-4 shrink-0 text-paper/70" strokeWidth={1.75} />
-              <span className="text-[13.5px] text-paper">Approval_Note_TK-402.docx</span>
-              <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.12em] text-signal">
-                Ready
+                <span className="text-[13.5px] text-ink">{s}</span>
               </span>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
+          <Reveal>
+            {/* bluish-white panel: a cool tinted surface with an accent ring,
+                so the request side reads as paper and the execution side as the
+                machine */}
+            <div className="flex h-full flex-col rounded-[18px] bg-gradient-to-b from-[#f6f8ff] to-surface p-8 shadow-e2 ring-1 ring-[#dce3fb]">
+              <Label>User request</Label>
+              <p className="mt-7 text-[20px] leading-[1.35] tracking-[-0.02em] text-ink sm:text-[22px]">
+                &ldquo;Analyse this inspection report and prepare an approval note.&rdquo;
+              </p>
+              <div className="mt-8 flex flex-wrap gap-2">
+                {ATTACHMENTS.map((f) => (
+                  <span
+                    key={f.name}
+                    className={cn(
+                      "rounded-[9px] px-2.5 py-1.5 font-mono text-[10.5px]",
+                      TONES[f.tone].well,
+                    )}
+                  >
+                    {f.name}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-auto pt-12 text-[13px] leading-relaxed text-muted">
+                One instruction. Seven tool calls. Zero external requests.
+              </p>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            {/* deep blue rather than neutral obsidian, with a light rising off
+                the top edge — the panel reads as lit from within */}
+            <div className="relative h-full overflow-hidden rounded-[18px] bg-[linear-gradient(160deg,#141a3a,#0c1024)] p-8 shadow-e3 ring-1 ring-white/[0.06]">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(80%_100%_at_50%_0%,rgba(96,124,246,0.25),transparent_70%)]"
+              />
+              <div className="relative">
+                <Label invert>Agent execution</Label>
+                <ol className="mt-7 space-y-3.5">
+                  {EXECUTION.map((e, i) => (
+                    <li key={e} className="flex items-center gap-3">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-signal/15 text-signal ring-1 ring-signal/25">
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      <span className="text-[14.5px] text-paper/90">{e}</span>
+                      <span className="ml-auto font-mono text-[10px] text-white/25">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-8 flex items-center gap-3 rounded-[13px] bg-white/[0.06] px-4 py-3.5 ring-1 ring-white/[0.08]">
+                  <FileText className="h-4 w-4 shrink-0 text-[#9db4ff]" strokeWidth={1.75} />
+                  <span className="text-[13.5px] text-paper">Approval_Note_TK-402.docx</span>
+                  <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-signal">
+                    <span className="dot-live h-1 w-1 rounded-full bg-signal" />
+                    Ready
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </Section>
   );
