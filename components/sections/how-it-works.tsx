@@ -29,18 +29,21 @@ const STAGES = [
     icon: Users,
     title: "Your apps",
     meta: "5 clients · 1 login",
+    tone: "doc",
     items: ["Chat, documents and code", "Choose effort, not models", "One company account"],
   },
   {
     icon: Database,
     title: "Pragyan server",
     meta: "access · memory · search",
+    tone: "field",
     items: ["Users, roles and limits", "Shared memory and projects", "Search across internal files"],
   },
   {
     icon: Split,
     title: "Pragyan Router",
     meta: "automatic · per task",
+    tone: "eng",
     items: ["Understands the request", "Picks the best local model", "Checks important answers"],
   },
 ];
@@ -59,9 +62,28 @@ const TONE = {
   fin: "bg-[#e9f6ef] text-[#0f8b55]",
 } as const;
 
+const WASH = { doc: "#2338cc", eng: "#b0670f", field: "#5551c4", fin: "#0f8b55" } as const;
+
+const CARD_BG = {
+  doc: "linear-gradient(158deg, #eef1fe, #f8f9fe 52%, var(--color-surface))",
+  eng: "linear-gradient(158deg, #fdf4e8, #fbf8f1 52%, var(--color-surface))",
+  field: "linear-gradient(158deg, #f0f0fc, #f7f7fd 52%, var(--color-surface))",
+  fin: "linear-gradient(158deg, #e9f6ef, #f3f9f5 52%, var(--color-surface))",
+} as const;
+
+type ToneKey = keyof typeof TONE;
+
 export function HowItWorks() {
   return (
-    <Section id="how-it-works" tone="paper">
+    <Section id="how-it-works" tone="paper" className="relative overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(90%_80%_at_50%_40%,#000_25%,transparent_100%)]"
+      >
+        <div className="drift-b absolute right-[6%] top-[6%] h-[62%] w-[42%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(88,114,246,0.14),transparent_70%)] blur-[95px]" />
+        <div className="drift-c absolute left-[10%] bottom-[4%] h-[56%] w-[40%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(132,96,228,0.1),transparent_70%)] blur-[95px]" />
+      </div>
+
       <Reveal>
         <p className="label">
           <span className="text-accent">[01]</span> How it works
@@ -282,10 +304,19 @@ function ArrowChip() {
 
 function StageCard({ stage }: { stage: (typeof STAGES)[number] }) {
   const Icon = stage.icon;
+  const tone = stage.tone as ToneKey;
   return (
-    <div className="rounded-[16px] bg-surface p-5 shadow-e2 ring-1 ring-line/70">
-      <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-accent-tint text-accent">
+    <div
+      className="relative overflow-hidden rounded-[16px] p-5 shadow-e2 ring-1 ring-line/70"
+      style={{ background: CARD_BG[tone] }}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-70 blur-2xl"
+        style={{ background: `radial-gradient(closest-side, ${WASH[tone]}26, transparent)` }}
+      />
+      <div className="relative flex items-center gap-3">
+        <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]", TONE[tone])}>
           <Icon className="h-[18px] w-[18px]" strokeWidth={1.7} />
         </span>
         <div className="min-w-0">
@@ -293,7 +324,7 @@ function StageCard({ stage }: { stage: (typeof STAGES)[number] }) {
           <p className="truncate font-mono text-[10px] tracking-[0.06em] text-muted">{stage.meta}</p>
         </div>
       </div>
-      <ul className="mt-4 space-y-2">
+      <ul className="relative mt-4 space-y-2">
         {stage.items.map((it) => (
           <li key={it} className="flex items-start gap-2">
             <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-signal" strokeWidth={2.5} />
@@ -307,7 +338,7 @@ function StageCard({ stage }: { stage: (typeof STAGES)[number] }) {
 
 function ModelCard({ model }: { model: (typeof MODELS)[number] }) {
   return (
-    <div className="flex items-center gap-2.5 rounded-[12px] bg-surface px-3 py-2.5 shadow-e1 ring-1 ring-line">
+    <div className="flex items-center gap-2.5 rounded-[12px] px-3 py-2.5 shadow-e1 ring-1 ring-line" style={{ background: CARD_BG[model.tone as ToneKey] }}>
       <span className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]", TONE[model.tone])}>
         <Cpu className="h-3.5 w-3.5" strokeWidth={1.7} />
       </span>
