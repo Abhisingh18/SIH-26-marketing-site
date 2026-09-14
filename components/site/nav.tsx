@@ -81,25 +81,12 @@ export function Nav() {
         scrolled ? "pt-3" : "pt-0",
       )}
     >
-      {/* a graded scrim behind the bar: a paper wash with a faint warm-to-cool
-          tint, fading out before it clears the header, so the nav always reads
-          against a soft ground rather than floating on raw content */}
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-0 -z-10 h-[120px] transition-opacity duration-500",
-          scrolled ? "opacity-0" : "opacity-100",
-        )}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-paper via-paper/80 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(80%_150%_at_20%_-20%,rgba(240,150,70,0.12),transparent_60%),radial-gradient(80%_150%_at_80%_-20%,rgba(88,114,246,0.12),transparent_60%)]" />
-      </div>
 
       <div
         className={cn(
           "grid w-full grid-cols-[1fr_auto_1fr] items-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           scrolled
-            ? "h-[58px] max-w-[1128px] rounded-full bg-gradient-to-b from-surface/85 to-paper/75 pl-6 pr-2 shadow-e3 ring-1 ring-line backdrop-blur-xl"
+            ? "h-[58px] max-w-[1128px] rounded-full bg-paper/70 pl-6 pr-2 shadow-e2 ring-1 ring-line/80 backdrop-blur-xl"
             : "h-[74px] max-w-[1216px] rounded-full px-2 sm:px-4",
         )}
       >
