@@ -308,20 +308,27 @@ function AuthMock() {
 function NetworkMock() {
   return (
     <div className="flex h-full flex-col justify-center">
-      <div className="flex items-center gap-3">
-        <div className="flex-1 rounded-[11px] bg-veil/70 p-3.5 font-mono text-[11px] ring-1 ring-line/60">
+      <div className="relative flex items-center gap-3">
+        {/* a faint rail under the row with a packet travelling it, so the file
+            visibly moves to the GPU and stops there — never outward */}
+        <div className="pointer-events-none absolute inset-x-[14%] top-1/2 h-px -translate-y-1/2 overflow-hidden bg-line-2">
+          <span className="flow-x absolute top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_8px_rgba(35,56,204,0.6)]" />
+        </div>
+
+        <div className="relative flex-1 rounded-[11px] bg-veil/70 p-3.5 font-mono text-[11px] ring-1 ring-line/60">
           <p className="text-muted">EMPLOYEE UPLOAD</p>
           <p className="mt-1 text-ink">inspection_17.pdf</p>
         </div>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent to-[#1b2ea8] text-[13px] font-semibold text-paper shadow-[0_2px_8px_-2px_rgba(35,56,204,0.5)]">
+        <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-accent to-[#1b2ea8] text-[13px] font-semibold text-paper shadow-[0_2px_8px_-2px_rgba(35,56,204,0.5)]">
           P
         </span>
-        <div className="flex-1 rounded-[11px] bg-veil/70 p-3.5 font-mono text-[11px] ring-1 ring-line/60">
+        <div className="relative flex-1 rounded-[11px] bg-veil/70 p-3.5 font-mono text-[11px] ring-1 ring-line/60">
           <p className="text-muted">ON-PREM GPU</p>
           <p className="mt-1 text-ink">paddleocr-vl → qwen3.6</p>
         </div>
       </div>
-      <p className="mt-4 text-center font-mono text-[10.5px] tracking-[0.04em] text-muted">
+      <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-mono text-[10.5px] tracking-[0.04em] text-muted">
+        <span className="dot-live h-1 w-1 rounded-full bg-signal" />
         stays on your network · no calls to cloud AI providers
       </p>
     </div>
@@ -332,14 +339,13 @@ function EffortMock() {
   const levels = ["low", "medium", "high", "xhigh", "max"];
   return (
     <div>
-      <div className="flex rounded-full bg-veil/70 p-1 ring-1 ring-line/60">
+      <div className="relative flex rounded-full bg-veil/70 p-1 ring-1 ring-line/60">
+        {/* the highlight glides between levels on its own */}
+        <span className="effort-slide absolute inset-y-1 left-0 w-1/5 rounded-full bg-accent shadow-e1" />
         {levels.map((l) => (
           <span
             key={l}
-            className={cn(
-              "flex-1 rounded-full py-1.5 text-center font-mono text-[10.5px]",
-              l === "high" ? "bg-accent text-paper shadow-e1" : "text-muted",
-            )}
+            className="relative flex-1 rounded-full py-1.5 text-center font-mono text-[10.5px] text-muted mix-blend-luminosity"
           >
             {l}
           </span>
@@ -370,15 +376,16 @@ function ChipsMock({
 }) {
   return (
     <div className="flex flex-wrap gap-1.5">
-      {items.map((c) => (
+      {items.map((c, i) => (
         <span
           key={c}
           className={cn(
-            "rounded-full px-2.5 py-1 font-mono text-[10.5px]",
+            "chip-wave rounded-full px-2.5 py-1 font-mono text-[10.5px] will-change-transform",
             c === active
               ? TONES[tone]
               : "bg-surface text-body shadow-e1 ring-1 ring-line",
           )}
+          style={{ animationDelay: `${i * 0.18}s` }}
         >
           {c}
         </span>

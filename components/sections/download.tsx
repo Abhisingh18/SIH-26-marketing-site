@@ -186,29 +186,30 @@ function PhoneMock() {
     ["Drive Car to Car Wash", "Apr 11"],
   ];
   return (
-    <div className="mt-auto flex justify-center pt-7">
-      {/* a real phone frame, screen running: status bar, an idling chat list,
-          then a live "generating" line and the input dock */}
-      <div className="w-full max-w-[248px] rounded-t-[30px] bg-obsidian p-2.5 pb-0 shadow-e3 ring-1 ring-white/[0.08]">
-        <div className="overflow-hidden rounded-t-[22px] bg-[#0c1024]">
+    <div className="mt-7 flex flex-1 justify-center">
+      {/* a real phone frame that fills the tall card — it stretches to the
+          available height and bleeds off the bottom edge, so the card reads as a
+          device rather than a card with a thumbnail parked in it */}
+      <div className="flex w-full max-w-[272px] flex-col self-stretch rounded-t-[32px] bg-obsidian p-2.5 pb-0 shadow-e3 ring-1 ring-white/[0.08]">
+        <div className="flex min-h-[280px] flex-1 flex-col overflow-hidden rounded-t-[24px] bg-[#0c1024]">
           {/* status bar with a notch */}
-          <div className="relative flex items-center justify-between px-4 py-2 font-mono text-[9px] text-white/55">
+          <div className="relative flex items-center justify-between px-4 py-2.5 font-mono text-[9.5px] text-white/55">
             <span>7:29</span>
-            <span className="absolute left-1/2 top-1.5 h-3.5 w-16 -translate-x-1/2 rounded-full bg-black/60" />
+            <span className="absolute left-1/2 top-2 h-4 w-16 -translate-x-1/2 rounded-full bg-black/60" />
             <span className="flex items-center gap-1">
               <span className="dot-live h-1 w-1 rounded-full bg-signal" />
               on-prem
             </span>
           </div>
 
-          {/* the scrolling history */}
-          <div className="h-[168px] overflow-hidden px-2">
+          {/* the scrolling history — grows to fill the phone */}
+          <div className="flex-1 overflow-hidden px-2">
             <ul className="phone-scroll space-y-0.5">
               {rows.map(([t, d], i) => (
                 <li
                   key={t}
                   className={cn(
-                    "flex items-center justify-between rounded-[8px] px-2 py-2 text-[11px]",
+                    "flex items-center justify-between rounded-[8px] px-2.5 py-2.5 text-[11.5px]",
                     i === 0 ? "bg-white/[0.06] text-white" : "text-white/75",
                   )}
                 >
@@ -220,22 +221,22 @@ function PhoneMock() {
           </div>
 
           {/* a reply being written */}
-          <div className="border-t border-white/[0.06] px-3 py-2.5">
+          <div className="border-t border-white/[0.06] px-3 py-3">
             <div className="flex items-center gap-1.5">
               <span className="dot-live h-1.5 w-1.5 rounded-full bg-[#9db4ff]" />
-              <span className="font-mono text-[9px] text-white/45">Pragyan is writing</span>
+              <span className="font-mono text-[9.5px] text-white/45">Pragyan is writing</span>
             </div>
-            <div className="mt-2 space-y-1.5">
-              <span className="shimmer-bar block h-1.5 w-[88%] rounded-full" />
-              <span className="shimmer-bar block h-1.5 w-[64%] rounded-full [animation-delay:0.3s]" />
+            <div className="mt-2.5 space-y-1.5">
+              <span className="shimmer-bar block h-2 w-[88%] rounded-full" />
+              <span className="shimmer-bar block h-2 w-[64%] rounded-full [animation-delay:0.3s]" />
             </div>
           </div>
 
           {/* input dock */}
-          <div className="flex items-center gap-2 px-3 pb-3 pt-1">
-            <span className="h-7 flex-1 rounded-full bg-white/[0.06]" />
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent">
-              <svg width="12" height="12" viewBox="0 0 12 12" className="fill-none stroke-paper" strokeWidth="1.6">
+          <div className="flex items-center gap-2 px-3 pb-4 pt-1">
+            <span className="h-8 flex-1 rounded-full bg-white/[0.06]" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent">
+              <svg width="13" height="13" viewBox="0 0 12 12" className="fill-none stroke-paper" strokeWidth="1.6">
                 <path d="M6 9.5V2.5M3 5.5 6 2.5l3 3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>

@@ -238,6 +238,23 @@ body {
  * travel the perimeter. Slow on purpose — a fast orbit reads as a spinner, a
  * slow one reads as a system idling.
  */
+/* the effort selector's highlight gliding across the five levels and back */
+.effort-slide { animation: effort-slide 9s ease-in-out infinite alternate; }
+@keyframes effort-slide {
+  0%, 12% { left: 0%; }
+  22%, 34% { left: 20%; }
+  44%, 56% { left: 40%; }
+  66%, 78% { left: 60%; }
+  88%, 100% { left: 80%; }
+}
+
+/* a wave running through a row of chips — each lifts a touch in turn */
+.chip-wave { animation: chip-wave 3.4s ease-in-out infinite; }
+@keyframes chip-wave {
+  0%, 70%, 100% { transform: translateY(0); box-shadow: var(--shadow-e1); }
+  35% { transform: translateY(-3px); box-shadow: var(--shadow-e2); }
+}
+
 /* a blinking terminal/text caret */
 .caret { animation: caret-blink 1.1s steps(1) infinite; }
 @keyframes caret-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -520,6 +537,8 @@ body {
   .orbit-spin-rev,
   .wire-flow,
   .caret,
+  .effort-slide,
+  .chip-wave,
   .flow-x,
   .phone-scroll,
   .ring-pulse,
