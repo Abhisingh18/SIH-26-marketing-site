@@ -19,7 +19,6 @@ import {
 import { Flourish } from "@/components/ui/flourish";
 import { Workbench } from "@/components/mock/workbench";
 import { PlatformTitle } from "@/components/sections/platform-title";
-import { Wordmark } from "@/components/sections/wordmark";
 import { Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
@@ -76,17 +75,18 @@ export function Hero() {
             </div>
           </Reveal>
 
-          {/* The greeting carries the fold; the line under it and the
-              subheading below say what this actually is. The brand name lives
-              in the nav, so the hero can open with a welcome instead. */}
-          <div className="mt-8">
-            <Wordmark />
-          </div>
+          {/* No brand mark in the fold — the name lives in the nav. The kicker
+              and this subheading carry the opening. */}
+          <Reveal delay={0.1}>
+            <p className="mt-9 max-w-[24ch] text-balance text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.08] tracking-[-0.02em] text-ink">
+              An on-premise agentic AI workbench for confidential industrial work.
+            </p>
+          </Reveal>
 
-          <Reveal delay={0.34}>
-            <p className="mt-7 max-w-[56ch] text-balance text-[17px] leading-[1.6] text-body sm:text-[18.5px]">
-              An on-premise agentic AI workbench for confidential industrial work.{" "}
-              <span className="text-ink">Nothing leaves your infrastructure.</span>
+          <Reveal delay={0.28}>
+            <p className="mt-6 max-w-[52ch] text-balance text-[16.5px] leading-[1.6] text-body sm:text-[17.5px]">
+              <span className="text-ink">Nothing leaves your infrastructure.</span> No cloud,
+              no external APIs, no data leaving your perimeter.
             </p>
           </Reveal>
 
